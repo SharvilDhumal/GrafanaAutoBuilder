@@ -1,175 +1,164 @@
 <div class="auth-page">
-  <header class="auth-header">
-    <div class="brand">
-      <span class="brand-logo">🧭</span>
-      <span class="brand-name">Grafana AutoBuilder</span>
+  <header class="header">
+    <div class="container">
+      <nav class="navbar">
+        <div class="logo">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              d="M12 2L4 7v10l8 5 8-5V7L12 2zm0 2.5L18 8v8l-6 3.5-6-3.5V8l6-3.5z"
+            />
+            <path
+              d="M12 7L6 10v4l6 3 6-3v-4l-6-3zm0 2.5L16 11v2l-4 2-4-2v-2l4-1.5z"
+            />
+          </svg>
+          <span>Grafana AutoBuilder</span>
+        </div>
+        <a class="back-btn" routerLink="/">← Back to Home</a>
+      </nav>
     </div>
-
-    <a class="back-home" routerLink="/">← Back to Home</a>
   </header>
 
-  <div class="auth-content">
-    <div class="auth-card">
-      <div class="avatar">
-        <span>👤</span>
+  <main class="signup-main">
+    <div class="container">
+      <div class="signup-card">
+        <div class="signup-header">
+          <div class="signup-logo">
+            <span>👤</span>
+          </div>
+          <h1>Create your account</h1>
+          <p class="signup-subtitle">
+            Start transforming CSVs into beautiful Grafana dashboards
+          </p>
+        </div>
+        <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+          <!-- Full name -->
+          <div class="form-group" [class.invalid]="showError('fullName')">
+            <label for="fullName">Full Name</label>
+            <input
+              id="fullName"
+              type="text"
+              formControlName="fullName"
+              placeholder="Enter your full name"
+              autocomplete="name"
+            />
+            <div class="error" *ngIf="showError('fullName')">
+              Name must be at least 2 characters.
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="form-group" [class.invalid]="showError('email')">
+            <label for="email">Email Address</label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="Enter your email"
+              autocomplete="email"
+            />
+            <div class="error" *ngIf="showError('email')">
+              Please enter a valid email address.
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div class="form-group" [class.invalid]="showError('password')">
+            <label for="password">Password</label>
+
+            <div class="password-field">
+              <input
+                id="password"
+                [type]="showPwd ? 'text' : 'password'"
+                formControlName="password"
+                placeholder="Create a strong password"
+                autocomplete="new-password"
+              />
+              <button
+                class="eye"
+                type="button"
+                (click)="showPwd = !showPwd"
+                aria-label="Toggle password visibility"
+              >
+                {{ showPwd ? "🙈" : "👁️" }}
+              </button>
+            </div>
+
+            <div class="hint">
+              Minimum 8 characters, with a letter and a number.
+            </div>
+            <div class="error" *ngIf="showError('password')">
+              Password must be at least 8 chars and include a letter and a
+              number.
+            </div>
+          </div>
+
+          <!-- Confirm password -->
+          <div
+            class="form-group"
+            [class.invalid]="showError('confirmPassword') || passwordMismatch"
+          >
+            <label for="confirmPassword">Confirm Password</label>
+
+            <div class="password-field">
+              <input
+                id="confirmPassword"
+                [type]="showConfirm ? 'text' : 'password'"
+                formControlName="confirmPassword"
+                placeholder="Re-enter your password"
+                autocomplete="new-password"
+              />
+              <button
+                class="eye"
+                type="button"
+                (click)="showConfirm = !showConfirm"
+                aria-label="Toggle password visibility"
+              >
+                {{ showConfirm ? "🙈" : "👁️" }}
+              </button>
+            </div>
+
+            <div class="error" *ngIf="passwordMismatch">
+              Passwords do not match.
+            </div>
+          </div>
+
+          <!-- Terms -->
+          <div class="form-row space-between">
+            <label class="checkbox">
+              <input type="checkbox" formControlName="acceptTerms" />
+              <span
+                >I agree to the
+                <a href="#" (click)="$event.preventDefault()"
+                  >Terms & Conditions</a
+                ></span
+              >
+            </label>
+          </div>
+          <div class="error" *ngIf="showError('acceptTerms')">
+            You must accept the terms to continue.
+          </div>
+
+          <!-- Submit -->
+          <button
+            class="primary-btn"
+            type="submit"
+            [disabled]="form.invalid || loading"
+          >
+            {{ loading ? "Creating account..." : "Create Account" }}
+          </button>
+
+          <div class="divider"></div>
+
+          <p class="muted center">
+            Already have an account?
+            <a routerLink="/login">Sign in</a>
+          </p>
+        </form>
       </div>
-
-      <h1 class="title">Create your account</h1>
-      <p class="subtitle">
-        Start transforming CSVs into beautiful Grafana dashboards
-      </p>
-
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
-        <!-- Full name -->
-        <div class="form-group" [class.invalid]="showError('fullName')">
-          <label for="fullName">Full Name</label>
-          <input
-            id="fullName"
-            type="text"
-            formControlName="fullName"
-            placeholder="Enter your full name"
-            autocomplete="name"
-          />
-          <div class="error" *ngIf="showError('fullName')">
-            Name must be at least 2 characters.
-          </div>
-        </div>
-
-        <!-- Email -->
-        <div class="form-group" [class.invalid]="showError('email')">
-          <label for="email">Email Address</label>
-          <input
-            id="email"
-            type="email"
-            formControlName="email"
-            placeholder="Enter your email"
-            autocomplete="email"
-          />
-          <div class="error" *ngIf="showError('email')">
-            Please enter a valid email address.
-          </div>
-        </div>
-
-        <!-- Password -->
-        <div class="form-group" [class.invalid]="showError('password')">
-          <label for="password">Password</label>
-
-          <div class="password-field">
-            <input
-              id="password"
-              [type]="showPwd ? 'text' : 'password'"
-              formControlName="password"
-              placeholder="Create a strong password"
-              autocomplete="new-password"
-            />
-            <button
-              class="eye"
-              type="button"
-              (click)="showPwd = !showPwd"
-              aria-label="Toggle password visibility"
-            >
-              {{ showPwd ? "🙈" : "👁️" }}
-            </button>
-          </div>
-
-          <div class="hint">
-            Minimum 8 characters, with a letter and a number.
-          </div>
-          <div class="error" *ngIf="showError('password')">
-            Password must be at least 8 chars and include a letter and a number.
-          </div>
-        </div>
-
-        <!-- Confirm password -->
-        <div
-          class="form-group"
-          [class.invalid]="showError('confirmPassword') || passwordMismatch"
-        >
-          <label for="confirmPassword">Confirm Password</label>
-
-          <div class="password-field">
-            <input
-              id="confirmPassword"
-              [type]="showConfirm ? 'text' : 'password'"
-              formControlName="confirmPassword"
-              placeholder="Re-enter your password"
-              autocomplete="new-password"
-            />
-            <button
-              class="eye"
-              type="button"
-              (click)="showConfirm = !showConfirm"
-              aria-label="Toggle password visibility"
-            >
-              {{ showConfirm ? "🙈" : "👁️" }}
-            </button>
-          </div>
-
-          <div class="error" *ngIf="passwordMismatch">
-            Passwords do not match.
-          </div>
-        </div>
-
-        <!-- Terms -->
-        <div class="form-row space-between">
-          <label class="checkbox">
-            <input type="checkbox" formControlName="acceptTerms" />
-            <span
-              >I agree to the
-              <a href="#" (click)="$event.preventDefault()"
-                >Terms & Conditions</a
-              ></span
-            >
-          </label>
-        </div>
-        <div class="error" *ngIf="showError('acceptTerms')">
-          You must accept the terms to continue.
-        </div>
-
-        <!-- Submit -->
-        <button
-          class="primary-btn"
-          type="submit"
-          [disabled]="form.invalid || loading"
-        >
-          {{ loading ? "Creating account..." : "Create Account" }}
-        </button>
-
-        <div class="divider"></div>
-
-        <p class="muted center">
-          Already have an account?
-          <a routerLink="/login">Sign in</a>
-        </p>
-      </form>
     </div>
-
-    <!-- Right-side marketing panel (optional, like your login page) -->
-    <!-- <aside class="side-panel">
-      <h2>Why Choose Grafana AutoBuilder?</h2>
-      <ul class="bullets">
-        <li>
-          <span class="icon">⚡</span>
-          <div>
-            <strong>Instant Dashboard Creation</strong>
-            <p>Turn CSV files into beautiful dashboards in seconds.</p>
-          </div>
-        </li>
-        <li>
-          <span class="icon">🔒</span>
-          <div>
-            <strong>Secure & Reliable</strong>
-            <p>Enterprise-grade security with PostgreSQL backend.</p>
-          </div>
-        </li>
-        <li>
-          <span class="icon">🔌</span>
-          <div>
-            <strong>Seamless Integration</strong>
-            <p>Works with Grafana API for real-time updates.</p>
-          </div>
-        </li>
-      </ul>
-    </aside> -->
-  </div>
+  </main>
 </div>
