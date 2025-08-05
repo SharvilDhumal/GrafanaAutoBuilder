@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -7,13 +8,15 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.css']
 })
 export class Home {
+  constructor(private router: Router) {}
+
   onLogin() {
-    // TODO: Implement login functionality
-    console.log('Login clicked');
+    // Navigate to login page
+    this.router.navigate(['/login']);
   }
 
   onTryDemo() {
-    // TODO: Implement demo functionality
-    console.log('Try Demo clicked');
+    // Navigate to login page with demo credentials
+    this.router.navigate(['/login']);
   }
 }
