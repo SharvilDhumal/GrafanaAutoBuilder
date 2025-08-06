@@ -1,6 +1,13 @@
+/* :host {
+  display: block;
+  color: #1f3b57;
+} */
+
 :host {
   display: block;
   color: #1f3b57;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
 .auth-page {
@@ -87,6 +94,42 @@
 label {
   font-weight: 600;
   color: #2c4c6f;
+}
+
+/* Password field container */
+.password-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-field input {
+  padding-right: 45px;
+  flex: 1;
+}
+
+/* Eye toggle button */
+.eye {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: color 0.2s ease;
+}
+
+.eye:hover {
+  color: #2a6fd6;
+}
+
+.eye svg {
+  width: 20px;
+  height: 20px;
 }
 
 input[type="text"],
@@ -244,6 +287,23 @@ input:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.login-logo {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
+  border-radius: 50%;
+}
+
+.login-logo svg {
+  width: 32px;
+  height: 32px;
+  color: #4299e1;
 }
 
 .logo {

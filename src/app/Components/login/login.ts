@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router'; // <-- Import RouterLink
 
 @Component({
   selector: 'app-login',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterLink], // <-- Add RouterLink here
   templateUrl: './login.html',
-  styleUrl: './login.css'
+  styleUrl: './login.css',
 })
 export class Login {
   // Form properties
@@ -22,7 +22,7 @@ export class Login {
 
   onSubmit() {
     if (this.isLoading) return;
-    
+
     this.isLoading = true;
     this.loginError = '';
 
