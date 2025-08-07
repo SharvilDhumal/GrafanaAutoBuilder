@@ -49,6 +49,9 @@
           </p>
         </div>
         <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate>
+          <div class="alert alert-danger" *ngIf="errorMessage">
+            {{ errorMessage }}
+          </div>
           <!-- Full name -->
           <div class="form-group" [class.invalid]="showError('fullName')">
             <label for="fullName">Full Name</label>

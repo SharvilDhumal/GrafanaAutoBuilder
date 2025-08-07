@@ -1,10 +1,15 @@
 package com.example.grafanaautobuilder.dto;
 
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
 
 public record ResetPasswordRequest(
+        @NotBlank(message = "Email is required")
+        @Email(message = "Email should be valid")
+        String email,
+        
         @NotBlank(message = "Token is required")
         String token,
 

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 250">
+  <g fill="#DD0031">
+    <path d="M125 30L31.9 63.2l46.8 143.3H125l46.3-143.3L125 30z"/>
+  </g>
+  <g fill="#C3002F">
+    <path d="M125 30v55.4l-46.8 143.3H125V30z"/>
+  </g>
+  <g fill="#DD0031">
+    <path d="M125 30L218.1 63.2l-46.8 143.3H125L125 30z"/>
+  </g>
+  <g fill="#C3002F">
+    <path d="M125 30v55.4l46.8 143.3H125V30z"/>
+  </g>
+</svg>

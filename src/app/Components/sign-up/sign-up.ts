@@ -21,6 +21,7 @@ export class SignUp {
   loading = false;
   showPwd = false;
   showConfirm = false;
+  errorMessage: string | null = null;
 
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.form = this.fb.group(
@@ -65,6 +66,7 @@ export class SignUp {
   onSubmit() {
     // mark all as touched to show errors if any
     (this.form as any).submitted = true;
+    this.errorMessage = null; // Clear previous errors
 
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -82,13 +84,15 @@ export class SignUp {
       next: (response) => {
         console.log('Signup successful!', response);
         this.loading = false;
-        // Navigate to login page
-        this.router.navigateByUrl('/login');
+        // Navigate to login page with success message
+        this.router.navigate(['/login'], { 
+          state: { message: 'Registration successful! Please check your email to verify your account.' } 
+        });
       },
       error: (error) => {
         console.error('Signup failed:', error);
         this.loading = false;
-        // Handle error (you might want to show a more specific error message)
+        this.errorMessage = error.message || 'An error occurred during signup. Please try again.';
       }
     });
   }

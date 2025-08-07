@@ -39,11 +39,21 @@ public class EmailService {
     }
 
     private void sendEmail(String toEmail, String subject, String text) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromEmail);
-        message.setTo(toEmail);
-        message.setSubject(subject);
-        message.setText(text);
-        mailSender.send(message);
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom(fromEmail);
+            message.setTo(toEmail);
+            message.setSubject(subject);
+            message.setText(text);
+            mailSender.send(message);
+        } catch (Exception e) {
+            // Log the error but don't fail the signup process
+            System.err.println("Failed to send email to " + toEmail + ": " + e.getMessage());
+            // For development, we'll just log the verification URL
+            if (subject.contains("Verify")) {
+                String verificationUrl = backendBaseUrl + "/api/auth/verify?token=" + text.substring(text.lastIndexOf("=") + 1);
+                System.out.println("Verification URL for " + toEmail + ": " + verificationUrl);
+            }
+        }
     }
 }
