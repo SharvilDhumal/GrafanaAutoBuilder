@@ -16,7 +16,8 @@
         </svg>
         <span>Grafana AutoBuilder</span>
       </div>
-      <button class="login-btn" (click)="onLogin()">Login</button>
+      <button class="login-btn" (click)="onLogin()" *ngIf="!isAuthenticated">Login</button>
+      <button class="login-btn" (click)="onLogout()" *ngIf="isAuthenticated">Logout</button>
     </nav>
   </div>
 </header>

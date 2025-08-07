@@ -1,10 +1,11 @@
 package com.example.grafanaautobuilder.service;
 
+import com.example.grafanaautobuilder.config.JwtService;
 import com.example.grafanaautobuilder.dto.*;
 import com.example.grafanaautobuilder.entity.*;
 import com.example.grafanaautobuilder.exception.*;
 import com.example.grafanaautobuilder.repository.*;
-import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,7 +22,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @Service
-@RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final VerificationTokenRepository verificationTokenRepository;
@@ -30,6 +30,22 @@ public class UserService implements UserDetailsService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+
+    public UserService(UserRepository userRepository, 
+                      VerificationTokenRepository verificationTokenRepository,
+                      PasswordResetTokenRepository passwordResetTokenRepository,
+                      PasswordEncoder passwordEncoder,
+                      JwtService jwtService,
+                      @Lazy AuthenticationManager authenticationManager,
+                      EmailService emailService) {
+        this.userRepository = userRepository;
+        this.verificationTokenRepository = verificationTokenRepository;
+        this.passwordResetTokenRepository = passwordResetTokenRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
+        this.emailService = emailService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {

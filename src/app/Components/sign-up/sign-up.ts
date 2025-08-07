@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService, SignupRequest } from '../../services/auth.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -21,7 +22,7 @@ export class SignUp {
   showPwd = false;
   showConfirm = false;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
     this.form = this.fb.group(
       {
         fullName: ['', [Validators.required, Validators.minLength(2)]],
@@ -72,16 +73,23 @@ export class SignUp {
 
     this.loading = true;
 
-    // Simulate API call
-    setTimeout(() => {
-      this.loading = false;
+    const signupRequest: SignupRequest = {
+      email: this.form.value.email,
+      password: this.form.value.password
+    };
 
-      // For demo only: save minimal info in memory/localStorage
-      const { fullName, email } = this.form.value;
-      localStorage.setItem('demo_user', JSON.stringify({ fullName, email }));
-
-      // Navigate to login or a welcome page
-      this.router.navigateByUrl('/login');
-    }, 1500);
+    this.authService.signup(signupRequest).subscribe({
+      next: (response) => {
+        console.log('Signup successful!', response);
+        this.loading = false;
+        // Navigate to login page
+        this.router.navigateByUrl('/login');
+      },
+      error: (error) => {
+        console.error('Signup failed:', error);
+        this.loading = false;
+        // Handle error (you might want to show a more specific error message)
+      }
+    });
   }
 }

@@ -1,12 +1,10 @@
 package com.example.grafanaautobuilder.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-@Data
 @Entity
 @Table(name = "password_reset_tokens")
 public class PasswordResetToken {
@@ -26,4 +24,45 @@ public class PasswordResetToken {
 
     @Column(nullable = false)
     private boolean used = false;
+
+    // Getters and Setters
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public OffsetDateTime getExpiresAt() {
+        return expiresAt;
+    }
+
+    public void setExpiresAt(OffsetDateTime expiresAt) {
+        this.expiresAt = expiresAt;
+    }
+
+    public boolean isUsed() {
+        return used;
+    }
+
+    public void setUsed(boolean used) {
+        this.used = used;
+    }
 }

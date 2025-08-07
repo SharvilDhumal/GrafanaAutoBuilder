@@ -1,0 +1,22 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.project.sourcePaths": ["src/Backend/src/main/java"],
+  "java.project.outputPath": "src/Backend/target/classes",
+  "java.project.referencedLibraries": ["lib/**/*.jar"],
+  "java.maven.downloadSources": true,
+  "java.maven.downloadJavadoc": true,
+  "java.import.maven.enabled": true,
+  "java.import.gradle.enabled": false,
+  "java.server.launchMode": "Standard",
+  "java.completion.enabled": true,
+  "java.signatureHelp.enabled": true,
+  "java.contentProvider.preferred": "fernflower",
+  "java.configuration.runtimes": [
+    {
+      "name": "JavaSE-17",
+      "path": "C:\\Program Files\\jdk-17.0.0.1",
+      "default": true
+    }
+  ]
+}
