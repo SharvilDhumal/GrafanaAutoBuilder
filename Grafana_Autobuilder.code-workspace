@@ -1,0 +1,51 @@
+{
+  "folders": [
+    {
+      "name": "Root",
+      "path": "."
+    },
+    {
+      "name": "Backend",
+      "path": "./src/Backend"
+    }
+  ],
+  "settings": {
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.import.gradle.enabled": false,
+    "java.import.maven.enabled": true,
+    "java.maven.downloadSources": true,
+    "java.maven.updateSnapshots": true,
+    "java.dependency.packagePresentation": "hierarchical",
+    "java.dependency.syncWithFolderExplorer": true,
+    "java.completion.enabled": true,
+    "java.signatureHelp.enabled": true,
+    "java.contentProvider.preferred": "fernflower",
+    "java.configuration.runtimes": [
+      {
+        "name": "JavaSE-17",
+        "path": "C:\\Program Files\\Java\\jdk-17",
+        "default": true
+      }
+    ],
+    "java.server.launchMode": "Standard",
+    "java.import.maven.offline.enabled": false,
+    "java.maven.downloadJavadoc": true,
+    "java.project.exportJar.targetPath": "${workspaceFolder}/target",
+    "java.project.referencedLibraries": [
+      "lib/**/*.jar",
+      "${workspaceFolder}/target/dependency/*.jar"
+    ]
+  },
+  "extensions": {
+    "recommendations": [
+      "vscjava.vscode-java-pack",
+      "vscjava.vscode-maven",
+      "vscjava.vscode-java-debug",
+      "vscjava.vscode-java-test",
+      "vscjava.vscode-java-dependency",
+      "redhat.java",
+      "angular.ng-template"
+    ]
+  }
+}

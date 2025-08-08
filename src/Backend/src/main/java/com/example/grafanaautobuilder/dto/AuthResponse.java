@@ -5,4 +5,5 @@ import java.time.OffsetDateTime;
 public record AuthResponse(
         String token,
         OffsetDateTime expiresAt
-) {}
+) {
+}

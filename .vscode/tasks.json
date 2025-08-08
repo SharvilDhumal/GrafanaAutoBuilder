@@ -23,7 +23,7 @@
       "type": "shell",
       "command": "mvn",
       "args": ["spring-boot:run"],
-      "group": "test",
+      "group": "build",
       "options": {
         "cwd": "${workspaceFolder}/src/Backend"
       },

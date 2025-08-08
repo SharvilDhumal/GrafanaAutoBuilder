@@ -1,22 +1,39 @@
 {
   "java.configuration.updateBuildConfiguration": "automatic",
   "java.compile.nullAnalysis.mode": "automatic",
-  "java.project.sourcePaths": ["src/Backend/src/main/java"],
-  "java.project.outputPath": "src/Backend/target/classes",
-  "java.project.referencedLibraries": ["lib/**/*.jar"],
-  "java.maven.downloadSources": true,
-  "java.maven.downloadJavadoc": true,
-  "java.import.maven.enabled": true,
   "java.import.gradle.enabled": false,
-  "java.server.launchMode": "Standard",
+  "java.import.maven.enabled": true,
+  "java.maven.downloadSources": true,
+  "java.maven.updateSnapshots": true,
+  "java.project.sourcePaths": [
+    "src/Backend/src/main/java",
+    "src/Backend/src/test/java"
+  ],
+  "java.project.outputPath": "src/Backend/target/classes",
+  "java.project.referencedLibraries": [
+    "lib/**/*.jar",
+    "${workspaceFolder}/src/Backend/target/dependency/*.jar"
+  ],
+  "java.dependency.packagePresentation": "hierarchical",
+  "java.dependency.syncWithFolderExplorer": true,
   "java.completion.enabled": true,
   "java.signatureHelp.enabled": true,
   "java.contentProvider.preferred": "fernflower",
+  "java.maven.terminal.customEnv": [
+    {
+      "environmentVariable": "JAVA_HOME",
+      "value": "C:\\Program Files\\Java\\jdk-17"
+    }
+  ],
   "java.configuration.runtimes": [
     {
       "name": "JavaSE-17",
-      "path": "C:\\Program Files\\jdk-17.0.0.1",
+      "path": "C:\\Program Files\\Java\\jdk-17",
       "default": true
     }
-  ]
+  ],
+  "java.server.launchMode": "Standard",
+  "java.import.maven.offline.enabled": false,
+  "java.maven.downloadJavadoc": true,
+  "java.project.exportJar.targetPath": "${workspaceFolder}/src/Backend/target"
 }

@@ -1,0 +1,30 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2025-08-08T14:54:28.836+05:30  INFO 12084 --- [           main] c.e.g.GrafanaAutobuilderApplication      : Starting GrafanaAutobuilderApplication v0.0.1-SNAPSHOT using Java 17.0.0.1 with PID 12084 (C:\Angular\Grafana_Autobuilder\src\Backend\target\grafana-autobuilder-0.0.1-SNAPSHOT.jar started by sharv in C:\Angular\Grafana_Autobuilder\src\Backend)
+2025-08-08T14:54:28.841+05:30 DEBUG 12084 --- [           main] c.e.g.GrafanaAutobuilderApplication      : Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-08-08T14:54:28.846+05:30  INFO 12084 --- [           main] c.e.g.GrafanaAutobuilderApplication      : No active profile set, falling back to 1 default profile: "default"
+2025-08-08T14:54:30.007+05:30  WARN 12084 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.support.BeanDefinitionOverrideException: Invalid bean definition with name 'authenticationManager' defined in class path resource [com/example/grafanaautobuilder/config/SecurityConfig.class]: Cannot register bean definition [Root bean: class [null]; scope=; abstract=false; lazyInit=null; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=securityConfig; factoryMethodName=authenticationManager; initMethodNames=null; destroyMethodNames=[(inferred)]; defined in class path resource [com/example/grafanaautobuilder/config/SecurityConfig.class]] for bean 'authenticationManager' since there is already [Root bean: class [null]; scope=; abstract=false; lazyInit=null; autowireMode=3; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=authenticationConfig; factoryMethodName=authenticationManager; initMethodNames=null; destroyMethodNames=[(inferred)]; defined in class path resource [com/example/grafanaautobuilder/config/AuthenticationConfig.class]] bound.
+2025-08-08T14:54:30.015+05:30  INFO 12084 --- [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-08-08T14:54:30.038+05:30 ERROR 12084 --- [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The bean 'authenticationManager', defined in class path resource [com/example/grafanaautobuilder/config/SecurityConfig.class], could not be registered. A bean with that name has already been defined in class path resource [com/example/grafanaautobuilder/config/AuthenticationConfig.class] and overriding is disabled.
+
+Action:
+
+Consider renaming one of the beans or enabling overriding by setting spring.main.allow-bean-definition-overriding=true
+

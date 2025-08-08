@@ -1,10 +1,22 @@
 package com.example.grafanaautobuilder.service;
 
 import com.example.grafanaautobuilder.config.JwtService;
-import com.example.grafanaautobuilder.dto.*;
-import com.example.grafanaautobuilder.entity.*;
-import com.example.grafanaautobuilder.exception.*;
-import com.example.grafanaautobuilder.repository.*;
+import com.example.grafanaautobuilder.dto.AuthResponse;
+import com.example.grafanaautobuilder.dto.ForgotPasswordRequest;
+import com.example.grafanaautobuilder.dto.LoginRequest;
+import com.example.grafanaautobuilder.dto.ResetPasswordRequest;
+import com.example.grafanaautobuilder.dto.SignupRequest;
+import com.example.grafanaautobuilder.entity.PasswordResetToken;
+import com.example.grafanaautobuilder.entity.User;
+import com.example.grafanaautobuilder.entity.VerificationToken;
+import com.example.grafanaautobuilder.exception.EmailAlreadyExistsException;
+import com.example.grafanaautobuilder.exception.TokenAlreadyUsedException;
+import com.example.grafanaautobuilder.exception.TokenExpiredException;
+import com.example.grafanaautobuilder.exception.TokenNotFoundException;
+import com.example.grafanaautobuilder.exception.UserNotFoundException;
+import com.example.grafanaautobuilder.repository.PasswordResetTokenRepository;
+import com.example.grafanaautobuilder.repository.UserRepository;
+import com.example.grafanaautobuilder.repository.VerificationTokenRepository;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -47,6 +59,31 @@ public class UserService implements UserDetailsService {
         this.emailService = emailService;
     }
 
+    @Transactional
+    public void resendVerification(String email) {
+        String normalizedEmail = email.toLowerCase().trim();
+        User user = userRepository.findByEmail(normalizedEmail)
+                .orElseThrow(() -> new UserNotFoundException("User not found with email: " + normalizedEmail));
+
+        if (user.isEnabled()) {
+            return; // no-op if already verified
+        }
+
+        // Invalidate previous tokens for this user (optional but cleaner)
+        verificationTokenRepository.findAll().stream()
+                .filter(vt -> vt.getUser().getId().equals(user.getId()) && !vt.isUsed())
+                .forEach(vt -> { vt.setUsed(true); verificationTokenRepository.save(vt); });
+
+        String token = UUID.randomUUID().toString();
+        VerificationToken verificationToken = new VerificationToken();
+        verificationToken.setToken(token);
+        verificationToken.setUser(user);
+        verificationToken.setExpiresAt(OffsetDateTime.now().plus(24, ChronoUnit.HOURS));
+        verificationTokenRepository.save(verificationToken);
+
+        emailService.sendVerificationEmail(user.getEmail(), token);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return userRepository.findByEmail(email)
@@ -55,12 +92,23 @@ public class UserService implements UserDetailsService {
 
     @Transactional
     public void signup(SignupRequest signupRequest) {
-        if (userRepository.existsByEmail(signupRequest.email())) {
-            throw new EmailAlreadyExistsException("Email already in use");
+        String normalizedEmail = signupRequest.email().toLowerCase().trim();
+
+        // Check if a user already exists with this normalized email
+        var existingOpt = userRepository.findByEmail(normalizedEmail);
+        if (existingOpt.isPresent()) {
+            User existing = existingOpt.get();
+            if (existing.isEnabled()) {
+                throw new EmailAlreadyExistsException("Email already in use");
+            }
+
+            // If the user exists but is not yet verified, resend a fresh verification token
+            resendVerification(normalizedEmail);
+            throw new EmailAlreadyExistsException("Email already registered but not verified. We have sent a new verification email.");
         }
 
         User user = new User();
-        user.setEmail(signupRequest.email().toLowerCase().trim());
+        user.setEmail(normalizedEmail);
         user.setPassword(passwordEncoder.encode(signupRequest.password()));
         user.setEnabled(false);
         userRepository.save(user);
@@ -110,6 +158,12 @@ public class UserService implements UserDetailsService {
         OffsetDateTime expiresAt = OffsetDateTime.now().plusHours(1);
 
         return new AuthResponse(jwt, expiresAt);
+    }
+
+    public boolean isEmailEnabled(String email) {
+        return userRepository.findByEmail(email.toLowerCase().trim())
+                .map(User::isEnabled)
+                .orElse(false);
     }
 
     @Transactional

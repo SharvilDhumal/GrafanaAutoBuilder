@@ -1,0 +1,231 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.2.0)
+
+2025-08-08T15:22:45.962+05:30  INFO 4140 --- [           main] c.e.g.GrafanaAutobuilderApplication      : Starting GrafanaAutobuilderApplication v0.0.1-SNAPSHOT using Java 17.0.0.1 with PID 4140 (C:\Angular\Grafana_Autobuilder\src\Backend\target\grafana-autobuilder-0.0.1-SNAPSHOT.jar started by sharv in C:\Angular\Grafana_Autobuilder\src\Backend)
+2025-08-08T15:22:45.972+05:30 DEBUG 4140 --- [           main] c.e.g.GrafanaAutobuilderApplication      : Running with Spring Boot v3.2.0, Spring v6.1.1
+2025-08-08T15:22:45.974+05:30  INFO 4140 --- [           main] c.e.g.GrafanaAutobuilderApplication      : No active profile set, falling back to 1 default profile: "default"
+2025-08-08T15:22:47.341+05:30  INFO 4140 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-08T15:22:47.430+05:30  INFO 4140 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 78 ms. Found 3 JPA repository interfaces.
+2025-08-08T15:22:48.430+05:30  INFO 4140 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-08-08T15:22:48.441+05:30  INFO 4140 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-08-08T15:22:48.441+05:30  INFO 4140 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.16]
+2025-08-08T15:22:48.504+05:30  INFO 4140 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-08-08T15:22:48.506+05:30  INFO 4140 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2376 ms
+2025-08-08T15:22:48.780+05:30  INFO 4140 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-08T15:22:48.937+05:30  INFO 4140 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.3.1.Final
+2025-08-08T15:22:49.012+05:30  INFO 4140 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-08-08T15:22:49.091+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BasicTypeReference@6a98f353
+2025-08-08T15:22:49.091+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration boolean -> org.hibernate.type.BasicTypeReference@6a98f353
+2025-08-08T15:22:49.091+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Boolean -> org.hibernate.type.BasicTypeReference@6a98f353
+2025-08-08T15:22:49.091+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration numeric_boolean -> org.hibernate.type.BasicTypeReference@3b35798
+2025-08-08T15:22:49.091+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.NumericBooleanConverter -> org.hibernate.type.BasicTypeReference@3b35798
+2025-08-08T15:22:49.091+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration true_false -> org.hibernate.type.BasicTypeReference@1e00bfe2
+2025-08-08T15:22:49.091+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.TrueFalseConverter -> org.hibernate.type.BasicTypeReference@1e00bfe2
+2025-08-08T15:22:49.091+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration yes_no -> org.hibernate.type.BasicTypeReference@4702e7a5
+2025-08-08T15:22:49.093+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.YesNoConverter -> org.hibernate.type.BasicTypeReference@4702e7a5
+2025-08-08T15:22:49.093+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.BasicTypeReference@6a2d867d
+2025-08-08T15:22:49.093+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte -> org.hibernate.type.BasicTypeReference@6a2d867d
+2025-08-08T15:22:49.093+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Byte -> org.hibernate.type.BasicTypeReference@6a2d867d
+2025-08-08T15:22:49.094+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary -> org.hibernate.type.BasicTypeReference@73bb1337
+2025-08-08T15:22:49.094+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration byte[] -> org.hibernate.type.BasicTypeReference@73bb1337
+2025-08-08T15:22:49.094+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [B -> org.hibernate.type.BasicTypeReference@73bb1337
+2025-08-08T15:22:49.094+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration binary_wrapper -> org.hibernate.type.BasicTypeReference@3e28d779
+2025-08-08T15:22:49.094+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-binary -> org.hibernate.type.BasicTypeReference@3e28d779
+2025-08-08T15:22:49.094+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration image -> org.hibernate.type.BasicTypeReference@15214920
+2025-08-08T15:22:49.094+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration blob -> org.hibernate.type.BasicTypeReference@784d9bc
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Blob -> org.hibernate.type.BasicTypeReference@784d9bc
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob -> org.hibernate.type.BasicTypeReference@3a0aaaf0
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_blob_wrapper -> org.hibernate.type.BasicTypeReference@426131d7
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.BasicTypeReference@5d9618f2
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration short -> org.hibernate.type.BasicTypeReference@5d9618f2
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Short -> org.hibernate.type.BasicTypeReference@5d9618f2
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration integer -> org.hibernate.type.BasicTypeReference@7c7e73c5
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration int -> org.hibernate.type.BasicTypeReference@7c7e73c5
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Integer -> org.hibernate.type.BasicTypeReference@7c7e73c5
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.BasicTypeReference@13cc0b90
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration long -> org.hibernate.type.BasicTypeReference@13cc0b90
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Long -> org.hibernate.type.BasicTypeReference@13cc0b90
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.BasicTypeReference@58687fb7
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration float -> org.hibernate.type.BasicTypeReference@58687fb7
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Float -> org.hibernate.type.BasicTypeReference@58687fb7
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.BasicTypeReference@3554bdc0
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration double -> org.hibernate.type.BasicTypeReference@3554bdc0
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Double -> org.hibernate.type.BasicTypeReference@3554bdc0
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_integer -> org.hibernate.type.BasicTypeReference@3a3b10f4
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigInteger -> org.hibernate.type.BasicTypeReference@3a3b10f4
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration big_decimal -> org.hibernate.type.BasicTypeReference@49580ca8
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.math.BigDecimal -> org.hibernate.type.BasicTypeReference@49580ca8
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration character -> org.hibernate.type.BasicTypeReference@525647f3
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration char -> org.hibernate.type.BasicTypeReference@525647f3
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Character -> org.hibernate.type.BasicTypeReference@525647f3
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration character_nchar -> org.hibernate.type.BasicTypeReference@42fc4ac4
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration string -> org.hibernate.type.BasicTypeReference@20a24edf
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.String -> org.hibernate.type.BasicTypeReference@20a24edf
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration nstring -> org.hibernate.type.BasicTypeReference@29962b2f
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration characters -> org.hibernate.type.BasicTypeReference@491f8831
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration char[] -> org.hibernate.type.BasicTypeReference@491f8831
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration [C -> org.hibernate.type.BasicTypeReference@491f8831
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration wrapper-characters -> org.hibernate.type.BasicTypeReference@691541bc
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration text -> org.hibernate.type.BasicTypeReference@5b733ef7
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ntext -> org.hibernate.type.BasicTypeReference@43a4a9e5
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration clob -> org.hibernate.type.BasicTypeReference@764fffa0
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Clob -> org.hibernate.type.BasicTypeReference@764fffa0
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration nclob -> org.hibernate.type.BasicTypeReference@35145874
+2025-08-08T15:22:49.095+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.NClob -> org.hibernate.type.BasicTypeReference@35145874
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob -> org.hibernate.type.BasicTypeReference@77524ca7
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob_char_array -> org.hibernate.type.BasicTypeReference@11df2829
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_clob_character_array -> org.hibernate.type.BasicTypeReference@18e4674d
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob -> org.hibernate.type.BasicTypeReference@f245bdd
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob_character_array -> org.hibernate.type.BasicTypeReference@6af609ea
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration materialized_nclob_char_array -> org.hibernate.type.BasicTypeReference@280fafd
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Duration -> org.hibernate.type.BasicTypeReference@39e53bef
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Duration -> org.hibernate.type.BasicTypeReference@39e53bef
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDateTime -> org.hibernate.type.BasicTypeReference@14b275bd
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDateTime -> org.hibernate.type.BasicTypeReference@14b275bd
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalDate -> org.hibernate.type.BasicTypeReference@4ed18798
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalDate -> org.hibernate.type.BasicTypeReference@4ed18798
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration LocalTime -> org.hibernate.type.BasicTypeReference@4b03cbad
+2025-08-08T15:22:49.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.LocalTime -> org.hibernate.type.BasicTypeReference@4b03cbad
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -> org.hibernate.type.BasicTypeReference@5b29ab61
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -> org.hibernate.type.BasicTypeReference@5b29ab61
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTimeWithTimezone -> org.hibernate.type.BasicTypeReference@5c313224
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTimeWithoutTimezone -> org.hibernate.type.BasicTypeReference@1e1e837d
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -> org.hibernate.type.BasicTypeReference@4b957db0
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -> org.hibernate.type.BasicTypeReference@4b957db0
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTimeUtc -> org.hibernate.type.BasicTypeReference@5d71b500
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTimeWithTimezone -> org.hibernate.type.BasicTypeReference@8840c98
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTimeWithoutTimezone -> org.hibernate.type.BasicTypeReference@626b639e
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -> org.hibernate.type.BasicTypeReference@273fa9e
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -> org.hibernate.type.BasicTypeReference@273fa9e
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTimeWithTimezone -> org.hibernate.type.BasicTypeReference@527a8665
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTimeWithoutTimezone -> org.hibernate.type.BasicTypeReference@7ab2a07e
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration date -> org.hibernate.type.BasicTypeReference@437c4b25
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Date -> org.hibernate.type.BasicTypeReference@437c4b25
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration time -> org.hibernate.type.BasicTypeReference@5ec6fede
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Time -> org.hibernate.type.BasicTypeReference@5ec6fede
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration timestamp -> org.hibernate.type.BasicTypeReference@580902cd
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.sql.Timestamp -> org.hibernate.type.BasicTypeReference@580902cd
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Date -> org.hibernate.type.BasicTypeReference@580902cd
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar -> org.hibernate.type.BasicTypeReference@3757e8e2
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Calendar -> org.hibernate.type.BasicTypeReference@3757e8e2
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.GregorianCalendar -> org.hibernate.type.BasicTypeReference@3757e8e2
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_date -> org.hibernate.type.BasicTypeReference@1653b84e
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration calendar_time -> org.hibernate.type.BasicTypeReference@7f8a9454
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration instant -> org.hibernate.type.BasicTypeReference@6f85ee02
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Instant -> org.hibernate.type.BasicTypeReference@6f85ee02
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid -> org.hibernate.type.BasicTypeReference@679d0be8
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.UUID -> org.hibernate.type.BasicTypeReference@679d0be8
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration pg-uuid -> org.hibernate.type.BasicTypeReference@679d0be8
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-binary -> org.hibernate.type.BasicTypeReference@6c075e9d
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration uuid-char -> org.hibernate.type.BasicTypeReference@47044f7d
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration class -> org.hibernate.type.BasicTypeReference@7b14c61
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Class -> org.hibernate.type.BasicTypeReference@7b14c61
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration currency -> org.hibernate.type.BasicTypeReference@8fcc534
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Currency -> org.hibernate.type.BasicTypeReference@8fcc534
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Currency -> org.hibernate.type.BasicTypeReference@8fcc534
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration locale -> org.hibernate.type.BasicTypeReference@5e599100
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.Locale -> org.hibernate.type.BasicTypeReference@5e599100
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration serializable -> org.hibernate.type.BasicTypeReference@3b435211
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.io.Serializable -> org.hibernate.type.BasicTypeReference@3b435211
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration timezone -> org.hibernate.type.BasicTypeReference@361cd35c
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.util.TimeZone -> org.hibernate.type.BasicTypeReference@361cd35c
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZoneOffset -> org.hibernate.type.BasicTypeReference@58a765ce
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZoneOffset -> org.hibernate.type.BasicTypeReference@58a765ce
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration url -> org.hibernate.type.BasicTypeReference@4a642e4b
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.net.URL -> org.hibernate.type.BasicTypeReference@4a642e4b
+2025-08-08T15:22:49.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration row_version -> org.hibernate.type.BasicTypeReference@6b162ecc
+2025-08-08T15:22:49.113+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration object -> org.hibernate.type.JavaObjectType@251c8145
+2025-08-08T15:22:49.113+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Object -> org.hibernate.type.JavaObjectType@251c8145
+2025-08-08T15:22:49.114+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration null -> org.hibernate.type.NullType@34045582
+2025-08-08T15:22:49.114+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_date -> org.hibernate.type.BasicTypeReference@3db65c0d
+2025-08-08T15:22:49.114+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_time -> org.hibernate.type.BasicTypeReference@1edccfd4
+2025-08-08T15:22:49.114+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_timestamp -> org.hibernate.type.BasicTypeReference@8c43966
+2025-08-08T15:22:49.114+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar -> org.hibernate.type.BasicTypeReference@1efac5b9
+2025-08-08T15:22:49.114+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_date -> org.hibernate.type.BasicTypeReference@11a3a45f
+2025-08-08T15:22:49.114+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_calendar_time -> org.hibernate.type.BasicTypeReference@69796bd0
+2025-08-08T15:22:49.114+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_binary -> org.hibernate.type.BasicTypeReference@40df6090
+2025-08-08T15:22:49.114+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration imm_serializable -> org.hibernate.type.BasicTypeReference@8c0a23f
+2025-08-08T15:22:49.482+05:30  INFO 4140 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-08T15:22:49.538+05:30  INFO 4140 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-08-08T15:22:49.895+05:30  INFO 4140 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@667797f
+2025-08-08T15:22:49.903+05:30  INFO 4140 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-08-08T15:22:50.056+05:30 DEBUG 4140 --- [           main] o.h.t.d.sql.spi.DdlTypeRegistry          : addDescriptor(6, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@3973b6d4) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@18dd7767)
+2025-08-08T15:22:50.059+05:30 DEBUG 4140 --- [           main] o.h.t.d.jdbc.spi.JdbcTypeRegistry        : addDescriptor(2004, BlobTypeDescriptor(BLOB_BINDING)) replaced previous registration(BlobTypeDescriptor(DEFAULT))
+2025-08-08T15:22:50.060+05:30 DEBUG 4140 --- [           main] o.h.t.d.jdbc.spi.JdbcTypeRegistry        : addDescriptor(2005, ClobTypeDescriptor(CLOB_BINDING)) replaced previous registration(ClobTypeDescriptor(DEFAULT))
+2025-08-08T15:22:50.078+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration JAVA_OBJECT -> org.hibernate.type.JavaObjectType@78545d40
+2025-08-08T15:22:50.078+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.lang.Object -> org.hibernate.type.JavaObjectType@78545d40
+2025-08-08T15:22:50.078+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Type registration key [java.lang.Object] overrode previous entry : `org.hibernate.type.JavaObjectType@251c8145`
+2025-08-08T15:22:50.090+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration Duration -> basicType@1(java.time.Duration,2)
+2025-08-08T15:22:50.090+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.Duration -> basicType@1(java.time.Duration,2)
+2025-08-08T15:22:50.097+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.OffsetDateTimeType -> basicType@2(java.time.OffsetDateTime,3003)
+2025-08-08T15:22:50.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetDateTime -> basicType@2(java.time.OffsetDateTime,3003)
+2025-08-08T15:22:50.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetDateTime -> basicType@2(java.time.OffsetDateTime,3003)
+2025-08-08T15:22:50.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.ZonedDateTimeType -> basicType@3(java.time.ZonedDateTime,3003)
+2025-08-08T15:22:50.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration ZonedDateTime -> basicType@3(java.time.ZonedDateTime,3003)
+2025-08-08T15:22:50.098+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.ZonedDateTime -> basicType@3(java.time.ZonedDateTime,3003)
+2025-08-08T15:22:50.099+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration org.hibernate.type.OffsetTimeType -> basicType@4(java.time.OffsetTime,3007)
+2025-08-08T15:22:50.099+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration OffsetTime -> basicType@4(java.time.OffsetTime,3007)
+2025-08-08T15:22:50.099+05:30 DEBUG 4140 --- [           main] org.hibernate.type.BasicTypeRegistry     : Adding type registration java.time.OffsetTime -> basicType@4(java.time.OffsetTime,3007)
+2025-08-08T15:22:50.102+05:30 DEBUG 4140 --- [           main] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@36e409e0] to MetadataBuildingContext [org.hibernate.boot.internal.MetadataBuildingContextRootImpl@145e958f]
+2025-08-08T15:22:51.204+05:30  INFO 4140 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-08T15:22:51.204+05:30 DEBUG 4140 --- [           main] o.h.type.spi.TypeConfiguration$Scope     : Scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration@36e409e0] to SessionFactoryImplementor [org.hibernate.internal.SessionFactoryImpl@4850d66b]
+2025-08-08T15:22:51.287+05:30 TRACE 4140 --- [           main] o.h.type.spi.TypeConfiguration$Scope     : Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@4850d66b] for TypeConfiguration
+2025-08-08T15:22:51.287+05:30  INFO 4140 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-08T15:22:51.904+05:30 ERROR 4140 --- [           main] o.s.b.web.embedded.tomcat.TomcatStarter  : Error starting Tomcat context. Exception: org.springframework.beans.factory.UnsatisfiedDependencyException. Message: Error creating bean with name 'jwtAuthFilter' defined in URL [jar:nested:/C:/Angular/Grafana_Autobuilder/src/Backend/target/grafana-autobuilder-0.0.1-SNAPSHOT.jar/!BOOT-INF/classes/!/com/example/grafanaautobuilder/config/JwtAuthFilter.class]: Unsatisfied dependency expressed through constructor parameter 1: Error creating bean with name 'userService' defined in URL [jar:nested:/C:/Angular/Grafana_Autobuilder/src/Backend/target/grafana-autobuilder-0.0.1-SNAPSHOT.jar/!BOOT-INF/classes/!/com/example/grafanaautobuilder/service/UserService.class]: Unsatisfied dependency expressed through constructor parameter 3: Error creating bean with name 'securityConfig': Unsatisfied dependency expressed through field 'userDetailsService': Error creating bean with name 'userService': Requested bean is currently in creation: Is there an unresolvable circular reference?
+2025-08-08T15:22:51.956+05:30  INFO 4140 --- [           main] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2025-08-08T15:22:51.962+05:30  WARN 4140 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1 housekeeper] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.0.1/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.0.1/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+ java.base@17.0.0.1/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1672)
+ java.base@17.0.0.1/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1182)
+ java.base@17.0.0.1/java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:899)
+ java.base@17.0.0.1/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1062)
+ java.base@17.0.0.1/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+ java.base@17.0.0.1/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.0.1/java.lang.Thread.run(Thread.java:833)
+2025-08-08T15:22:51.964+05:30  WARN 4140 --- [           main] o.a.c.loader.WebappClassLoaderBase       : The web application [ROOT] appears to have started a thread named [HikariPool-1 connection adder] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ java.base@17.0.0.1/jdk.internal.misc.Unsafe.park(Native Method)
+ java.base@17.0.0.1/java.util.concurrent.locks.LockSupport.parkNanos(LockSupport.java:252)
+ java.base@17.0.0.1/java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.awaitNanos(AbstractQueuedSynchronizer.java:1672)
+ java.base@17.0.0.1/java.util.concurrent.LinkedBlockingQueue.poll(LinkedBlockingQueue.java:460)
+ java.base@17.0.0.1/java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1061)
+ java.base@17.0.0.1/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1122)
+ java.base@17.0.0.1/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+ java.base@17.0.0.1/java.lang.Thread.run(Thread.java:833)
+2025-08-08T15:22:51.967+05:30  WARN 4140 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server
+2025-08-08T15:22:51.967+05:30  INFO 4140 --- [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-08T15:22:51.967+05:30 TRACE 4140 --- [           main] o.h.type.spi.TypeConfiguration$Scope     : Handling #sessionFactoryClosed from [org.hibernate.internal.SessionFactoryImpl@4850d66b] for TypeConfiguration
+2025-08-08T15:22:51.967+05:30 DEBUG 4140 --- [           main] o.h.type.spi.TypeConfiguration$Scope     : Un-scoping TypeConfiguration [org.hibernate.type.spi.TypeConfiguration$Scope@2cd877d3] from SessionFactory [org.hibernate.internal.SessionFactoryImpl@4850d66b]
+2025-08-08T15:22:51.972+05:30  INFO 4140 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-08-08T15:22:51.978+05:30  INFO 4140 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-08-08T15:22:51.991+05:30  INFO 4140 --- [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-08-08T15:22:52.030+05:30 ERROR 4140 --- [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The dependencies of some of the beans in the application context form a cycle:
+
+   jwtAuthFilter defined in URL [jar:nested:/C:/Angular/Grafana_Autobuilder/src/Backend/target/grafana-autobuilder-0.0.1-SNAPSHOT.jar/!BOOT-INF/classes/!/com/example/grafanaautobuilder/config/JwtAuthFilter.class]
+???????
+|  userService defined in URL [jar:nested:/C:/Angular/Grafana_Autobuilder/src/Backend/target/grafana-autobuilder-0.0.1-SNAPSHOT.jar/!BOOT-INF/classes/!/com/example/grafanaautobuilder/service/UserService.class]
+?     ?
+|  securityConfig (field private org.springframework.security.core.userdetails.UserDetailsService com.example.grafanaautobuilder.config.SecurityConfig.userDetailsService)
+???????
+
+
+Action:
+
+Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting spring.main.allow-circular-references to true.
+

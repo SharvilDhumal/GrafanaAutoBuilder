@@ -59,32 +59,34 @@ export class AuthService {
     const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
     return this.http.post<void>(`${this.apiUrl}/signup`, signupRequest, { 
       headers,
-      withCredentials: true,
-      observe: 'response' as const
+      withCredentials: true
     }).pipe(
-      tap(response => {
-        console.log('Signup successful', response);
-        return null;
+      tap(() => {
+        console.log('Signup successful');
       }),
       catchError(this.handleError)
-    ) as any; // Type assertion to handle the response type
+    );
   }
 
   // Handle errors
   private handleError(error: HttpErrorResponse) {
-    let errorMessage = 'An unknown error occurred';
+    let message = 'An unknown error occurred';
     if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Error: ${error.error.message}`;
+      // Client-side/network error
+      message = error.error.message || message;
     } else {
-      // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-      if (error.error && error.error.message) {
-        errorMessage += `\nDetails: ${error.error.message}`;
+      // Server-side error: prefer backend-provided message (often plain text)
+      if (typeof error.error === 'string' && error.error.trim().length > 0) {
+        message = error.error.trim();
+      } else if (error.error && error.error.message) {
+        message = error.error.message;
+      } else if (error.message) {
+        message = error.message;
       }
     }
-    console.error('Error details:', error);
-    return throwError(() => new Error(errorMessage));
+    console.error('Auth API error', { status: error.status, message, raw: error });
+    // Return a lightweight error-like object with status and message
+    return throwError(() => ({ status: error.status, message }));
   }
 
   // Logout method
