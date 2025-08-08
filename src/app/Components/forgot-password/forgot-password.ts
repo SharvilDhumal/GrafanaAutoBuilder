@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -19,8 +20,9 @@ export class ForgotPassword {
   form: FormGroup;
   loading = false;
   emailSent = false;
+  errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(private fb: FormBuilder, private router: Router, private auth: AuthService) {
     this.form = this.fb.group({
       email: ['', [Validators.required, Validators.email]]
     });
@@ -34,12 +36,20 @@ export class ForgotPassword {
   onSubmit() {
     if (this.form.valid && !this.loading) {
       this.loading = true;
-      
-      // Simulate API call
-      setTimeout(() => {
-        this.loading = false;
-        this.emailSent = true;
-      }, 2000);
+      this.errorMessage = null;
+      const email = this.form.value.email as string;
+      this.auth.forgotPassword(email).subscribe({
+        next: () => {
+          this.loading = false;
+          this.emailSent = true;
+        },
+        error: (err) => {
+          // For security, still show success but log error; optionally surface a generic error
+          console.error('Forgot password failed', err);
+          this.loading = false;
+          this.emailSent = true;
+        }
+      });
     } else {
       // Mark all fields as touched to show validation errors
       Object.keys(this.form.controls).forEach(key => {

@@ -22,6 +22,16 @@ export interface SignupRequest {
   password: string;
 }
 
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordRequest {
+  email: string;
+  token: string;
+  newPassword: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -64,6 +74,32 @@ export class AuthService {
       tap(() => {
         console.log('Signup successful');
       }),
+      catchError(this.handleError)
+    );
+  }
+
+  // Forgot password: triggers email with reset link
+  forgotPassword(email: string): Observable<void> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const payload: ForgotPasswordRequest = { email };
+    return this.http.post<void>(`${this.apiUrl}/forgot-password`, payload, {
+      headers,
+      withCredentials: true
+    }).pipe(
+      tap(() => console.log('Forgot password email sent (if account exists)')),
+      catchError(this.handleError)
+    );
+  }
+
+  // Reset password: submits the token, email, and new password
+  resetPassword(email: string, token: string, newPassword: string): Observable<void> {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    const payload: ResetPasswordRequest = { email, token, newPassword };
+    return this.http.post<void>(`${this.apiUrl}/reset-password`, payload, {
+      headers,
+      withCredentials: true
+    }).pipe(
+      tap(() => console.log('Password reset successful')),
       catchError(this.handleError)
     );
   }
