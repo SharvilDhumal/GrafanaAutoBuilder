@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-documentation',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './documentation.html',
-  styleUrl: './documentation.css'
+  styleUrls: ['./documentation.css']
 })
 export class Documentation {
 

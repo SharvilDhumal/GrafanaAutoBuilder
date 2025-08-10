@@ -44,4 +44,9 @@ export class Home implements OnInit {
       this.router.navigate(['/login']);
     }
   }
+
+  onDocs() {
+    // Navigate to documentation page
+    this.router.navigate(['/documentation']);
+  }
 }

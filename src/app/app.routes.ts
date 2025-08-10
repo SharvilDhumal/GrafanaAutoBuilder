@@ -5,6 +5,7 @@ import { SignUp } from './Components/sign-up/sign-up';
 import { ForgotPassword } from './Components/forgot-password/forgot-password';
 import { ResetPassword } from './Components/reset-password/reset-password';
 import { Upload } from './Components/upload/upload';
+import { Documentation } from './Components/documentation/documentation';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -13,4 +14,6 @@ export const routes: Routes = [
   { path: 'forgot-password', component: ForgotPassword },
   { path: 'reset-password', component: ResetPassword },
   { path: 'upload', component: Upload },
+  { path: 'docs', component: Documentation },
+  { path: 'documentation', component: Documentation },
 ];

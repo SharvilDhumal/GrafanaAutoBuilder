@@ -1,1 +1,110 @@
-<p>documentation works!</p>
+<section class="doc-wrapper">
+  <h1>Grafana AutoBuilder — Documentation</h1>
+
+  <p class="lead">This guide helps you set up the project, run the backend and frontend, and prepare CSV data to generate Grafana dashboards.</p>
+
+  <h2 id="prereqs">Prerequisites</h2>
+  <ul>
+    <li>Node.js 18+ and npm</li>
+    <li>Angular CLI (ng) — <code>npm i -g @angular/cli</code></li>
+    <li>Java 17+</li>
+    <li>Build tool for backend: Maven (<code>mvn</code>) or Gradle (<code>gradle</code>)</li>
+    <li>PostgreSQL installed and running</li>
+  </ul>
+
+  <h2 id="backend">Backend (Spring Boot)</h2>
+  <ol>
+    <li>Ensure PostgreSQL is running and configured:
+      <ul>
+        <li>URL: <code>jdbc:postgresql://localhost:5432/grafana_autobuilder</code></li>
+        <li>Username: <code>postgres</code></li>
+        <li>Password: <code>sharvil39*</code></li>
+      </ul>
+      You can verify via Services (services.msc), pgAdmin, or the psql CLI.
+    </li>
+    <li>From the backend project directory, start the server:
+      <ul>
+        <li>Maven: <code>mvn spring-boot:run</code></li>
+        <li>Gradle: <code>gradle bootRun</code></li>
+      </ul>
+      The backend runs on <strong>http://localhost:8080</strong> by default.
+    </li>
+    <li>Auth endpoints available:
+      <ul>
+        <li><code>POST /api/auth/login</code></li>
+        <li><code>POST /api/auth/signup</code></li>
+      </ul>
+      Note: The Angular app currently uses demo/mock logic and may not yet call these endpoints. Integration work is planned.
+    </li>
+  </ol>
+
+  <h2 id="frontend">Frontend (Angular)</h2>
+  <ol>
+    <li>Install dependencies: <code>npm install</code></li>
+    <li>Start the dev server: <code>ng serve</code></li>
+    <li>Open: <strong>http://localhost:4200</strong></li>
+  </ol>
+
+  <h2 id="usage">Using the App</h2>
+  <ul>
+    <li><strong>Home</strong>: Overview and quick entry points.</li>
+    <li><strong>Upload</strong>: Drag & drop or browse a <code>.csv</code> file, then click <em>Generate Dashboard</em>.</li>
+    <li><strong>Documentation</strong>: You are here.</li>
+  </ul>
+
+  <h2 id="csv-format">CSV Format</h2>
+  <p>The app accepts standard <code>.csv</code> files. As a recommended template for dashboard generation, include:</p>
+  <ul>
+    <li><code>timestamp</code> — ISO 8601 or epoch milliseconds (e.g., <code>2025-08-10T12:34:56Z</code>)</li>
+    <li><code>metric</code> — Name of the measurement (e.g., <code>cpu_usage</code>, <code>http_requests</code>)</li>
+    <li><code>value</code> — Numeric value</li>
+    <li><code>tags</code> (optional) — Comma- or pipe-separated key=value pairs (e.g., <code>host=web-1|region=us-east</code>)</li>
+  </ul>
+
+  <pre class="code">
+timestamp,metric,value,tags
+2025-08-10T12:00:00Z,cpu_usage,37.5,host=web-1|region=us-east
+2025-08-10T12:00:00Z,http_requests,120,host=web-1|route=/api
+2025-08-10T12:01:00Z,cpu_usage,45.2,host=web-1|region=us-east
+  </pre>
+
+  <p>Notes:</p>
+  <ul>
+    <li>Ensure the file extension is <code>.csv</code>. Other formats are not accepted by the uploader.</li>
+    <li>Use consistent timestamp formats throughout the file.</li>
+    <li>Numeric values should be parseable as numbers (no currency symbols).</li>
+  </ul>
+
+  <h2 id="generate-csv">Generating CSV Data</h2>
+  <p>You can generate CSV in multiple ways:</p>
+  <ol>
+    <li><strong>Export from your data source</strong> (databases, monitoring tools, BI tools) with the columns above.</li>
+    <li><strong>Transform existing data</strong> using scripts (Python, Node.js): map your column names to <code>timestamp, metric, value, tags</code>.</li>
+    <li><strong>Manual creation</strong>: create a spreadsheet with the columns and save as CSV.</li>
+  </ol>
+
+  <h2 id="auth">Authentication</h2>
+  <p>The backend supports login and signup. The frontend currently uses demo checks for authentication (localStorage-based). A later update will connect the Angular app to <code>/api/auth/*</code>.</p>
+
+  <h2 id="troubleshooting">Troubleshooting</h2>
+  <ul>
+    <li><strong>Footer color or spacing issues</strong>: the app uses a full-bleed footer component; ensure body margins are reset in <code>styles.css</code>.</li>
+    <li><strong>CSV rejected</strong>: confirm the file type is <code>.csv</code> and that it is not empty. Validate numeric columns.</li>
+    <li><strong>Backend fails to start</strong>: verify PostgreSQL is running with the configured DB, user, and password.</li>
+  </ul>
+
+  <h2 id="architecture">Architecture & Components</h2>
+  <ul>
+    <li><strong>Navbar</strong>: standalone, reused on Home and Upload pages.</li>
+    <li><strong>Footer</strong>: standalone, full-bleed background with responsive layout.</li>
+    <li><strong>Upload</strong>: drag & drop CSV uploader with file validation and size display.</li>
+    <li><strong>Documentation</strong>: this guide, rendered in-app.</li>
+  </ul>
+
+  <h2 id="next-steps">Next Steps</h2>
+  <ul>
+    <li>Wire the frontend to the backend auth endpoints.</li>
+    <li>Define a strict CSV schema (if needed) and validation rules.</li>
+    <li>Implement dashboard generation flow that pushes to Grafana via API.</li>
+  </ul>
+</section>
