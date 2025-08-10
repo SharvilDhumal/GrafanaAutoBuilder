@@ -34,7 +34,12 @@ export class Home implements OnInit {
   }
 
   onTryDemo() {
-    // Navigate to login page with demo credentials
-    this.router.navigate(['/login']);
+    // If authenticated, go to upload; otherwise prompt to login first
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/upload']);
+    } else {
+      alert('Please login first to try the demo.');
+      this.router.navigate(['/login']);
+    }
   }
 }
