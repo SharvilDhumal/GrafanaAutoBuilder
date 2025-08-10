@@ -1,30 +1,4 @@
-<header class="header">
-  <div class="container">
-    <nav class="navbar">
-      <div class="logo">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path
-            d="M12 2L4 7v10l8 5 8-5V7L12 2zm0 2.5L18 8v8l-6 3.5-6-3.5V8l6-3.5z"
-          />
-          <path
-            d="M12 7L6 10v4l6 3 6-3v-4l-6-3zm0 2.5L16 11v2l-4 2-4-2v-2l4-1.5z"
-          />
-        </svg>
-        <span>Grafana AutoBuilder</span>
-      </div>
-      <button class="login-btn" (click)="onLogin()" *ngIf="!isAuthenticated">
-        Login
-      </button>
-      <button class="login-btn" (click)="onLogout()" *ngIf="isAuthenticated">
-        Logout
-      </button>
-    </nav>
-  </div>
-</header>
+<app-navbar></app-navbar>
 
 <main>
   <section class="hero">
@@ -138,49 +112,19 @@
           <span>Angular</span>
         </div>
         <div class="tech-icon">
-          <img src="assets/images/java_img.png" alt="Java" />
+          <img src="assets/images/java_icon.jpg" alt="Java" />
           <span>FastAPI</span>
         </div>
         <div class="tech-icon">
-          <img src="assets/images/postgresql-icon.svg" alt="PostgreSQL" />
+          <img src="assets/images/Postgresql_icon.jpg" alt="PostgreSQL" />
           <span>PostgreSQL</span>
         </div>
         <div class="tech-icon">
-          <img src="assets/images/grafana-icon.svg" alt="Grafana" />
+          <img src="assets/images/grafana_icon.jpg" alt="Grafana" />
           <span>Grafana</span>
         </div>
       </div>
     </div>
   </section>
 </main>
-
-<footer class="footer">
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-logo">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-        >
-          <path
-            d="M12 2L4 7v10l8 5 8-5V7L12 2zm0 2.5L18 8v8l-6 3.5-6-3.5V8l6-3.5z"
-          />
-          <path
-            d="M12 7L6 10v4l6 3 6-3v-4l-6-3zm0 2.5L16 11v2l-4 2-4-2v-2l4-1.5z"
-          />
-        </svg>
-        <span>Grafana AutoBuilder</span>
-      </div>
-      <div class="footer-links">
-        <a href="#">Documentation</a>
-        <a href="#">GitHub</a>
-        <a href="#">Privacy</a>
-        <a href="#">Contact</a>
-      </div>
-    </div>
-    <div class="footer-copyright">
-      <p>© 2025 Grafana AutoBuilder. All rights reserved.</p>
-    </div>
-  </div>
-</footer>
+<app-footer></app-footer>

@@ -2,6 +2,8 @@
     max-width: 1000px;
     margin: 0 auto;
     padding: 2rem;
+    /* Avoid being hidden under fixed navbar */
+    margin-top: 6rem;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
   

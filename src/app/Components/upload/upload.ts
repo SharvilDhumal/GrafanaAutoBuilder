@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Navbar } from '../../Components/navbar/navbar';
+import { Footer } from '../../Components/footer/footer';
 
 @Component({
   selector: 'app-upload',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, Navbar, Footer],
   templateUrl: './upload.html',
   styleUrls: ['./upload.css']
 })

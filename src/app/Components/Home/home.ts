@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { Navbar } from '../../Components/navbar/navbar';
+import { Footer } from '../../Components/footer/footer';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule],
+  imports: [CommonModule, Navbar, Footer],
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })

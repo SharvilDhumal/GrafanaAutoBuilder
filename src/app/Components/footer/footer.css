@@ -1,0 +1,78 @@
+/* Footer Styles moved from Home */
+.footer {
+  padding: 3rem 0 1.5rem;
+  background: linear-gradient(180deg, #1a365d 0%, #0f2a4a 100%);
+  color: white;
+  border: 0;
+  box-shadow: none;
+  margin: 0;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Make footer full-bleed without side gaps */
+.footer .container {
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+.footer-content {
+  padding: 0 1.5rem; /* inner padding for content */
+  max-width: 1200px;
+  margin: 0 auto; /* center inner content */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  column-gap: 2rem;
+  row-gap: 1.25rem;
+  align-items: start;
+}
+
+.footer a {
+  color: #e2e8f0;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer a:hover {
+  color: #63b3ed;
+}
+
+.footer::before {
+  display: none !important;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+
+.footer-logo svg {
+  width: 24px;
+  height: 24px;
+}
+
+.footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.5rem;
+}
+
+.footer-links a {
+  font-size: 0.95rem;
+}
+
+.footer-copyright {
+  margin-top: 1.5rem;
+  padding: 0 1.5rem;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #cbd5e0;
+  font-size: 0.9rem;
+}

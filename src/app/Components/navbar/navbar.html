@@ -1,1 +1,27 @@
-<p>navbar works!</p>
+<header class="header">
+  <div class="container">
+    <nav class="navbar">
+      <div class="logo">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+        >
+          <path
+            d="M12 2L4 7v10l8 5 8-5V7L12 2zm0 2.5L18 8v8l-6 3.5-6-3.5V8l6-3.5z"
+          />
+          <path
+            d="M12 7L6 10v4l6 3 6-3v-4l-6-3zm0 2.5L16 11v2l-4 2-4-2v-2l4-1.5z"
+          />
+        </svg>
+        <span>Grafana AutoBuilder</span>
+      </div>
+      <button class="login-btn" (click)="onLogin()" *ngIf="!isAuthenticated">
+        Login
+      </button>
+      <button class="login-btn" (click)="onLogout()" *ngIf="isAuthenticated">
+        Logout
+      </button>
+    </nav>
+  </div>
+</header>

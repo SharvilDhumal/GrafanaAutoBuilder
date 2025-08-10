@@ -221,7 +221,8 @@ h2 {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 3rem;
+  gap: 2rem 3rem;
+  align-items: center;
 }
 
 .tech-icon {
@@ -232,8 +233,14 @@ h2 {
 }
 
 .tech-icon img {
-  width: 64px;
-  height: 64px;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  background: #ffffff;
+  border: 1px solid #e2e8f0; /* subtle border for mixed assets */
+  border-radius: 12px;
+  padding: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.06);
 }
 
 .tech-icon span {
@@ -243,9 +250,52 @@ h2 {
 
 /* Footer Styles */
 .footer {
-  padding: 4rem 0 2rem;
-  background-color: #1a365d;
+  padding: 3rem 0 1.5rem;
+  background: linear-gradient(180deg, #1a365d 0%, #0f2a4a 100%);
   color: white;
+  border: 0;
+  box-shadow: none;
+  margin: 0;            /* prevent any outer gaps */
+  width: 100%;
+  overflow: hidden;      /* avoid subtle edge bleed */
+}
+
+/* Make footer full-bleed without side gaps */
+.footer .container {
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  /* Force true full-bleed even if a parent limits width */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+}
+
+.footer-content {
+  padding: 0 1.5rem; /* inner padding for content */
+  max-width: 1200px;
+  margin: 0 auto; /* center inner content */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  column-gap: 2rem;
+  row-gap: 1.25rem;
+  align-items: start;
+}
+
+/* Footer links + hover states */
+.footer a {
+  color: #e2e8f0;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer a:hover {
+  color: #63b3ed;
+}
+
+/* Subtle top divider to separate footer from content without white border */
+.footer::before {
+  display: none !important; /* remove divider entirely */
 }
 
 .footer-content {
