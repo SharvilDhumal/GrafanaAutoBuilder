@@ -1,1 +1,23 @@
-/* You can add global styles to this file, and also import other style files */
+/* Global styles */
+/* Import fonts: Poppins primary, Space Grotesk fallback */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --app-font: 'Poppins', 'Space Grotesk', sans-serif;
+}
+
+html, body {
+  font-family: var(--app-font) !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Ensure form controls and interactive elements inherit */
+button, input, select, textarea {
+  font-family: inherit !important;
+}
+
+/* Make all elements inherit body font unless explicitly overridden */
+*, *::before, *::after {
+  font-family: inherit !important;
+}
