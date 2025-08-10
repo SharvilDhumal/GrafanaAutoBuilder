@@ -3,21 +3,23 @@
   padding: 3rem 0 1.5rem;
   background: linear-gradient(180deg, #1a365d 0%, #0f2a4a 100%);
   color: white;
-  border: 0;
-  box-shadow: none;
-  margin: 0;
+  /* margin: 0; */
   width: 100%;
-  overflow: hidden;
-}
-
-/* Make footer full-bleed without side gaps */
-.footer .container {
-  max-width: 100%;
-  padding-left: 0;
-  padding-right: 0;
+  /* background-clip: padding-box; avoid anti-alias edges */
+  border: 0 !important;
+  box-shadow: none !important;
   width: 100vw;
   margin-left: calc(50% - 50vw);
   margin-right: calc(50% - 50vw);
+  margin-bottom: calc(50% - 50vw);
+}
+
+/* Make footer full-bleed without side gaps */
+.footer-container {
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  margin: 0; /* ensure no side gap */
 }
 
 .footer-content {
