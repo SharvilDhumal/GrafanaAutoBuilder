@@ -1,7 +1,7 @@
 <header class="header">
   <div class="container">
     <nav class="navbar">
-      <div class="logo">
+      <a class="logo" routerLink="/" routerLinkActive="active" aria-label="Go to home">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -15,7 +15,7 @@
           />
         </svg>
         <span>Grafana AutoBuilder</span>
-      </div>
+      </a>
       <button class="login-btn" (click)="onLogin()" *ngIf="!isAuthenticated">
         Login
       </button>

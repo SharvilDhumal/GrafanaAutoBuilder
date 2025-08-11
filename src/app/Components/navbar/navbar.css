@@ -32,12 +32,30 @@
   font-weight: 600;
   font-size: 1.25rem;
   color: #1a365d;
+  text-decoration: none; /* Remove underline on link */
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
 }
 
 .logo svg {
   width: 24px;
   height: 24px;
   color: #4299e1;
+}
+
+.logo:hover {
+  color: #2b6cb0; /* Slightly darker on hover */
+  transform: translateY(-1px);
+}
+
+.logo:hover svg {
+  color: #2b6cb0;
+}
+
+.logo:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.35);
+  border-radius: 6px;
 }
 
 .login-btn {
