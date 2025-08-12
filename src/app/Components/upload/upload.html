@@ -37,9 +37,18 @@
         </button>
       </div>
   
-      <button class="generate-btn" [disabled]="!selectedFile" [class.disabled]="!selectedFile">
-        Generate Dashboard
+      <button class="generate-btn" [disabled]="!selectedFile || loading" [class.disabled]="!selectedFile || loading" (click)="generateDashboard()">
+        {{ loading ? 'Generating...' : 'Generate Dashboard' }}
       </button>
+
+      <div class="error" *ngIf="errorMsg" style="color:#c00; margin-top:12px;">
+        {{ errorMsg }}
+      </div>
+
+      <div class="success" *ngIf="result" style="margin-top:12px;">
+        <p>Dashboard created: <strong>{{ result.title }}</strong></p>
+        <a [href]="result.grafanaUrl" target="_blank" rel="noopener">Open in Grafana</a>
+      </div>
     </div>
   
     <div class="features-section">

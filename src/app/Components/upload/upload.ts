@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../../Components/navbar/navbar';
 import { Footer } from '../../Components/footer/footer';
+import { DashboardService, UploadResponse } from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-upload',
@@ -13,11 +14,17 @@ import { Footer } from '../../Components/footer/footer';
 export class Upload {
   selectedFile: File | null = null;
   isDragging = false;
+  loading = false;
+  errorMsg: string | null = null;
+  result: UploadResponse | null = null;
+
+  constructor(private dashboardService: DashboardService) {}
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
     if (file && file.type === 'text/csv') {
       this.selectedFile = file;
+      this.errorMsg = null;
     } else {
       alert('Please select a valid CSV file.');
     }
@@ -44,6 +51,7 @@ export class Upload {
       const file = event.dataTransfer.files[0];
       if (file && file.type === 'text/csv') {
         this.selectedFile = file;
+        this.errorMsg = null;
       } else {
         alert('Please drop a valid CSV file.');
       }
@@ -52,6 +60,8 @@ export class Upload {
 
   removeFile(): void {
     this.selectedFile = null;
+    this.result = null;
+    this.errorMsg = null;
   }
 
   getFileSize(bytes: number): string {
@@ -60,5 +70,23 @@ export class Upload {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  }
+
+  generateDashboard(): void {
+    if (!this.selectedFile || this.loading) return;
+    this.loading = true;
+    this.errorMsg = null;
+    this.result = null;
+    this.dashboardService.uploadCsv(this.selectedFile)
+      .subscribe({
+        next: (res) => {
+          this.result = res;
+          this.loading = false;
+        },
+        error: (err) => {
+          this.errorMsg = err?.message || 'Upload failed';
+          this.loading = false;
+        }
+      });
   }
 }

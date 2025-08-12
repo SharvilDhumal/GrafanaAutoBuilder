@@ -1,0 +1,54 @@
+package com.example.grafanaautobuilder.service.csv;
+
+import com.example.grafanaautobuilder.dto.PanelConfig;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.springframework.stereotype.Service;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class CsvParsingService {
+
+    public List<PanelConfig> parse(InputStream inputStream) throws IOException {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+             CSVParser parser = CSVFormat.DEFAULT
+                     .builder()
+                     .setHeader()
+                     .setSkipHeaderRecord(true)
+                     .setTrim(true)
+                     .build()
+                     .parse(reader)) {
+            List<PanelConfig> list = new ArrayList<>();
+            for (CSVRecord r : parser) {
+                PanelConfig cfg = new PanelConfig();
+                cfg.setTitle(get(r, "title"));
+                cfg.setDatasource(get(r, "datasource"));
+                cfg.setQuery(get(r, "query"));
+                cfg.setVisualization(get(r, "visualization"));
+                cfg.setUnit(get(r, "unit"));
+                cfg.setThresholds(get(r, "thresholds"));
+                cfg.setW(parseIntOrNull(get(r, "w")));
+                cfg.setH(parseIntOrNull(get(r, "h")));
+                list.add(cfg);
+            }
+            return list;
+        }
+    }
+
+    private static Integer parseIntOrNull(String s) {
+        if (s == null || s.isBlank()) return null;
+        try { return Integer.parseInt(s.trim()); } catch (NumberFormatException e) { return null; }
+    }
+
+    private static String get(CSVRecord r, String name) {
+        try { return r.isMapped(name) ? r.get(name) : null; } catch (Exception e) { return null; }
+    }
+}

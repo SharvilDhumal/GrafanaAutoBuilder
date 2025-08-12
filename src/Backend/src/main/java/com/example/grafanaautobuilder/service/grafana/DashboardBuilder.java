@@ -1,0 +1,44 @@
+package com.example.grafanaautobuilder.service.grafana;
+
+import com.example.grafanaautobuilder.dto.PanelConfig;
+import org.springframework.stereotype.Service;
+
+import java.util.*;
+
+@Service
+public class DashboardBuilder {
+    public static final int GRID_COLUMNS = 24;
+
+    public Map<String, Object> buildDashboard(String title, List<Map<String, Object>> panels) {
+        Map<String, Object> dashboard = new LinkedHashMap<>();
+        dashboard.put("uid", UUID.randomUUID().toString().replaceAll("-", ""));
+        dashboard.put("title", title);
+        dashboard.put("schemaVersion", 38);
+        dashboard.put("panels", panels);
+
+        Map<String, Object> payload = new LinkedHashMap<>();
+        payload.put("dashboard", dashboard);
+        payload.put("overwrite", true);
+        return payload;
+    }
+
+    public List<Map<String, Object>> layoutPanels(List<PanelConfig> configs, PanelJsonBuilder panelBuilder) {
+        List<Map<String, Object>> panels = new ArrayList<>();
+        int x = 0, y = 0, rowHeight = 0, id = 1;
+        for (PanelConfig cfg : configs) {
+            int w = (cfg.getW() == null || cfg.getW() <= 0) ? 12 : cfg.getW();
+            int h = (cfg.getH() == null || cfg.getH() <= 0) ? 8 : cfg.getH();
+            if (x + w > GRID_COLUMNS) {
+                // wrap to next row
+                x = 0;
+                y += rowHeight;
+                rowHeight = 0;
+            }
+            Map<String, Object> panel = panelBuilder.buildPanel(cfg, x, y, id++);
+            panels.add(panel);
+            x += w;
+            rowHeight = Math.max(rowHeight, h);
+        }
+        return panels;
+    }
+}
