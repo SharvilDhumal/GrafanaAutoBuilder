@@ -1,0 +1,6 @@
+﻿title,datasource,query,visualization,unit,thresholds,w,h
+CPU Usage,Prometheus,avg(rate(process_cpu_seconds_total[5m]))*100,timeseries,percent,80|90,12,8
+Requests per Second,Prometheus,sum(rate(http_requests_total[1m])),stat,reqps,1000|2000,6,6
+Error Rate,Prometheus,100 * (sum(rate(http_requests_total{status=~"5.."}[5m]))/sum(rate(http_requests_total[5m]))),barchart,percent,5|10,6,6
+Mock Panel 1,Prometheus,sum(rate(sample_metric_total[1m])),timeseries,reqps,77|95,12,6
+Mock Panel 2,Prometheus,sum(rate(sample_metric_total[1m])),timeseries,percent,65|93,8,8

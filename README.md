@@ -56,29 +56,45 @@ Note: The Angular app currently uses demo logic for auth and may not yet call th
 - Upload: Drag & drop or browse a `.csv` file and click "Generate Dashboard"
 - Documentation: In-app guide describing setup and CSV format
 
-## CSV Format
+## CSV prerequisites for dashboard generation
 
-The app accepts standard `.csv` files. Recommended columns for dashboard generation:
+The backend reads a CSV of panel definitions and converts each row into a Grafana panel. Columns must match exactly the headers below.
 
-- `timestamp` — ISO 8601 or epoch milliseconds (e.g., `2025-08-10T12:34:56Z`)
-- `metric` — Measurement/series name (e.g., `cpu_usage`, `http_requests`)
-- `value` — Numeric value
-- `tags` (optional) — key=value pairs separated by `|` (e.g., `host=web-1|region=us-east`)
+Required headers (case-sensitive):
 
-Example:
+- `title` — Panel title (string)
+- `datasource` — Grafana datasource name visible in Grafana (e.g., `Prometheus`, `PostgreSQL`)
+- `query` — Query for the datasource (e.g., PromQL, SQL)
+- `visualization` — Panel type: `timeseries`, `stat`, `barchart`
+- `unit` — Display unit (e.g., `percent`, `bytes`, `s`, `reqps`)
+
+Optional headers:
+
+- `thresholds` — Two numbers separated by `|` (e.g., `80|90`)
+- `w` — Width in grid units (integer)
+- `h` — Height in grid units (integer)
+
+Sample CSV:
 
 ```csv
-timestamp,metric,value,tags
-2025-08-10T12:00:00Z,cpu_usage,37.5,host=web-1|region=us-east
-2025-08-10T12:00:00Z,http_requests,120,host=web-1|route=/api
-2025-08-10T12:01:00Z,cpu_usage,45.2,host=web-1|region=us-east
+title,datasource,query,visualization,unit,thresholds,w,h
+CPU Usage,Prometheus,avg(rate(process_cpu_seconds_total[5m]))*100,timeseries,percent,80|90,12,8
+Requests per Second,Prometheus,sum(rate(http_requests_total[1m])),stat,reqps,1000|2000,6,6
+Error Rate,Prometheus,100 * (sum(rate(http_requests_total{status=~"5.."}[5m]))/sum(rate(http_requests_total[5m]))),barchart,percent,5|10,6,6
 ```
 
-Tips:
+Checklist (make sure this is true before uploading):
 
-- Ensure the file extension is `.csv`.
-- Keep timestamp formats consistent across rows.
-- Keep `value` strictly numeric (no units/currency symbols).
+- File is UTF-8 encoded `.csv` with a single header row.
+- Headers match exactly: `title,datasource,query,visualization,unit,thresholds,w,h`.
+- `datasource` exists and is configured in Grafana.
+- `query` is valid for the chosen datasource (PromQL/SQL/etc.).
+- `visualization` is one of: `timeseries`, `stat`, `barchart`.
+- `thresholds` format: `low|high` (optional; leave blank if not used).
+- `w` and `h` are integers if provided; leave blank to let the layout pick defaults.
+- No extra/unknown columns.
+
+Note: These fields are parsed by `CsvParsingService` and mapped to `PanelConfig` on the backend.
 
 ## Styling and Fonts
 
