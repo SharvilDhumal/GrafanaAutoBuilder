@@ -77,14 +77,33 @@ export class Upload {
     this.loading = true;
     this.errorMsg = null;
     this.result = null;
+    // Debug: log selected file before upload
+    try {
+      console.log('[Upload] Starting upload', {
+        name: this.selectedFile.name,
+        size: this.selectedFile.size,
+        type: this.selectedFile.type
+      });
+    } catch (e) { /* noop */ }
+
     this.dashboardService.uploadCsv(this.selectedFile)
       .subscribe({
         next: (res) => {
+          console.log('[Upload] Success response', res);
           this.result = res;
           this.loading = false;
         },
         error: (err) => {
-          this.errorMsg = err?.message || 'Upload failed';
+          // Surface detailed error information in console
+          try {
+            console.error('[Upload] Error response', {
+              status: err?.status,
+              statusText: err?.statusText,
+              message: err?.message,
+              error: err?.error
+            });
+          } catch (e) { /* noop */ }
+          this.errorMsg = (err?.error && (err.error.error || err.error.message)) || err?.message || 'Upload failed';
           this.loading = false;
         }
       });

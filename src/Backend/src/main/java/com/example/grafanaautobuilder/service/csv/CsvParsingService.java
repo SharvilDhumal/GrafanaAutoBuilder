@@ -4,6 +4,8 @@ import com.example.grafanaautobuilder.dto.PanelConfig;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -16,8 +18,10 @@ import java.util.List;
 
 @Service
 public class CsvParsingService {
+    private static final Logger log = LoggerFactory.getLogger(CsvParsingService.class);
 
     public List<PanelConfig> parse(InputStream inputStream) throws IOException {
+        long start = System.currentTimeMillis();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
              CSVParser parser = CSVFormat.DEFAULT
                      .builder()
@@ -39,6 +43,7 @@ public class CsvParsingService {
                 cfg.setH(parseIntOrNull(get(r, "h")));
                 list.add(cfg);
             }
+            log.info("CSV parsed: {} records in {} ms", list.size(), (System.currentTimeMillis() - start));
             return list;
         }
     }

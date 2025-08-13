@@ -35,7 +35,17 @@ export class DashboardService {
       }
     }
 
-    return this.http.post<UploadResponse>(`${this.baseUrl}/upload`, form, {
+    const endpoint = `${this.baseUrl}/upload`;
+    // Debug: log request info (excluding sensitive values)
+    try {
+      console.log('[DashboardService] POST', endpoint, {
+        file: { name: file.name, size: file.size, type: file.type },
+        hasAuthHeader: headers.has('Authorization'),
+        withCredentials: true
+      });
+    } catch (e) { /* noop */ }
+
+    return this.http.post<UploadResponse>(endpoint, form, {
       headers,
       withCredentials: true
     });

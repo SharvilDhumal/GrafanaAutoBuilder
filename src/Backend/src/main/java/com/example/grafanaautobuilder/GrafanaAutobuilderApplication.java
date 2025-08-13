@@ -10,4 +10,4 @@ public class GrafanaAutobuilderApplication {
     public static void main(String[] args) {
         SpringApplication.run(GrafanaAutobuilderApplication.class, args);
     }
-}
+} 
