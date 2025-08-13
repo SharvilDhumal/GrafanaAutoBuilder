@@ -16,6 +16,9 @@ export class ResetPassword {
   loading = false;
   success = false;
   errorMessage: string | null = null;
+  // Eye toggle state
+  showNewPassword = false;
+  showConfirmPassword = false;
 
   // Pre-populated from query params if present
   tokenFromLink: string | null = null;
@@ -53,6 +56,15 @@ export class ResetPassword {
   showError(field: string): boolean {
     const control = this.form.get(field);
     return !!(control && control.invalid && (control.dirty || control.touched));
+  }
+
+  // Toggle handlers for password visibility
+  toggleNewPassword() {
+    this.showNewPassword = !this.showNewPassword;
+  }
+
+  toggleConfirmPassword() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   onSubmit() {
