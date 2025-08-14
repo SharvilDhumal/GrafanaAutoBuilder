@@ -17,8 +17,6 @@ import com.example.grafanaautobuilder.exception.UserNotFoundException;
 import com.example.grafanaautobuilder.repository.PasswordResetTokenRepository;
 import com.example.grafanaautobuilder.repository.UserRepository;
 import com.example.grafanaautobuilder.repository.VerificationTokenRepository;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -40,7 +38,6 @@ public class UserService implements UserDetailsService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
-    private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
 
     public UserService(UserRepository userRepository, 
@@ -48,14 +45,12 @@ public class UserService implements UserDetailsService {
                       PasswordResetTokenRepository passwordResetTokenRepository,
                       PasswordEncoder passwordEncoder,
                       JwtService jwtService,
-                      @Lazy AuthenticationManager authenticationManager,
                       EmailService emailService) {
         this.userRepository = userRepository;
         this.verificationTokenRepository = verificationTokenRepository;
         this.passwordResetTokenRepository = passwordResetTokenRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
         this.emailService = emailService;
     }
 
@@ -145,16 +140,30 @@ public class UserService implements UserDetailsService {
     }
 
     public AuthResponse login(LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.email().toLowerCase().trim(),
-                        loginRequest.password()
-                )
-        );
-
+        String email = loginRequest.email().toLowerCase().trim();
+        String password = loginRequest.password();
+        
+        // Find user by email
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
+        
+        // Check if user is enabled
+        if (!user.isEnabled()) {
+            throw new RuntimeException("User account is not verified");
+        }
+        
+        // Verify password
+        if (!passwordEncoder.matches(password, user.getPassword())) {
+            throw new RuntimeException("Invalid password");
+        }
+        
+        // Create authentication token
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String jwt = jwtService.generateToken(userDetails);
+        
+        // Generate JWT token
+        String jwt = jwtService.generateToken(user);
         OffsetDateTime expiresAt = OffsetDateTime.now().plusHours(1);
 
         return new AuthResponse(jwt, expiresAt);

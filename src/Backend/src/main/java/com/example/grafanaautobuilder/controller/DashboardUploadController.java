@@ -27,6 +27,11 @@ public class DashboardUploadController {
         this.grafanaProperties = grafanaProperties;
     }
 
+    @GetMapping("/test")
+    public ResponseEntity<?> test() {
+        return ResponseEntity.ok(Map.of("message", "Backend is working"));
+    }
+
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     // Uncomment if using method-level security
     // @PreAuthorize("isAuthenticated()")
@@ -34,6 +39,9 @@ public class DashboardUploadController {
     public ResponseEntity<?> uploadCsvAndCreateDashboard(@RequestParam("file") MultipartFile file,
                                                          @RequestParam(value = "title", required = false) String title) {
         try {
+            log.info("Received upload request - file: {}, title: {}", 
+                    file != null ? file.getOriginalFilename() : "null", title);
+            
             if (file == null || file.isEmpty()) {
                 log.warn("/api/dashboard/upload called without file or with empty file");
                 return ResponseEntity.badRequest().body(Map.of("error", "CSV file is required"));
@@ -62,6 +70,7 @@ public class DashboardUploadController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.error("Error handling /api/dashboard/upload: {}", e.getMessage(), e);
+            log.error("Stack trace: ", e);
             return ResponseEntity.badRequest().body(Map.of(
                     "error", "Failed to process CSV or create dashboard",
                     "details", e.getMessage()

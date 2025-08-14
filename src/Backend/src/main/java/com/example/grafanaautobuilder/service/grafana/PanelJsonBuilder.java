@@ -21,7 +21,8 @@ public class PanelJsonBuilder {
 
         Map<String, Object> datasource = null;
         if (cfg.getDatasource() != null && !cfg.getDatasource().isBlank()) {
-            datasource = Map.of("uid", cfg.getDatasource());
+            datasource = new HashMap<>();
+            datasource.put("uid", cfg.getDatasource());
         }
 
         Map<String, Object> target = new HashMap<>();
@@ -32,7 +33,8 @@ public class PanelJsonBuilder {
         }
         if (datasource != null) target.put("datasource", datasource);
 
-        List<Map<String, Object>> targets = List.of(target);
+        List<Map<String, Object>> targets = new ArrayList<>();
+        targets.add(target);
 
         Map<String, Object> panel = new LinkedHashMap<>();
         panel.put("id", id);
@@ -59,13 +61,27 @@ public class PanelJsonBuilder {
             Map<String, Object> th = new HashMap<>();
             th.put("mode", "absolute");
             List<Map<String, Object>> steps = new ArrayList<>();
-            steps.add(Map.of("color", "green", "value", null));
+            Map<String, Object> greenStep = new HashMap<>();
+            greenStep.put("color", "green");
+            greenStep.put("value", null);
+            steps.add(greenStep);
+            
             String[] parts = thresholds.split("\\|");
             if (parts.length >= 1) {
-                try { steps.add(Map.of("color", "yellow", "value", Double.parseDouble(parts[0]))); } catch (Exception ignored) {}
+                try { 
+                    Map<String, Object> yellowStep = new HashMap<>();
+                    yellowStep.put("color", "yellow");
+                    yellowStep.put("value", Double.parseDouble(parts[0]));
+                    steps.add(yellowStep);
+                } catch (Exception ignored) {}
             }
             if (parts.length >= 2) {
-                try { steps.add(Map.of("color", "red", "value", Double.parseDouble(parts[1]))); } catch (Exception ignored) {}
+                try { 
+                    Map<String, Object> redStep = new HashMap<>();
+                    redStep.put("color", "red");
+                    redStep.put("value", Double.parseDouble(parts[1]));
+                    steps.add(redStep);
+                } catch (Exception ignored) {}
             }
             th.put("steps", steps);
             defaults.put("thresholds", th);
@@ -73,7 +89,7 @@ public class PanelJsonBuilder {
 
         if (!defaults.isEmpty()) {
             fieldConfig.put("defaults", defaults);
-            fieldConfig.put("overrides", List.of());
+            fieldConfig.put("overrides", new ArrayList<>());
         }
         return fieldConfig;
     }

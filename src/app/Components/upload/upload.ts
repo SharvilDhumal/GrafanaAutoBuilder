@@ -2,14 +2,17 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../../Components/navbar/navbar';
 import { Footer } from '../../Components/footer/footer';
-import { DashboardService, UploadResponse } from '../../services/dashboard.service';
+import {
+  DashboardService,
+  UploadResponse,
+} from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-upload',
   standalone: true,
   imports: [CommonModule, Navbar, Footer],
   templateUrl: './upload.html',
-  styleUrls: ['./upload.css']
+  styleUrls: ['./upload.css'],
 })
 export class Upload {
   selectedFile: File | null = null;
@@ -22,7 +25,10 @@ export class Upload {
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
-    if (file && file.type === 'text/csv') {
+    if (
+      file &&
+      (file.type === 'text/csv' || file.name.toLowerCase().endsWith('.csv'))
+    ) {
       this.selectedFile = file;
       this.errorMsg = null;
     } else {
@@ -46,10 +52,13 @@ export class Upload {
     event.preventDefault();
     event.stopPropagation();
     this.isDragging = false;
-    
+
     if (event.dataTransfer?.files) {
       const file = event.dataTransfer.files[0];
-      if (file && file.type === 'text/csv') {
+      if (
+        file &&
+        (file.type === 'text/csv' || file.name.toLowerCase().endsWith('.csv'))
+      ) {
         this.selectedFile = file;
         this.errorMsg = null;
       } else {
@@ -82,30 +91,47 @@ export class Upload {
       console.log('[Upload] Starting upload', {
         name: this.selectedFile.name,
         size: this.selectedFile.size,
-        type: this.selectedFile.type
+        type: this.selectedFile.type,
+        lastModified: this.selectedFile.lastModified,
       });
-    } catch (e) { /* noop */ }
 
-    this.dashboardService.uploadCsv(this.selectedFile)
-      .subscribe({
-        next: (res) => {
-          console.log('[Upload] Success response', res);
-          this.result = res;
-          this.loading = false;
-        },
-        error: (err) => {
-          // Surface detailed error information in console
-          try {
-            console.error('[Upload] Error response', {
-              status: err?.status,
-              statusText: err?.statusText,
-              message: err?.message,
-              error: err?.error
-            });
-          } catch (e) { /* noop */ }
-          this.errorMsg = (err?.error && (err.error.error || err.error.message)) || err?.message || 'Upload failed';
-          this.loading = false;
+      // Also log the file content for debugging
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        console.log(
+          '[Upload] File content preview:',
+          e.target?.result?.toString().substring(0, 200)
+        );
+      };
+      reader.readAsText(this.selectedFile);
+    } catch (e) {
+      /* noop */
+    }
+
+    this.dashboardService.uploadCsv(this.selectedFile).subscribe({
+      next: (res) => {
+        console.log('[Upload] Success response', res);
+        this.result = res;
+        this.loading = false;
+      },
+      error: (err) => {
+        // Surface detailed error information in console
+        try {
+          console.error('[Upload] Error response', {
+            status: err?.status,
+            statusText: err?.statusText,
+            message: err?.message,
+            error: err?.error,
+          });
+        } catch (e) {
+          /* noop */
         }
-      });
+        this.errorMsg =
+          (err?.error && (err.error.error || err.error.message)) ||
+          err?.message ||
+          'Upload failed';
+        this.loading = false;
+      },
+    });
   }
 }

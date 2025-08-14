@@ -41,13 +41,16 @@ export class DashboardService {
       console.log('[DashboardService] POST', endpoint, {
         file: { name: file.name, size: file.size, type: file.type },
         hasAuthHeader: headers.has('Authorization'),
-        withCredentials: true
+        withCredentials: true,
       });
-    } catch (e) { /* noop */ }
+    } catch (e) {
+      /* noop */
+    }
 
+    // Don't set Content-Type header - let browser set it automatically for FormData
     return this.http.post<UploadResponse>(endpoint, form, {
       headers,
-      withCredentials: true
+      withCredentials: true,
     });
   }
 }
