@@ -9,6 +9,7 @@ Grafana AutoBuilder lets you upload a CSV and generate a Grafana dashboard autom
 - Frontend: Angular (Navbar, Upload, Footer, Documentation components)
 - Backend: Spring Boot (Auth endpoints, PostgreSQL connection)
 - Database: PostgreSQL
+- **Supports multiple datasources**: Prometheus and PostgreSQL in the same dashboard
 
 ## Prerequisites
 
@@ -21,8 +22,8 @@ Grafana AutoBuilder lets you upload a CSV and generate a Grafana dashboard autom
 Database configuration (used by Spring Boot):
 
 - URL: `jdbc:postgresql://localhost:5432/grafana_autobuilder`
-- Username: `postgres`
-- Password: `sharvil39*`
+- Username: `grafana_user`
+- Password: `sharvil39`
 
 ## Development server
 
@@ -60,21 +61,25 @@ Note: The Angular app currently uses demo logic for auth and may not yet call th
 
 The backend reads a CSV of panel definitions and converts each row into a Grafana panel. Columns must match exactly the headers below.
 
-Required headers (case-sensitive):
+### Required headers (case-sensitive):
 
 - `title` — Panel title (string)
-- `datasource` — Grafana datasource name visible in Grafana (e.g., `Prometheus`, `PostgreSQL`)
-- `query` — Query for the datasource (e.g., PromQL, SQL)
-- `visualization` — Panel type: `timeseries`, `stat`, `barchart`
-- `unit` — Display unit (e.g., `percent`, `bytes`, `s`, `reqps`)
+- `datasource` — Grafana datasource UID (e.g., `Prometheus`, `PostgreSQL`)
+- `query` — Query for the datasource (PromQL for Prometheus, SQL for PostgreSQL)
+- `visualization` — Panel type: `timeseries`, `stat`, `barchart`, `gauge`
+- `unit` — Display unit (e.g., `percent`, `bytes`, `s`, `ms`, `short`)
 
-Optional headers:
+### Optional headers:
 
 - `thresholds` — Two numbers separated by `|` (e.g., `80|90`)
 - `w` — Width in grid units (integer)
 - `h` — Height in grid units (integer)
 
-Sample CSV:
+### Multiple Datasources Support
+
+**Yes, multiple datasources are supported!** Each panel can use a different datasource, allowing you to mix Prometheus and PostgreSQL panels in the same dashboard.
+
+### Sample CSV - Prometheus
 
 ```csv
 title,datasource,query,visualization,unit,thresholds,w,h
@@ -83,16 +88,58 @@ Requests per Second,Prometheus,sum(rate(http_requests_total[1m])),stat,reqps,100
 Error Rate,Prometheus,100 * (sum(rate(http_requests_total{status=~"5.."}[5m]))/sum(rate(http_requests_total[5m]))),barchart,percent,5|10,6,6
 ```
 
-Checklist (make sure this is true before uploading):
+### Sample CSV - PostgreSQL
+
+```csv
+title,datasource,query,visualization,unit,thresholds,w,h
+User Registrations,PostgreSQL,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short,100|200,12,8
+Active Users,PostgreSQL,"SELECT DATE_TRUNC('hour', last_login) as time, COUNT(DISTINCT user_id) as value FROM user_sessions WHERE last_login >= $__timeFrom() AND last_login <= $__timeTo() GROUP BY DATE_TRUNC('hour', last_login) ORDER BY time",timeseries,short,50|100,6,6
+```
+
+### Sample CSV - Mixed Datasources
+
+```csv
+title,datasource,query,visualization,unit,thresholds,w,h
+System CPU,Prometheus,avg(rate(process_cpu_seconds_total[5m])) * 100,timeseries,percent,80|90,12,8
+User Registrations,PostgreSQL,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short,100|200,12,8
+Memory Usage,Prometheus,process_resident_memory_bytes,gauge,bytes,10737418240|16106127360,6,6
+Database Connections,PostgreSQL,"SELECT DATE_TRUNC('minute', connection_time) as time, COUNT(*) as value FROM db_connections WHERE connection_time >= $__timeFrom() AND connection_time <= $__timeTo() GROUP BY DATE_TRUNC('minute', connection_time) ORDER BY time",stat,short,80|120,8,8
+```
+
+### PostgreSQL Setup
+
+To use PostgreSQL as a datasource:
+
+1. **Add PostgreSQL datasource in Grafana:**
+
+   - Go to Grafana → Configuration → Data Sources
+   - Click "Add data source"
+   - Select "PostgreSQL"
+   - Configure connection details
+   - Note the UID (e.g., "PostgreSQL")
+
+2. **Use the correct query format:**
+
+   - Must have `time` column (timestamp)
+   - Must have `value` column (numeric)
+   - Use `$__timeFrom()` and `$__timeTo()` for time filtering
+
+3. **Run the test data script:**
+   ```bash
+   psql -U grafana_user -d grafana_autobuilder -f src/Backend/setup_test_data.sql
+   ```
+
+### Checklist (make sure this is true before uploading):
 
 - File is UTF-8 encoded `.csv` with a single header row.
 - Headers match exactly: `title,datasource,query,visualization,unit,thresholds,w,h`.
 - `datasource` exists and is configured in Grafana.
 - `query` is valid for the chosen datasource (PromQL/SQL/etc.).
-- `visualization` is one of: `timeseries`, `stat`, `barchart`.
+- `visualization` is one of: `timeseries`, `stat`, `barchart`, `gauge`.
 - `thresholds` format: `low|high` (optional; leave blank if not used).
 - `w` and `h` are integers if provided; leave blank to let the layout pick defaults.
 - No extra/unknown columns.
+- **For PostgreSQL queries:** Always use `$__timeFrom()` and `$__timeTo()` for time filtering.
 
 Note: These fields are parsed by `CsvParsingService` and mapped to `PanelConfig` on the backend.
 
@@ -104,6 +151,8 @@ The entire site uses the Poppins font (fallbacks: Space Grotesk, sans-serif). Th
 
 - Backend won't start: Confirm PostgreSQL is running and credentials/URL are correct.
 - CSV not accepted: Ensure it's `.csv` and not empty; validate numeric values.
+- No data showing: Check that PostgreSQL queries use `$__timeFrom()` and `$__timeTo()`.
+- PostgreSQL connection issues: Verify datasource configuration in Grafana.
 - Footer shows white border: The standalone Footer is full-bleed; make sure global body margins are reset in `styles.css`.
 
 ## Code scaffolding

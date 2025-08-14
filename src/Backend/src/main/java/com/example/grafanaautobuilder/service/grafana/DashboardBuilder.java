@@ -15,6 +15,29 @@ public class DashboardBuilder {
         dashboard.put("title", title);
         dashboard.put("schemaVersion", 38);
         dashboard.put("panels", panels);
+        
+        // Add time range configuration to fix "no data" issue
+        Map<String, Object> time = new HashMap<>();
+        time.put("from", "now-7d");
+        time.put("to", "now");
+        dashboard.put("time", time);
+        
+        // Add time picker configuration
+        Map<String, Object> timepicker = new HashMap<>();
+        timepicker.put("refresh_intervals", Arrays.asList("5s", "10s", "30s", "1m", "5m", "15m", "30m", "1h", "2h", "1d"));
+        timepicker.put("time_options", Arrays.asList("5m", "15m", "1h", "6h", "12h", "24h", "2d", "7d", "30d"));
+        dashboard.put("timepicker", timepicker);
+        
+        // Add templating for better data selection
+        Map<String, Object> templating = new HashMap<>();
+        templating.put("list", new ArrayList<>());
+        dashboard.put("templating", templating);
+        
+        // Add refresh configuration
+        dashboard.put("refresh", "5m");
+        
+        // Add timezone
+        dashboard.put("timezone", "browser");
 
         Map<String, Object> payload = new LinkedHashMap<>();
         payload.put("dashboard", dashboard);

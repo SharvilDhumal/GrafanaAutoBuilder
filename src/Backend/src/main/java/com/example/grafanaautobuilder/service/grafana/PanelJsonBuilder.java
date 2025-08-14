@@ -25,13 +25,7 @@ public class PanelJsonBuilder {
             datasource.put("uid", cfg.getDatasource());
         }
 
-        Map<String, Object> target = new HashMap<>();
-        target.put("refId", "A");
-        if (cfg.getQuery() != null) {
-            // Assume Prometheus expr; for generic Grafana, this will vary.
-            target.put("expr", cfg.getQuery());
-        }
-        if (datasource != null) target.put("datasource", datasource);
+        Map<String, Object> target = buildTarget(cfg, datasource);
 
         List<Map<String, Object>> targets = new ArrayList<>();
         targets.add(target);
@@ -44,10 +38,95 @@ public class PanelJsonBuilder {
         if (datasource != null) panel.put("datasource", datasource);
         panel.put("targets", targets);
 
+        // Add time range configuration to fix "no data" issue
+        Map<String, Object> options = buildPanelOptions(cfg.getVisualization());
+        if (!options.isEmpty()) {
+            panel.put("options", options);
+        }
+
         Map<String, Object> fieldConfig = buildFieldConfig(cfg.getUnit(), cfg.getThresholds());
         if (!fieldConfig.isEmpty()) panel.put("fieldConfig", fieldConfig);
 
         return panel;
+    }
+
+    private Map<String, Object> buildTarget(PanelConfig cfg, Map<String, Object> datasource) {
+        Map<String, Object> target = new HashMap<>();
+        target.put("refId", "A");
+        
+        if (cfg.getQuery() != null) {
+            String datasourceType = cfg.getDatasource() != null ? cfg.getDatasource().toLowerCase() : "prometheus";
+            
+            if (datasourceType.contains("postgres") || datasourceType.contains("postgresql")) {
+                // PostgreSQL query format
+                target.put("rawQuery", true);
+                target.put("rawSql", cfg.getQuery());
+                target.put("format", "time_series");
+            } else {
+                // Prometheus query format
+                target.put("expr", cfg.getQuery());
+            }
+        }
+        
+        if (datasource != null) target.put("datasource", datasource);
+        
+        return target;
+    }
+
+    private Map<String, Object> buildPanelOptions(String visualization) {
+        Map<String, Object> options = new HashMap<>();
+        
+        if (visualization != null) {
+            switch (visualization.toLowerCase(Locale.ROOT)) {
+                case "stat":
+                    Map<String, Object> statOptions = new HashMap<>();
+                    statOptions.put("colorMode", "value");
+                    statOptions.put("graphMode", "area");
+                    statOptions.put("justifyMode", "auto");
+                    statOptions.put("orientation", "auto");
+                    statOptions.put("reduceOptions", Map.of(
+                        "calcs", List.of("lastNotNull"),
+                        "fields", "",
+                        "values", false
+                    ));
+                    statOptions.put("textMode", "auto");
+                    options.putAll(statOptions);
+                    break;
+                    
+                case "barchart":
+                case "bar":
+                    Map<String, Object> barOptions = new HashMap<>();
+                    barOptions.put("orientation", "auto");
+                    barOptions.put("showValue", "auto");
+                    barOptions.put("stacking", "none");
+                    options.putAll(barOptions);
+                    break;
+                    
+                case "gauge":
+                    Map<String, Object> gaugeOptions = new HashMap<>();
+                    gaugeOptions.put("orientation", "auto");
+                    gaugeOptions.put("showThresholdLabels", false);
+                    gaugeOptions.put("showThresholdMarkers", true);
+                    options.putAll(gaugeOptions);
+                    break;
+                    
+                default: // timeseries
+                    Map<String, Object> timeSeriesOptions = new HashMap<>();
+                    timeSeriesOptions.put("legend", Map.of(
+                        "calcs", List.of(),
+                        "displayMode", "list",
+                        "placement", "bottom"
+                    ));
+                    timeSeriesOptions.put("tooltip", Map.of(
+                        "mode", "single",
+                        "sort", "none"
+                    ));
+                    options.putAll(timeSeriesOptions);
+                    break;
+            }
+        }
+        
+        return options;
     }
 
     private Map<String, Object> buildFieldConfig(String unit, String thresholds) {
