@@ -1,11 +1,26 @@
 <app-navbar></app-navbar>
 <section class="doc-wrapper">
-  <h1>Grafana AutoBuilder — User Guide</h1>
+  <header class="doc-hero">
+    <div class="doc-hero__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="28" height="28"><path fill="currentColor" d="M3 6a3 3 0 013-3h7l5 5v11a3 3 0 01-3 3H6a3 3 0 01-3-3V6zm9-1v4h4"/></svg>
+    </div>
+    <div>
+      <h1>Grafana AutoBuilder — User Guide</h1>
+      <p class="lead">Turn a simple CSV into a production‑ready Grafana dashboard in minutes. Supports PostgreSQL datasources.</p>
+    </div>
+  </header>
 
-  <p class="lead">
-    Turn a simple CSV into a production‑ready Grafana dashboard in minutes.
-    Supports PostgreSQL datasources.
-  </p>
+  <nav class="quick-nav" aria-label="Quick navigation">
+    <a href="#what-is" class="chip">Overview</a>
+    <a href="#get-started" class="chip">Get Started</a>
+    <a href="#datasources" class="chip">Datasources</a>
+    <a href="#csv-schema" class="chip">CSV Schema</a>
+    <a href="#postgresql-setup" class="chip">PostgreSQL</a>
+    <a href="#query-formats" class="chip">Query Formats</a>
+    <a href="#mock-data" class="chip">Mock Data</a>
+    <a href="#tips" class="chip">Tips</a>
+    <a href="#troubleshooting" class="chip">Troubleshooting</a>
+  </nav>
 
   <h2 id="what-is">What is Grafana AutoBuilder?</h2>
   <p>
@@ -34,13 +49,10 @@
     backend uses the default datasource UID from configuration.
   </p>
 
-  <p>
+  <div class="callout callout-info">
     <strong>Bring Your Own Postgres (BYODB):</strong>
-    Your CSV queries must reference tables/columns that already exist in your
-    own PostgreSQL database. The app does not auto-create tables for you.
-    If a query points to a non-existent table/column, the panel will show
-    "No data" or an error until you adjust the query or create the table.
-  </p>
+    Your CSV queries must reference tables/columns that already exist in your PostgreSQL database. The app does not auto-create tables.
+  </div>
 
   <h2 id="db-requirements">Database Requirements & Validation</h2>
   <ul>
@@ -57,9 +69,15 @@
     <li>When all rows are OK, upload the same CSV to generate the dashboard.</li>
   </ol>
 
-  <pre class="code">
-curl -F "file=@C:\path\to\your.csv" http://localhost:8080/api/dashboard/validate
-  </pre>
+  <div class="code-block">
+    <div class="code-block__header">
+      <span>Validate CSV via API</span>
+      <button class="copy-btn" (click)="copy(codeValidate.textContent || '', 'validate')" [class.copied]="copiedId==='validate'">{{ copiedId==='validate' ? 'Copied' : 'Copy' }}</button>
+    </div>
+    <pre class="code" #codeValidate>
+curl -F "file=@C:\\path\\to\\your.csv" http://localhost:8080/api/dashboard/validate
+    </pre>
+  </div>
 
   <h2 id="csv-schema">CSV schema (one row = one panel)</h2>
   <p>
@@ -119,12 +137,19 @@ curl -F "file=@C:\path\to\your.csv" http://localhost:8080/api/dashboard/validate
   </ul>
 
   <h3 id="csv-example-postgresql">Sample CSV - PostgreSQL</h3>
-  <pre class="code">
+  <div class="code-block">
+    <div class="code-block__header">
+      <span>CSV snippet</span>
+      <button class="copy-btn" (click)="copy(codeCsv.textContent || '', 'csv')" [class.copied]="copiedId==='csv'">{{ copiedId==='csv' ? 'Copied' : 'Copy' }}</button>
+    </div>
+    <pre class="code" #codeCsv>
 title,datasource,query,visualization,unit,thresholds,w,h
 User Registrations,fev06aq8frhfka,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short,100|200,12,8
 Active Users,fev06aq8frhfka,"SELECT DATE_TRUNC('hour', last_login) as time, COUNT(DISTINCT user_id) as value FROM user_sessions WHERE last_login >= $__timeFrom() AND last_login <= $__timeTo() GROUP BY DATE_TRUNC('hour', last_login) ORDER BY time",timeseries,short,50|100,6,6
 Error Rate,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', timestamp) as time, (COUNT(CASE WHEN status_code >= 400 THEN 1 END) * 100.0 / COUNT(*)) as value FROM application_logs WHERE timestamp >= $__timeFrom() AND timestamp <= $__timeTo() GROUP BY DATE_TRUNC('minute', timestamp) ORDER BY time",barchart,percent,5|10,6,6
-Response Time,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', request_time) as time, AVG(response_time_ms) as value FROM api_requests WHERE request_time >= $__timeFrom() AND request_time <= $__timeTo() GROUP BY DATE_TRUNC('minute', request_time) ORDER BY time",timeseries,ms,200|500,12,6</pre
+Response Time,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', request_time) as time, AVG(response_time_ms) as value FROM api_requests WHERE request_time >= $__timeFrom() AND request_time <= $__timeTo() GROUP BY DATE_TRUNC('minute', request_time) ORDER BY time",timeseries,ms,200|500,12,6
+    </pre>
+  </div>
   >
 
   <h2 id="postgresql-setup">PostgreSQL Setup</h2>
@@ -153,16 +178,27 @@ Response Time,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', request_time) as time,
     </li>
     <li>
       <strong>Run the test data script:</strong>
-      <pre class="code">
-psql -U grafana_user -d grafana_autobuilder -f src/Backend/setup_test_data.sql</pre
-      >
+      <div class="code-block">
+        <div class="code-block__header">
+          <span>psql command</span>
+          <button class="copy-btn" (click)="copy(codePsql.textContent || '', 'psql')" [class.copied]="copiedId==='psql'">{{ copiedId==='psql' ? 'Copied' : 'Copy' }}</button>
+        </div>
+        <pre class="code" #codePsql>
+psql -U grafana_user -d grafana_autobuilder -f src/Backend/setup_test_data.sql
+        </pre>
+      </div>
     </li>
   </ol>
 
   <h2 id="query-formats">Query Formats</h2>
 
   <h3>PostgreSQL (SQL)</h3>
-  <pre class="code">
+  <div class="code-block">
+    <div class="code-block__header">
+      <span>PostgreSQL query examples</span>
+      <button class="copy-btn" (click)="copy(codeSql.textContent || '', 'sql')" [class.copied]="copiedId==='sql'">{{ copiedId==='sql' ? 'Copied' : 'Copy' }}</button>
+    </div>
+    <pre class="code" #codeSql>
 -- User registrations by day
 SELECT 
   DATE_TRUNC('day', created_at) as time,
@@ -179,7 +215,9 @@ SELECT
 FROM application_logs 
 WHERE timestamp >= $__timeFrom() AND timestamp <= $__timeTo()
 GROUP BY DATE_TRUNC('minute', timestamp)
-ORDER BY time</pre
+ORDER BY time
+    </pre>
+  </div>
   >
 
   <h2 id="mock-data">Generate mock data</h2>
@@ -199,7 +237,12 @@ ORDER BY time</pre
   </ol>
 
   <h3 id="ai-prompt">AI prompt to generate a CSV for this project</h3>
-  <pre class="code">
+  <div class="code-block">
+    <div class="code-block__header">
+      <span>AI prompt</span>
+      <button class="copy-btn" (click)="copy(codeAi.textContent || '', 'ai')" [class.copied]="copiedId==='ai'">{{ copiedId==='ai' ? 'Copied' : 'Copy' }}</button>
+    </div>
+    <pre class="code" #codeAi>
 You are generating a CSV for Grafana AutoBuilder. Output ONLY valid CSV with this header:
 title,datasource,query,visualization,unit,thresholds,w,h
 
@@ -217,11 +260,13 @@ PostgreSQL query requirements:
 - Include WHERE clause with $__timeFrom() and $__timeTo()
 - ORDER BY time
 
-Return ONLY the CSV rows including the header. No commentary.</pre
+Return ONLY the CSV rows including the header. No commentary.
+    </pre>
+  </div>
   >
 
   <h2 id="tips">Tips & validation</h2>
-  <ul>
+  <ul class="tips-list">
     <li>Header names must match the schema. Extra columns are ignored.</li>
     <li>
       Leave cells empty rather than writing <code>n/a</code> to avoid parsing
@@ -251,7 +296,7 @@ Return ONLY the CSV rows including the header. No commentary.</pre
   </ul>
 
   <h2 id="troubleshooting">Troubleshooting</h2>
-  <ul>
+  <ul class="tips-list">
     <li>
       <strong>No data showing:</strong> Check that your PostgreSQL queries use
       <code>$__timeFrom()</code> and <code>$__timeTo()</code>
