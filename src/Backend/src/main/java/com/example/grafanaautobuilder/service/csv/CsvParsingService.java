@@ -36,7 +36,15 @@ public class CsvParsingService {
                 cfg.setTitle(get(r, "title"));
                 cfg.setDatasource(get(r, "datasource"));
                 cfg.setQuery(get(r, "query"));
-                cfg.setVisualization(get(r, "visualization"));
+                // Support multiple header variants mapping to visualization:
+                // visualization (preferred), panel_type, chart_type, viewType
+                String vis = firstNonBlank(
+                        get(r, "visualization"),
+                        get(r, "panel_type"),
+                        get(r, "chart_type"),
+                        get(r, "viewType")
+                );
+                cfg.setVisualization(vis);
                 cfg.setUnit(get(r, "unit"));
                 cfg.setThresholds(get(r, "thresholds"));
                 cfg.setW(parseIntOrNull(get(r, "w")));
@@ -55,5 +63,16 @@ public class CsvParsingService {
 
     private static String get(CSVRecord r, String name) {
         try { return r.isMapped(name) ? r.get(name) : null; } catch (Exception e) { return null; }
+    }
+
+    private static String firstNonBlank(String... values) {
+        if (values == null) return null;
+        for (String v : values) {
+            if (v != null) {
+                String t = v.trim();
+                if (!t.isBlank()) return t;
+            }
+        }
+        return null;
     }
 }
