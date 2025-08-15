@@ -1,0 +1,147 @@
+.admin-container {
+    font-family: 'Segoe UI', sans-serif;
+    padding: 2rem;
+    background-color: #f9fbfd;
+    color: #1e2a38;
+  }
+
+  .admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .admin-header h1 {
+    font-size: 1.8rem;
+    color: #2d6cdf;
+  }
+
+  .logout-btn {
+    background: #2d6cdf;
+    color: white;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  /* Stats Grid */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .stat-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+
+  .stat-card h3 {
+    color: #2d6cdf;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-value {
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  /* Upload Section */
+  .upload-section, .activity-section, .dashboard-table {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    margin-bottom: 2rem;
+  }
+
+  .upload-section h2, .activity-section h2, .dashboard-table h2 {
+    font-size: 1.4rem;
+    color: #2d6cdf;
+    margin-bottom: 0.5rem;
+  }
+
+  .file-input {
+    display: block;
+    margin: 1rem 0;
+    padding: 0.4rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+  }
+
+  .upload-btn {
+    background: #2d6cdf;
+    color: white;
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  /* Activity Section */
+  .activity-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .activity-list li {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #eee;
+    font-size: 0.95rem;
+  }
+
+  .activity-list li:last-child {
+    border-bottom: none;
+  }
+
+  .user-name {
+    font-weight: bold;
+    color: #2d6cdf;
+  }
+
+  /* Dashboard Table */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+  }
+
+  th, td {
+    padding: 0.8rem;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f1f5fb;
+    color: #2d6cdf;
+    font-weight: bold;
+  }
+
+  .edit-btn {
+    background: #ffc107;
+    border: none;
+    color: #fff;
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 0.4rem;
+  }
+
+  .delete-btn {
+    background: #e74c3c;
+    border: none;
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 5px;
+    cursor: pointer;
+  }

@@ -96,6 +96,8 @@ curl -F "file=@C:\\path\\to\\your.csv" http://localhost:8080/api/dashboard/valid
     <li>
       <code>visualization</code> — One of: <code>timeseries</code> (default),
       <code>stat</code>, <code>barchart</code>, <code>gauge</code>.
+      <br/>
+      <strong>Aliases:</strong> You may also use <code>panel_type</code>, <code>chart_type</code>, or <code>viewType</code> instead of <code>visualization</code>.
     </li>
     <li>
       <code>unit</code> — Grafana unit (examples: <code>percent</code>,
@@ -253,6 +255,9 @@ Requirements:
 - Use units like percent, bytes, s, ms, short when appropriate
 - Use thresholds in the form low|high (e.g., 80|90) when useful
 - Use widths/heights that fit a 24-column grid (e.g., w=12,h=8 for large charts; w=6,h=6 for small)
+
+ Notes:
+ - You may use aliases for visualization: panel_type, chart_type, or viewType (they map to visualization).
 
 PostgreSQL query requirements:
 - Must have "time" column (timestamp) and "value" column (numeric)

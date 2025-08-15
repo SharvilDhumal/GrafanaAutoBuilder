@@ -67,6 +67,7 @@ The backend reads a CSV of panel definitions and converts each row into a Grafan
 - `datasource` — Grafana datasource UID (PostgreSQL). If blank, backend uses the default UID from `application.yml`.
 - `query` — SQL for PostgreSQL (use Grafana macros like `$__timeFilter()` and `$__timeGroupAlias()`).
 - `visualization` — Panel type: `timeseries`, `stat`, `barchart`, `gauge`
+  - Aliases: you may also use `panel_type`, `chart_type`, or `viewType` (they map to `visualization`).
 - `unit` — Display unit (e.g., `percent`, `bytes`, `s`, `ms`, `short`)
 
 ### Optional headers:
@@ -115,6 +116,7 @@ To use PostgreSQL as a datasource:
 
 - File is UTF-8 encoded `.csv` with a single header row.
 - Headers match exactly: `title,datasource,query,visualization,unit,thresholds,w,h`.
+  - Alternatively, you can use `panel_type`, `chart_type`, or `viewType` instead of `visualization`.
 - `datasource` exists and is configured in Grafana.
 - `query` is valid for the chosen datasource (PromQL/SQL/etc.).
 - `query` is valid SQL for PostgreSQL.
