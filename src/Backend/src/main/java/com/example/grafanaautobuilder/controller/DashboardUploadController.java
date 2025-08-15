@@ -2,6 +2,7 @@ package com.example.grafanaautobuilder.controller;
 
 import com.example.grafanaautobuilder.config.GrafanaProperties;
 import com.example.grafanaautobuilder.service.grafana.DashboardService;
+import com.example.grafanaautobuilder.service.csv.CsvValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -19,12 +20,14 @@ import java.util.Map;
 public class DashboardUploadController {
 
     private final DashboardService dashboardService;
+    private final CsvValidationService csvValidationService;
     private final GrafanaProperties grafanaProperties;
     private static final Logger log = LoggerFactory.getLogger(DashboardUploadController.class);
 
-    public DashboardUploadController(DashboardService dashboardService, GrafanaProperties grafanaProperties) {
+    public DashboardUploadController(DashboardService dashboardService, GrafanaProperties grafanaProperties, CsvValidationService csvValidationService) {
         this.dashboardService = dashboardService;
         this.grafanaProperties = grafanaProperties;
+        this.csvValidationService = csvValidationService;
     }
 
     @GetMapping("/test")
@@ -73,6 +76,23 @@ public class DashboardUploadController {
             log.error("Stack trace: ", e);
             return ResponseEntity.badRequest().body(Map.of(
                     "error", "Failed to process CSV or create dashboard",
+                    "details", e.getMessage()
+            ));
+        }
+    }
+
+    @PostMapping(value = "/validate", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> validateCsv(@RequestParam("file") MultipartFile file) {
+        try {
+            if (file == null || file.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("error", "CSV file is required"));
+            }
+            var results = csvValidationService.validate(file);
+            return ResponseEntity.ok(Map.of("results", results));
+        } catch (Exception e) {
+            log.error("Error handling /api/dashboard/validate: {}", e.getMessage(), e);
+            return ResponseEntity.badRequest().body(Map.of(
+                    "error", "Failed to validate CSV",
                     "details", e.getMessage()
             ));
         }

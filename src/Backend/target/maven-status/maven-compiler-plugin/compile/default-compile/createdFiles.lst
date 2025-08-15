@@ -19,7 +19,6 @@ com\example\grafanaautobuilder\dto\AuthResponse.class
 com\example\grafanaautobuilder\service\grafana\DashboardBuilder.class
 com\example\grafanaautobuilder\config\RestTemplateConfig.class
 com\example\grafanaautobuilder\config\JwtService.class
-com\example\grafanaautobuilder\controller\DashboardUploadController.class
 com\example\grafanaautobuilder\config\JwtAuthFilter.class
 com\example\grafanaautobuilder\exception\TokenNotFoundException.class
 com\example\grafanaautobuilder\service\csv\CsvParsingService.class

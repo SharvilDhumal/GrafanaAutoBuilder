@@ -7,6 +7,7 @@ C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaauto
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\client\GrafanaClient.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\service\UserService.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\dto\LoginRequest.java
+C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\service\csv\CsvValidationService.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\dto\ResetPasswordRequest.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\service\EmailService.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\config\JwtService.java
@@ -30,3 +31,4 @@ C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaauto
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\exception\UserNotFoundException.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\dto\AuthResponse.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\repository\VerificationTokenRepository.java
+C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\dto\ValidationResult.java

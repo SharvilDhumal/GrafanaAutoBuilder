@@ -83,8 +83,25 @@ public class PanelJsonBuilder {
             if (datasourceType.contains("postgres") || datasourceType.contains("postgresql")) {
                 // PostgreSQL query format
                 target.put("rawQuery", true);
-                target.put("rawSql", cfg.getQuery());
-                target.put("format", "time_series");
+                String sql = cfg.getQuery();
+                target.put("rawSql", sql);
+
+                // Heuristic: decide if query returns time series or category table
+                boolean mentionsTimeMacros = sql.toLowerCase(Locale.ROOT).contains("$__timefilter")
+                        || sql.toLowerCase(Locale.ROOT).contains("$__timefrom()")
+                        || sql.toLowerCase(Locale.ROOT).contains("$__timeto()");
+                boolean selectsTimeAlias = sql.toLowerCase(Locale.ROOT).contains(" as time")
+                        || sql.toLowerCase(Locale.ROOT).contains("as \"time\"");
+                boolean isBarVis = cfg.getVisualization() != null
+                        && (cfg.getVisualization().equalsIgnoreCase("barchart")
+                            || cfg.getVisualization().equalsIgnoreCase("bar"));
+
+                // For barchart panels without time, use table format so categories render
+                if (isBarVis && !(mentionsTimeMacros || selectsTimeAlias)) {
+                    target.put("format", "table");
+                } else {
+                    target.put("format", "time_series");
+                }
             } else {
                 // Prometheus query format
                 target.put("expr", cfg.getQuery());
