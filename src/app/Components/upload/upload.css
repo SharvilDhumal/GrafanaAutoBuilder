@@ -6,6 +6,63 @@
     margin-top: 6rem;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   }
+
+  /* Result actions */
+  .result-actions {
+    display: flex;
+    gap: 0.75rem;
+    align-items: center;
+    margin-top: 0.5rem;
+  }
+
+  .grafana-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #ff8132, #f05a28);
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: transform 0.1s ease, filter 0.15s ease;
+    box-shadow: 0 6px 14px rgba(240, 90, 40, 0.25);
+  }
+
+  .grafana-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+  }
+
+  .grafana-btn:focus {
+    outline: 3px solid rgba(240, 90, 40, 0.35);
+    outline-offset: 2px;
+  }
+
+  .secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: #f3f4f6;
+    color: #1f2937;
+    border: 1px solid #e5e7eb;
+    padding: 0.55rem 0.9rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+  }
+
+  .secondary-btn:hover:not(:disabled) {
+    background: #e9ecf2;
+    transform: translateY(-1px);
+  }
+
+  .secondary-btn:disabled {
+    opacity: 0.7;
+    cursor: default;
+  }
   
   .upload-header {
     text-align: center;

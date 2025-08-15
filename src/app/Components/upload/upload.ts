@@ -20,6 +20,7 @@ export class Upload {
   loading = false;
   errorMsg: string | null = null;
   result: UploadResponse | null = null;
+  copied = false;
 
   constructor(private dashboardService: DashboardService) {}
 
@@ -86,6 +87,7 @@ export class Upload {
     this.loading = true;
     this.errorMsg = null;
     this.result = null;
+    this.copied = false;
     // Debug: log selected file before upload
     try {
       console.log('[Upload] Starting upload', {
@@ -133,5 +135,28 @@ export class Upload {
         this.loading = false;
       },
     });
+  }
+
+  async copyGrafanaLink(): Promise<void> {
+    if (!this.result?.grafanaUrl || this.copied) return;
+    const url = this.result.grafanaUrl;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+      }
+      this.copied = true;
+      setTimeout(() => (this.copied = false), 2000);
+    } catch (e) {
+      console.warn('Failed to copy link', e);
+    }
   }
 }
