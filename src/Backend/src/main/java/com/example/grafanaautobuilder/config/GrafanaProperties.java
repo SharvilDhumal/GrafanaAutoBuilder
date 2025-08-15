@@ -8,6 +8,9 @@ public class GrafanaProperties {
     private String apiKey;
     private String folderUid;
     private Integer orgId;
+    // Default datasource settings used when panel CSV does not specify one
+    private String defaultDatasourceUid; // e.g., UID of 'grafana_autobuilder' datasource
+    private String defaultDatasourceType; // e.g., "postgres", "prometheus"
 
     public String getUrl() {
         return url;
@@ -39,5 +42,21 @@ public class GrafanaProperties {
 
     public void setOrgId(Integer orgId) {
         this.orgId = orgId;
+    }
+
+    public String getDefaultDatasourceUid() {
+        return defaultDatasourceUid;
+    }
+
+    public void setDefaultDatasourceUid(String defaultDatasourceUid) {
+        this.defaultDatasourceUid = defaultDatasourceUid;
+    }
+
+    public String getDefaultDatasourceType() {
+        return defaultDatasourceType;
+    }
+
+    public void setDefaultDatasourceType(String defaultDatasourceType) {
+        this.defaultDatasourceType = defaultDatasourceType;
     }
 }

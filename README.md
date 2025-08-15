@@ -9,7 +9,7 @@ Grafana AutoBuilder lets you upload a CSV and generate a Grafana dashboard autom
 - Frontend: Angular (Navbar, Upload, Footer, Documentation components)
 - Backend: Spring Boot (Auth endpoints, PostgreSQL connection)
 - Database: PostgreSQL
-- **Supports multiple datasources**: Prometheus and PostgreSQL in the same dashboard
+- Datasource support: **PostgreSQL only** (multiple Postgres datasources are supported via UID)
 
 ## Prerequisites
 
@@ -64,8 +64,8 @@ The backend reads a CSV of panel definitions and converts each row into a Grafan
 ### Required headers (case-sensitive):
 
 - `title` — Panel title (string)
-- `datasource` — Grafana datasource UID (e.g., `Prometheus`, `PostgreSQL`)
-- `query` — Query for the datasource (PromQL for Prometheus, SQL for PostgreSQL)
+- `datasource` — Grafana datasource UID (PostgreSQL). If blank, backend uses the default UID from `application.yml`.
+- `query` — SQL for PostgreSQL (use Grafana macros like `$__timeFilter()` and `$__timeGroupAlias()`).
 - `visualization` — Panel type: `timeseries`, `stat`, `barchart`, `gauge`
 - `unit` — Display unit (e.g., `percent`, `bytes`, `s`, `ms`, `short`)
 
@@ -75,35 +75,17 @@ The backend reads a CSV of panel definitions and converts each row into a Grafan
 - `w` — Width in grid units (integer)
 - `h` — Height in grid units (integer)
 
-### Multiple Datasources Support
+### Datasource support
 
-**Yes, multiple datasources are supported!** Each panel can use a different datasource, allowing you to mix Prometheus and PostgreSQL panels in the same dashboard.
-
-### Sample CSV - Prometheus
-
-```csv
-title,datasource,query,visualization,unit,thresholds,w,h
-CPU Usage,Prometheus,avg(rate(process_cpu_seconds_total[5m]))*100,timeseries,percent,80|90,12,8
-Requests per Second,Prometheus,sum(rate(http_requests_total[1m])),stat,reqps,1000|2000,6,6
-Error Rate,Prometheus,100 * (sum(rate(http_requests_total{status=~"5.."}[5m]))/sum(rate(http_requests_total[5m]))),barchart,percent,5|10,6,6
-```
+- Only PostgreSQL datasources are supported at the moment.
+- You may specify a different Postgres datasource per row by setting the `datasource` column to that datasource's UID.
 
 ### Sample CSV - PostgreSQL
 
 ```csv
 title,datasource,query,visualization,unit,thresholds,w,h
-User Registrations,PostgreSQL,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short,100|200,12,8
-Active Users,PostgreSQL,"SELECT DATE_TRUNC('hour', last_login) as time, COUNT(DISTINCT user_id) as value FROM user_sessions WHERE last_login >= $__timeFrom() AND last_login <= $__timeTo() GROUP BY DATE_TRUNC('hour', last_login) ORDER BY time",timeseries,short,50|100,6,6
-```
-
-### Sample CSV - Mixed Datasources
-
-```csv
-title,datasource,query,visualization,unit,thresholds,w,h
-System CPU,Prometheus,avg(rate(process_cpu_seconds_total[5m])) * 100,timeseries,percent,80|90,12,8
-User Registrations,PostgreSQL,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short,100|200,12,8
-Memory Usage,Prometheus,process_resident_memory_bytes,gauge,bytes,10737418240|16106127360,6,6
-Database Connections,PostgreSQL,"SELECT DATE_TRUNC('minute', connection_time) as time, COUNT(*) as value FROM db_connections WHERE connection_time >= $__timeFrom() AND connection_time <= $__timeTo() GROUP BY DATE_TRUNC('minute', connection_time) ORDER BY time",stat,short,80|120,8,8
+User Registrations,fev06aq8frhfka,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short,100|200,12,8
+Active Users,fev06aq8frhfka,"SELECT DATE_TRUNC('hour', last_login) as time, COUNT(DISTINCT user_id) as value FROM user_sessions WHERE last_login >= $__timeFrom() AND last_login <= $__timeTo() GROUP BY DATE_TRUNC('hour', last_login) ORDER BY time",timeseries,short,50|100,6,6
 ```
 
 ### PostgreSQL Setup
@@ -116,7 +98,7 @@ To use PostgreSQL as a datasource:
    - Click "Add data source"
    - Select "PostgreSQL"
    - Configure connection details
-   - Note the UID (e.g., "PostgreSQL")
+   - Copy the UID from the datasource page (e.g., `fev06aq8frhfka`) and use it in the CSV `datasource` column when you want to override the default
 
 2. **Use the correct query format:**
 
@@ -135,6 +117,7 @@ To use PostgreSQL as a datasource:
 - Headers match exactly: `title,datasource,query,visualization,unit,thresholds,w,h`.
 - `datasource` exists and is configured in Grafana.
 - `query` is valid for the chosen datasource (PromQL/SQL/etc.).
+- `query` is valid SQL for PostgreSQL.
 - `visualization` is one of: `timeseries`, `stat`, `barchart`, `gauge`.
 - `thresholds` format: `low|high` (optional; leave blank if not used).
 - `w` and `h` are integers if provided; leave blank to let the layout pick defaults.

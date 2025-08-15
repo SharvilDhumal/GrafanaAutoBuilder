@@ -4,7 +4,7 @@
 
   <p class="lead">
     Turn a simple CSV into a production‑ready Grafana dashboard in minutes.
-    Supports both Prometheus and PostgreSQL datasources.
+    Supports PostgreSQL datasources.
   </p>
 
   <h2 id="what-is">What is Grafana AutoBuilder?</h2>
@@ -28,21 +28,10 @@
 
   <h2 id="datasources">Supported Datasources</h2>
   <p>
-    Grafana AutoBuilder supports multiple datasources in a single dashboard.
-    Each panel can use a different datasource, allowing you to combine data from
-    various sources.
-  </p>
-
-  <h3>Prometheus</h3>
-  <p>
-    Use PromQL queries for time-series metrics. Perfect for system monitoring,
-    application metrics, and infrastructure data.
-  </p>
-
-  <h3>PostgreSQL</h3>
-  <p>
-    Use SQL queries for business intelligence, user analytics, and custom data.
-    Supports Grafana time variables for automatic time range filtering.
+    Grafana AutoBuilder currently supports <strong>PostgreSQL only</strong>.
+    You can still use <em>multiple PostgreSQL datasources</em> in one dashboard by
+    specifying the datasource <em>UID</em> per row in the CSV. If left blank, the
+    backend uses the default datasource UID from configuration.
   </p>
 
   <h2 id="csv-schema">CSV schema (one row = one panel)</h2>
@@ -53,12 +42,11 @@
   <ul>
     <li><code>title</code> — Panel title.</li>
     <li>
-      <code>datasource</code> — Grafana datasource <em>UID</em> (e.g.,
-      "Prometheus", "PostgreSQL").
+      <code>datasource</code> — Grafana datasource <em>UID</em> (PostgreSQL). If
+      blank, the app uses the default UID from the backend config.
     </li>
     <li>
-      <code>query</code> — The query for the panel (PromQL for Prometheus, SQL
-      for PostgreSQL).
+      <code>query</code> — SQL for PostgreSQL.
     </li>
     <li>
       <code>visualization</code> — One of: <code>timeseries</code> (default),
@@ -97,38 +85,19 @@
       panels auto‑wrap across the 24‑column grid.
     </li>
     <li>
-      <strong>Multiple datasources:</strong> Each panel can use a different
-      datasource. Mix Prometheus and PostgreSQL panels in the same dashboard.
+      <strong>Multiple PostgreSQL datasources:</strong> Each panel can target a
+      different Postgres datasource by setting the UID in the CSV
+      <code>datasource</code> column.
     </li>
   </ul>
-
-  <h3 id="csv-example-prometheus">Sample CSV - Prometheus</h3>
-  <pre class="code">
-title,datasource,query,visualization,unit,thresholds,w,h
-CPU Usage (5m),Prometheus,avg(rate(process_cpu_seconds_total[5m])) * 100,timeseries,percent,80|90,12,8
-Error Rate,Prometheus,sum(rate(http_requests_total{{ "{" }}code=~"5.."{{
-      "}"
-    }}[5m])) / sum(rate(http_requests_total[5m])) * 100,stat,percent,1|5,6,6
-Top Endpoints (5m),Prometheus,topk(5, sum by (handler) (rate(http_requests_total[5m]))),barchart,,,
-Memory Usage,Prometheus,process_resident_memory_bytes,gauge,bytes,10737418240|16106127360,6,6</pre
-  >
 
   <h3 id="csv-example-postgresql">Sample CSV - PostgreSQL</h3>
   <pre class="code">
 title,datasource,query,visualization,unit,thresholds,w,h
-User Registrations,PostgreSQL,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short,100|200,12,8
-Active Users,PostgreSQL,"SELECT DATE_TRUNC('hour', last_login) as time, COUNT(DISTINCT user_id) as value FROM user_sessions WHERE last_login >= $__timeFrom() AND last_login <= $__timeTo() GROUP BY DATE_TRUNC('hour', last_login) ORDER BY time",timeseries,short,50|100,6,6
-Error Rate,PostgreSQL,"SELECT DATE_TRUNC('minute', timestamp) as time, (COUNT(CASE WHEN status_code >= 400 THEN 1 END) * 100.0 / COUNT(*)) as value FROM application_logs WHERE timestamp >= $__timeFrom() AND timestamp <= $__timeTo() GROUP BY DATE_TRUNC('minute', timestamp) ORDER BY time",barchart,percent,5|10,6,6
-Response Time,PostgreSQL,"SELECT DATE_TRUNC('minute', request_time) as time, AVG(response_time_ms) as value FROM api_requests WHERE request_time >= $__timeFrom() AND request_time <= $__timeTo() GROUP BY DATE_TRUNC('minute', request_time) ORDER BY time",timeseries,ms,200|500,12,6</pre
-  >
-
-  <h3 id="csv-example-mixed">Sample CSV - Mixed Datasources</h3>
-  <pre class="code">
-title,datasource,query,visualization,unit,thresholds,w,h
-System CPU,Prometheus,avg(rate(process_cpu_seconds_total[5m])) * 100,timeseries,percent,80|90,12,8
-User Registrations,PostgreSQL,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short,100|200,12,8
-Memory Usage,Prometheus,process_resident_memory_bytes,gauge,bytes,10737418240|16106127360,6,6
-Database Connections,PostgreSQL,"SELECT DATE_TRUNC('minute', connection_time) as time, COUNT(*) as value FROM db_connections WHERE connection_time >= $__timeFrom() AND connection_time <= $__timeTo() GROUP BY DATE_TRUNC('minute', connection_time) ORDER BY time",stat,short,80|120,8,8</pre
+User Registrations,fev06aq8frhfka,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short,100|200,12,8
+Active Users,fev06aq8frhfka,"SELECT DATE_TRUNC('hour', last_login) as time, COUNT(DISTINCT user_id) as value FROM user_sessions WHERE last_login >= $__timeFrom() AND last_login <= $__timeTo() GROUP BY DATE_TRUNC('hour', last_login) ORDER BY time",timeseries,short,50|100,6,6
+Error Rate,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', timestamp) as time, (COUNT(CASE WHEN status_code >= 400 THEN 1 END) * 100.0 / COUNT(*)) as value FROM application_logs WHERE timestamp >= $__timeFrom() AND timestamp <= $__timeTo() GROUP BY DATE_TRUNC('minute', timestamp) ORDER BY time",barchart,percent,5|10,6,6
+Response Time,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', request_time) as time, AVG(response_time_ms) as value FROM api_requests WHERE request_time >= $__timeFrom() AND request_time <= $__timeTo() GROUP BY DATE_TRUNC('minute', request_time) ORDER BY time",timeseries,ms,200|500,12,6</pre
   >
 
   <h2 id="postgresql-setup">PostgreSQL Setup</h2>
@@ -141,7 +110,7 @@ Database Connections,PostgreSQL,"SELECT DATE_TRUNC('minute', connection_time) as
         <li>Click "Add data source"</li>
         <li>Select "PostgreSQL"</li>
         <li>Configure connection details</li>
-        <li>Note the UID (e.g., "PostgreSQL")</li>
+        <li>Copy the UID (e.g., <code>fev06aq8frhfka</code>) and use it in the CSV when overriding the default</li>
       </ul>
     </li>
     <li>
@@ -164,20 +133,6 @@ psql -U grafana_user -d grafana_autobuilder -f src/Backend/setup_test_data.sql</
   </ol>
 
   <h2 id="query-formats">Query Formats</h2>
-
-  <h3>Prometheus (PromQL)</h3>
-  <pre class="code">
-# CPU usage over 5 minutes
-avg(rate(process_cpu_seconds_total[5m])) * 100
-
-# Error rate calculation
-sum(rate(http_requests_total{{ "{" }}code=~"5.."{{
-      "}"
-    }}[5m])) / sum(rate(http_requests_total[5m])) * 100
-
-# Memory usage
-process_resident_memory_bytes</pre
-  >
 
   <h3>PostgreSQL (SQL)</h3>
   <pre class="code">
@@ -222,14 +177,12 @@ You are generating a CSV for Grafana AutoBuilder. Output ONLY valid CSV with thi
 title,datasource,query,visualization,unit,thresholds,w,h
 
 Requirements:
-- Support both Prometheus and PostgreSQL datasources
-- For Prometheus: Use PromQL queries with realistic metrics
-- For PostgreSQL: Use SQL queries with $__timeFrom() and $__timeTo() time variables
+- PostgreSQL datasource only
+- Use SQL queries with $__timeFrom() and $__timeTo() time variables
 - Provide 6–10 panels covering timeseries, stat, barchart, and gauge
 - Use units like percent, bytes, s, ms, short when appropriate
 - Use thresholds in the form low|high (e.g., 80|90) when useful
 - Use widths/heights that fit a 24-column grid (e.g., w=12,h=8 for large charts; w=6,h=6 for small)
-- Mix both datasources in the same dashboard
 
 PostgreSQL query requirements:
 - Must have "time" column (timestamp) and "value" column (numeric)
@@ -257,8 +210,8 @@ Return ONLY the CSV rows including the header. No commentary.</pre
       for time filtering to avoid "no data" issues.
     </li>
     <li>
-      <strong>Multiple datasources:</strong> Each panel can use a different
-      datasource. Mix Prometheus and PostgreSQL in the same dashboard.
+      <strong>Multiple PostgreSQL datasources:</strong> Each panel can use a
+      different Postgres datasource by setting the UID in the CSV.
     </li>
     <li>
       After upload, the app shows the dashboard title and a link to open it in

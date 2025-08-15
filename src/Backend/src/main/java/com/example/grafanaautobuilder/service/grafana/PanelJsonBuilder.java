@@ -1,12 +1,18 @@
 package com.example.grafanaautobuilder.service.grafana;
 
 import com.example.grafanaautobuilder.dto.PanelConfig;
+import com.example.grafanaautobuilder.config.GrafanaProperties;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class PanelJsonBuilder {
+    private final GrafanaProperties grafanaProperties;
+
+    public PanelJsonBuilder(GrafanaProperties grafanaProperties) {
+        this.grafanaProperties = grafanaProperties;
+    }
 
     public Map<String, Object> buildPanel(PanelConfig cfg, int x, int y, int id) {
         int w = (cfg.getW() == null || cfg.getW() <= 0) ? 12 : cfg.getW();
@@ -20,9 +26,23 @@ public class PanelJsonBuilder {
         gridPos.put("h", h);
 
         Map<String, Object> datasource = null;
-        if (cfg.getDatasource() != null && !cfg.getDatasource().isBlank()) {
+        // Prefer CSV-provided datasource UID; else fallback to configured default
+        String csvDatasource = cfg.getDatasource();
+        String defaultUid = grafanaProperties.getDefaultDatasourceUid();
+        String defaultType = grafanaProperties.getDefaultDatasourceType();
+        if (csvDatasource != null && !csvDatasource.isBlank()) {
             datasource = new HashMap<>();
-            datasource.put("uid", cfg.getDatasource());
+            datasource.put("uid", csvDatasource);
+            // We don't know CSV's type; assume configured default to ensure Grafana treats it as SQL
+            if (defaultType != null && !defaultType.isBlank()) {
+                datasource.put("type", defaultType);
+            }
+        } else if (defaultUid != null && !defaultUid.isBlank()) {
+            datasource = new HashMap<>();
+            datasource.put("uid", defaultUid);
+            if (defaultType != null && !defaultType.isBlank()) {
+                datasource.put("type", defaultType);
+            }
         }
 
         Map<String, Object> target = buildTarget(cfg, datasource);
@@ -36,6 +56,7 @@ public class PanelJsonBuilder {
         panel.put("title", cfg.getTitle() == null ? ("Panel " + id) : cfg.getTitle());
         panel.put("gridPos", gridPos);
         if (datasource != null) panel.put("datasource", datasource);
+        // Ensure targets are set on the panel
         panel.put("targets", targets);
 
         // Add time range configuration to fix "no data" issue
@@ -55,8 +76,10 @@ public class PanelJsonBuilder {
         target.put("refId", "A");
         
         if (cfg.getQuery() != null) {
-            String datasourceType = cfg.getDatasource() != null ? cfg.getDatasource().toLowerCase() : "prometheus";
-            
+            // Determine datasource type from configured default; CSV value is UID, not type
+            String defaultType = grafanaProperties.getDefaultDatasourceType();
+            String datasourceType = defaultType != null ? defaultType.toLowerCase() : "prometheus";
+
             if (datasourceType.contains("postgres") || datasourceType.contains("postgresql")) {
                 // PostgreSQL query format
                 target.put("rawQuery", true);
