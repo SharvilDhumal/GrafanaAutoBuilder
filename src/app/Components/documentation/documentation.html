@@ -13,8 +13,8 @@
     Grafana dashboard. Each row in the CSV describes a single panel (its title,
     query, visualization, units, thresholds, and size). Upload the CSV and
     AutoBuilder will create and arrange the panels automatically, returning a
-    link to open the dashboard in Grafana. The system supports multiple
-    datasources including Prometheus and PostgreSQL.
+    link to open the dashboard in Grafana.
+    <strong>Currently, only PostgreSQL datasources are supported.</strong>
   </p>
 
   <h2 id="get-started">Get started in 3 steps</h2>
@@ -33,6 +33,33 @@
     specifying the datasource <em>UID</em> per row in the CSV. If left blank, the
     backend uses the default datasource UID from configuration.
   </p>
+
+  <p>
+    <strong>Bring Your Own Postgres (BYODB):</strong>
+    Your CSV queries must reference tables/columns that already exist in your
+    own PostgreSQL database. The app does not auto-create tables for you.
+    If a query points to a non-existent table/column, the panel will show
+    "No data" or an error until you adjust the query or create the table.
+  </p>
+
+  <h2 id="db-requirements">Database Requirements & Validation</h2>
+  <ul>
+    <li><strong>Tables/columns must exist:</strong> The SQL in your CSV must match your database schema.</li>
+    <li><strong>How to create/adjust schema:</strong> Use pgAdmin, psql, migrations (Flyway/Liquibase), or provided seed SQL.</li>
+    <li><strong>Datasource UID:</strong> Ensure the CSV <code>datasource</code> column contains the correct Grafana Postgres UID, or leave blank to use the default.</li>
+    <li><strong>Time filtering:</strong> Use <code>$__timeFrom()</code> and <code>$__timeTo()</code> in WHERE clauses.</li>
+  </ul>
+
+  <h3 id="validation-workflow">Validation workflow (avoid "No data")</h3>
+  <ol>
+    <li>Before generating a dashboard, send your CSV to <code>POST /api/dashboard/validate</code> as multipart with the field <code>file</code>.</li>
+    <li>Review per-row results. Fix any missing tables/columns or SQL errors.</li>
+    <li>When all rows are OK, upload the same CSV to generate the dashboard.</li>
+  </ol>
+
+  <pre class="code">
+curl -F "file=@C:\path\to\your.csv" http://localhost:8080/api/dashboard/validate
+  </pre>
 
   <h2 id="csv-schema">CSV schema (one row = one panel)</h2>
   <p>
