@@ -65,7 +65,7 @@ public class PanelJsonBuilder {
             panel.put("options", options);
         }
 
-        Map<String, Object> fieldConfig = buildFieldConfig(cfg.getUnit(), cfg.getThresholds());
+        Map<String, Object> fieldConfig = buildFieldConfig(cfg.getUnit(), cfg.getThresholds(), cfg.getVisualization());
         if (!fieldConfig.isEmpty()) panel.put("fieldConfig", fieldConfig);
 
         return panel;
@@ -169,7 +169,7 @@ public class PanelJsonBuilder {
         return options;
     }
 
-    private Map<String, Object> buildFieldConfig(String unit, String thresholds) {
+    private Map<String, Object> buildFieldConfig(String unit, String thresholds, String visualization) {
         Map<String, Object> fieldConfig = new HashMap<>();
         Map<String, Object> defaults = new HashMap<>();
 
@@ -204,6 +204,38 @@ public class PanelJsonBuilder {
             }
             th.put("steps", steps);
             defaults.put("thresholds", th);
+        }
+
+        // Apply per-visualization default colors if none are specified via CSV (we don't have CSV colors yet)
+        if (visualization != null) {
+            String vis = visualization.toLowerCase(Locale.ROOT);
+            Map<String, Object> color = new HashMap<>();
+            switch (vis) {
+                case "stat":
+                    // Fixed blue for stat
+                    color.put("mode", "fixed");
+                    color.put("fixedColor", "#5794F2");
+                    defaults.put("color", color);
+                    break;
+                case "gauge":
+                    // Fixed green for gauge
+                    color.put("mode", "fixed");
+                    color.put("fixedColor", "#56A64B");
+                    defaults.put("color", color);
+                    break;
+                case "barchart":
+                case "bar":
+                    // Fixed orange for bar charts
+                    color.put("mode", "fixed");
+                    color.put("fixedColor", "#FF9830");
+                    defaults.put("color", color);
+                    break;
+                default:
+                    // Timeseries and others use Grafana's classic palette
+                    color.put("mode", "palette-classic");
+                    defaults.put("color", color);
+                    break;
+            }
         }
 
         if (!defaults.isEmpty()) {
