@@ -6,6 +6,8 @@ import {
   DashboardService,
   UploadResponse,
 } from '../../services/dashboard.service';
+import { MetricsService } from '../../services/metrics.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-upload',
@@ -22,7 +24,11 @@ export class Upload {
   result: UploadResponse | null = null;
   copied = false;
 
-  constructor(private dashboardService: DashboardService) {}
+  constructor(
+    private dashboardService: DashboardService,
+    private metrics: MetricsService,
+    private auth: AuthService,
+  ) {}
 
   onFileSelected(event: any): void {
     const file: File = event.target.files[0];
@@ -115,6 +121,14 @@ export class Upload {
         console.log('[Upload] Success response', res);
         this.result = res;
         this.loading = false;
+        // Record conversion activity for admin metrics
+        try {
+          const email = this.auth.getCurrentEmail() || 'anonymous';
+          const docName = this.selectedFile?.name || res?.title || 'CSV';
+          this.metrics.recordConversion(email, docName);
+        } catch (e) {
+          // non-fatal
+        }
       },
       error: (err) => {
         // Surface detailed error information in console

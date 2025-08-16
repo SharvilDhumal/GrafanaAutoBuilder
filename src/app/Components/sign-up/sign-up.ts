@@ -8,13 +8,15 @@ import {
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService, SignupRequest } from '../../services/auth.service';
+import { Navbar } from '../../Components/navbar/navbar';
+import { Footer } from '../../Components/footer/footer';
 
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink, Navbar, Footer],
   templateUrl: './sign-up.html',
-  styleUrl: './sign-up.css',
+  styleUrls: ['./sign-up.css'],
 })
 export class SignUp {
   form: FormGroup;

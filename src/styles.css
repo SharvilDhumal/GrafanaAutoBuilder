@@ -10,6 +10,9 @@ html, body {
   font-family: var(--app-font) !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
 
 /* Ensure form controls and interactive elements inherit */
@@ -20,4 +23,5 @@ button, input, select, textarea {
 /* Make all elements inherit body font unless explicitly overridden */
 *, *::before, *::after {
   font-family: inherit !important;
+  box-sizing: border-box;
 }
