@@ -1,3 +1,4 @@
+C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\entity\FileMetadata.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\exception\EmailAlreadyExistsException.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\exception\TokenAlreadyUsedException.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\config\SecurityConfig.java
@@ -14,7 +15,9 @@ C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaauto
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\entity\PasswordResetToken.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\repository\UserRepository.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\config\AdminSeeder.java
+C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\dto\FileMetadataDto.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\GrafanaAutobuilderApplication.java
+C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\repository\FileMetadataRepository.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\service\grafana\PanelJsonBuilder.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\dto\ForgotPasswordRequest.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\service\csv\CsvParsingService.java
@@ -24,6 +27,7 @@ C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaauto
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\config\JwtAuthFilter.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\entity\VerificationToken.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\config\GrafanaProperties.java
+C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\controller\FileController.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\dto\PanelConfig.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\entity\User.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\dto\SignupRequest.java
@@ -32,4 +36,5 @@ C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaauto
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\exception\UserNotFoundException.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\dto\AuthResponse.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\repository\VerificationTokenRepository.java
+C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\service\storage\SupabaseStorageService.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\dto\ValidationResult.java

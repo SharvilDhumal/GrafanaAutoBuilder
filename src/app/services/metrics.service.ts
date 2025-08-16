@@ -17,7 +17,7 @@ const LS_KEYS = {
 };
 
 const HEARTBEAT_MS = 10000; // 10s heartbeat for fast detection on other tabs
-const STALE_AFTER_MS = 2 * 60 * 60 * 1000; // 2 hours grace; considered offline sooner only if tab signals close
+const STALE_AFTER_MS = 15 * 60 * 1000; // 15 minutes; reduces inflated counts from idle/recent sessions
 const MAX_ACTIVITIES = 100;
 
 @Injectable({ providedIn: 'root' })
