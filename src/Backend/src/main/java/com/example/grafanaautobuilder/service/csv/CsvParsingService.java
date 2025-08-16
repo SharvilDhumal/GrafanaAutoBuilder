@@ -52,6 +52,8 @@ public class CsvParsingService {
                 // Optional per-panel time overrides
                 cfg.setTimeFrom(get(r, "timeFrom"));
                 cfg.setTimeShift(get(r, "timeShift"));
+                // Optional explicit color override (hex or Grafana color name)
+                cfg.setColor(get(r, "color"));
                 list.add(cfg);
             }
             log.info("CSV parsed: {} records in {} ms", list.size(), (System.currentTimeMillis() - start));

@@ -82,7 +82,7 @@ public class PanelJsonBuilder {
             panel.put("options", options);
         }
 
-        Map<String, Object> fieldConfig = buildFieldConfig(cfg.getUnit(), cfg.getThresholds(), cfg.getVisualization());
+        Map<String, Object> fieldConfig = buildFieldConfig(cfg.getUnit(), cfg.getThresholds(), cfg.getVisualization(), cfg.getColor());
         if (!fieldConfig.isEmpty()) panel.put("fieldConfig", fieldConfig);
 
         return panel;
@@ -198,7 +198,7 @@ public class PanelJsonBuilder {
         return options;
     }
 
-    private Map<String, Object> buildFieldConfig(String unit, String thresholds, String visualization) {
+    private Map<String, Object> buildFieldConfig(String unit, String thresholds, String visualization, String explicitColor) {
         Map<String, Object> fieldConfig = new HashMap<>();
         Map<String, Object> defaults = new HashMap<>();
 
@@ -252,15 +252,15 @@ public class PanelJsonBuilder {
             Map<String, Object> color = new HashMap<>();
             switch (vis) {
                 case "stat":
-                    // Fixed blue for stat
+                    // Fixed modern blue for stat (or explicit override)
                     color.put("mode", "fixed");
-                    color.put("fixedColor", "#5794F2");
+                    color.put("fixedColor", (explicitColor != null && !explicitColor.isBlank()) ? explicitColor : "#60A5FA");
                     defaults.put("color", color);
                     break;
                 case "gauge":
-                    // Fixed green for gauge
+                    // Fixed modern green for gauge (or explicit override)
                     color.put("mode", "fixed");
-                    color.put("fixedColor", "#56A64B");
+                    color.put("fixedColor", (explicitColor != null && !explicitColor.isBlank()) ? explicitColor : "#22C55E");
                     defaults.put("color", color);
                     // If percent unit, clamp 0-100
                     if (unit != null && unit.toLowerCase(Locale.ROOT).contains("percent")) {
@@ -272,14 +272,19 @@ public class PanelJsonBuilder {
                     break;
                 case "barchart":
                 case "bar":
-                    // Fixed orange for bar charts
+                    // Fixed modern cyan for bar charts (or explicit override)
                     color.put("mode", "fixed");
-                    color.put("fixedColor", "#FF9830");
+                    color.put("fixedColor", (explicitColor != null && !explicitColor.isBlank()) ? explicitColor : "#06B6D4");
                     defaults.put("color", color);
                     break;
                 default:
-                    // Timeseries and others use Grafana's classic palette
-                    color.put("mode", "palette-classic");
+                    // Timeseries: allow explicit color, otherwise use palette
+                    if (explicitColor != null && !explicitColor.isBlank()) {
+                        color.put("mode", "fixed");
+                        color.put("fixedColor", explicitColor);
+                    } else {
+                        color.put("mode", "palette-classic");
+                    }
                     defaults.put("color", color);
                     // Suggest soft min for percentages
                     if (unit != null && unit.toLowerCase(Locale.ROOT).contains("percent")) {

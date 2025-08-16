@@ -13,6 +13,8 @@ public class PanelConfig {
     private String timeFrom;
     // Optional per-panel time shift override (e.g., 1h)
     private String timeShift;
+    // Optional explicit color hex (e.g., #7C3AED). If set, overrides defaults.
+    private String color;
 
     public String getTitle() {
         return title;
@@ -92,5 +94,13 @@ public class PanelConfig {
 
     public void setTimeShift(String timeShift) {
         this.timeShift = timeShift;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }

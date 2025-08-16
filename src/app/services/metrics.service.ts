@@ -102,8 +102,13 @@ export class MetricsService {
   clearPresence() {
     if (!this.email) return;
     const map = this.getPresenceMap();
-    const key = this.presenceKey();
-    if (key) delete map[key];
+    // Remove ALL sessions for this email (not just this tab)
+    const email = this.email;
+    for (const k of Object.keys(map)) {
+      if (k === email || k.startsWith(email + '#')) {
+        delete map[k];
+      }
+    }
     if (this.browser) {
       localStorage.setItem(LS_KEYS.presence, JSON.stringify(map));
     }
@@ -152,11 +157,21 @@ export class MetricsService {
     const map = this.getPresenceMap();
     const now = Date.now();
     const unique = new Set<string>();
+    let mutated = false;
     for (const [key, ts] of Object.entries(map)) {
-      if (now - (ts as number) <= STALE_AFTER_MS) {
-        const email = key.includes('#') ? key.split('#')[0] : key; // support legacy keys
-        unique.add(email);
+      const last = Number(ts);
+      if (!isFinite(last) || now - last > STALE_AFTER_MS) {
+        // Prune stale/invalid entries so they don't linger for hours/days
+        delete map[key as string];
+        mutated = true;
+        continue;
       }
+      const email = key.includes('#') ? key.split('#')[0] : key; // support legacy keys
+      unique.add(email);
+    }
+    if (mutated && this.browser) {
+      localStorage.setItem(LS_KEYS.presence, JSON.stringify(map));
+      this.bc?.postMessage({ type: 'presence' });
     }
     this.activeUsers$.next(unique.size);
   }
