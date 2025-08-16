@@ -29,7 +29,7 @@ export class DashboardService {
 
     let headers = new HttpHeaders();
     if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem('authToken');
+      const token = sessionStorage.getItem('authToken');
       if (token) {
         headers = headers.set('Authorization', `Bearer ${token}`);
       }

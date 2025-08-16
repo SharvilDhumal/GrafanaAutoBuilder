@@ -44,6 +44,11 @@ export class MetricsService {
         this.activities$.next(this.getActivities());
         this.computeActiveUsers();
       });
+      // Ensure prompt decrement on tab close
+      const markStaleNow = () => this.markStaleImmediately();
+      // Use both events for broader browser coverage
+      window.addEventListener('beforeunload', markStaleNow);
+      window.addEventListener('pagehide', markStaleNow as any);
     }
 
     // Optional BroadcastChannel for more immediate sync
@@ -56,6 +61,13 @@ export class MetricsService {
           this.computeActiveUsers();
         }
       };
+    }
+
+    // Periodic sweep to expire stale users and refresh observers even without events
+    if (this.browser) {
+      this.zone.runOutsideAngular(() => {
+        setInterval(() => this.computeActiveUsers(), 5000);
+      });
     }
   }
 
@@ -150,6 +162,20 @@ export class MetricsService {
       return s ? JSON.parse(s) as ActivityItem[] : [];
     } catch {
       return [];
+    }
+  }
+
+  // Mark this user's presence as immediately stale (used on tab close)
+  private markStaleImmediately() {
+    if (!this.browser || !this.email) return;
+    try {
+      const map = this.getPresenceMap();
+      // Set last seen to a time older than the stale threshold so other tabs drop it promptly
+      map[this.email] = Date.now() - (STALE_AFTER_MS + 1000);
+      localStorage.setItem(LS_KEYS.presence, JSON.stringify(map));
+      this.bc?.postMessage({ type: 'presence' });
+    } catch {
+      // noop
     }
   }
 }
