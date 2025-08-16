@@ -49,6 +49,9 @@ public class CsvParsingService {
                 cfg.setThresholds(get(r, "thresholds"));
                 cfg.setW(parseIntOrNull(get(r, "w")));
                 cfg.setH(parseIntOrNull(get(r, "h")));
+                // Optional per-panel time overrides
+                cfg.setTimeFrom(get(r, "timeFrom"));
+                cfg.setTimeShift(get(r, "timeShift"));
                 list.add(cfg);
             }
             log.info("CSV parsed: {} records in {} ms", list.size(), (System.currentTimeMillis() - start));

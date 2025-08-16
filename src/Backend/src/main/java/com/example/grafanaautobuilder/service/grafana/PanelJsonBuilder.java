@@ -59,6 +59,23 @@ public class PanelJsonBuilder {
         // Ensure targets are set on the panel
         panel.put("targets", targets);
 
+        // Per-panel time overrides (Grafana honors these over dashboard picker)
+        String timeFrom = cfg.getTimeFrom();
+        String timeShift = cfg.getTimeShift();
+        // Provide sensible defaults by visualization if not explicitly set
+        if ((timeFrom == null || timeFrom.isBlank()) && type != null) {
+            String t = type.toLowerCase(Locale.ROOT);
+            if (t.equals("stat") || t.equals("gauge")) {
+                timeFrom = "24h"; // show last 24h for single-value panels by default
+            }
+        }
+        if (timeFrom != null && !timeFrom.isBlank()) {
+            panel.put("timeFrom", timeFrom.trim());
+        }
+        if (timeShift != null && !timeShift.isBlank()) {
+            panel.put("timeShift", timeShift.trim());
+        }
+
         // Add time range configuration to fix "no data" issue
         Map<String, Object> options = buildPanelOptions(cfg.getVisualization());
         if (!options.isEmpty()) {
@@ -121,7 +138,7 @@ public class PanelJsonBuilder {
                 case "stat":
                     Map<String, Object> statOptions = new HashMap<>();
                     statOptions.put("colorMode", "value");
-                    statOptions.put("graphMode", "area");
+                    statOptions.put("graphMode", "area"); // sparkline
                     statOptions.put("justifyMode", "auto");
                     statOptions.put("orientation", "auto");
                     statOptions.put("reduceOptions", Map.of(
@@ -136,8 +153,8 @@ public class PanelJsonBuilder {
                 case "barchart":
                 case "bar":
                     Map<String, Object> barOptions = new HashMap<>();
-                    barOptions.put("orientation", "auto");
-                    barOptions.put("showValue", "auto");
+                    barOptions.put("orientation", "horizontal"); // better for categorical labels
+                    barOptions.put("showValue", "always");
                     barOptions.put("stacking", "none");
                     options.putAll(barOptions);
                     break;
@@ -147,6 +164,11 @@ public class PanelJsonBuilder {
                     gaugeOptions.put("orientation", "auto");
                     gaugeOptions.put("showThresholdLabels", false);
                     gaugeOptions.put("showThresholdMarkers", true);
+                    gaugeOptions.put("reduceOptions", Map.of(
+                        "calcs", List.of("lastNotNull"),
+                        "fields", "",
+                        "values", false
+                    ));
                     options.putAll(gaugeOptions);
                     break;
                     
@@ -161,6 +183,13 @@ public class PanelJsonBuilder {
                         "mode", "single",
                         "sort", "none"
                     ));
+                    // Visual improvements
+                    timeSeriesOptions.put("drawStyle", "line");
+                    timeSeriesOptions.put("lineInterpolation", "smooth");
+                    timeSeriesOptions.put("lineWidth", 2);
+                    timeSeriesOptions.put("fillOpacity", 12);
+                    timeSeriesOptions.put("showPoints", "auto");
+                    timeSeriesOptions.put("spanNulls", true);
                     options.putAll(timeSeriesOptions);
                     break;
             }
@@ -175,6 +204,17 @@ public class PanelJsonBuilder {
 
         if (unit != null && !unit.isBlank()) {
             defaults.put("unit", unit);
+        }
+        // Heuristic decimals by unit
+        if (unit != null) {
+            String u = unit.toLowerCase(Locale.ROOT);
+            if (u.contains("percent")) {
+                defaults.put("decimals", 1);
+            } else if (u.contains("currency")) {
+                defaults.put("decimals", 0);
+            } else {
+                defaults.put("decimals", 2);
+            }
         }
         if (thresholds != null && !thresholds.isBlank()) {
             Map<String, Object> th = new HashMap<>();
@@ -222,6 +262,13 @@ public class PanelJsonBuilder {
                     color.put("mode", "fixed");
                     color.put("fixedColor", "#56A64B");
                     defaults.put("color", color);
+                    // If percent unit, clamp 0-100
+                    if (unit != null && unit.toLowerCase(Locale.ROOT).contains("percent")) {
+                        Map<String, Object> custom = (Map<String, Object>) defaults.getOrDefault("custom", new HashMap<>());
+                        custom.put("min", 0);
+                        custom.put("max", 100);
+                        defaults.put("custom", custom);
+                    }
                     break;
                 case "barchart":
                 case "bar":
@@ -234,6 +281,13 @@ public class PanelJsonBuilder {
                     // Timeseries and others use Grafana's classic palette
                     color.put("mode", "palette-classic");
                     defaults.put("color", color);
+                    // Suggest soft min for percentages
+                    if (unit != null && unit.toLowerCase(Locale.ROOT).contains("percent")) {
+                        Map<String, Object> custom = (Map<String, Object>) defaults.getOrDefault("custom", new HashMap<>());
+                        custom.put("axisSoftMin", 0);
+                        custom.put("axisSoftMax", 100);
+                        defaults.put("custom", custom);
+                    }
                     break;
             }
         }

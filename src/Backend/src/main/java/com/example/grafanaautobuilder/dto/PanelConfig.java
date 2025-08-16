@@ -9,6 +9,10 @@ public class PanelConfig {
     private String thresholds; // e.g., "80|90"
     private Integer w; // width in grid units
     private Integer h; // height in grid units
+    // Optional per-panel time range override (Grafana format: 24h, 7d, 30m, etc.)
+    private String timeFrom;
+    // Optional per-panel time shift override (e.g., 1h)
+    private String timeShift;
 
     public String getTitle() {
         return title;
@@ -72,5 +76,21 @@ public class PanelConfig {
 
     public void setH(Integer h) {
         this.h = h;
+    }
+
+    public String getTimeFrom() {
+        return timeFrom;
+    }
+
+    public void setTimeFrom(String timeFrom) {
+        this.timeFrom = timeFrom;
+    }
+
+    public String getTimeShift() {
+        return timeShift;
+    }
+
+    public void setTimeShift(String timeShift) {
+        this.timeShift = timeShift;
     }
 }
