@@ -25,6 +25,12 @@
   align-items: center;
 }
 
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
 .logo {
   display: flex;
   align-items: center;
@@ -71,4 +77,31 @@
 
 .login-btn:hover {
   background-color: #3182ce;
+}
+
+.admin-link {
+  color: #2d3748;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.admin-link:hover {
+  color: #1a202c;
+  background-color: rgba(66, 153, 225, 0.15);
+}
+
+.avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #2b6cb0;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }

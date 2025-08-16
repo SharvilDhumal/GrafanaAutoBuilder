@@ -16,12 +16,12 @@
         </svg>
         <span>Grafana AutoBuilder</span>
       </a>
-      <button class="login-btn" (click)="onLogin()" *ngIf="!isAuthenticated">
-        Login
-      </button>
-      <button class="login-btn" (click)="onLogout()" *ngIf="isAuthenticated">
-        Logout
-      </button>
+      <div class="nav-actions">
+        <a *ngIf="isAuthenticated && isAdmin" class="admin-link" routerLink="/admin-panel">Admin Panel</a>
+        <div *ngIf="isAuthenticated" class="avatar" [attr.aria-label]="email || 'user'">{{ userInitial }}</div>
+        <button class="login-btn" (click)="onLogin()" *ngIf="!isAuthenticated">Login</button>
+        <button class="login-btn" (click)="onLogout()" *ngIf="isAuthenticated">Logout</button>
+      </div>
     </nav>
   </div>
 </header>

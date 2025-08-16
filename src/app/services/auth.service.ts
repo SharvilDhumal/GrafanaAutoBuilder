@@ -57,11 +57,11 @@ export class AuthService {
     }).pipe(
       tap(response => {
         if (response.token && isPlatformBrowser(this.platformId)) {
-          localStorage.setItem('authToken', response.token);
-          localStorage.setItem('tokenExpiry', response.expiresAt);
+          sessionStorage.setItem('authToken', response.token);
+          sessionStorage.setItem('tokenExpiry', response.expiresAt);
           // Persist email from the login request so we can identify the user client-side
           if (loginRequest.email) {
-            localStorage.setItem('email', loginRequest.email.toLowerCase().trim());
+            sessionStorage.setItem('email', loginRequest.email.toLowerCase().trim());
             // Count visit and start presence heartbeat for active users metric
             this.metrics.markVisit(loginRequest.email.toLowerCase().trim());
           }
@@ -136,13 +136,13 @@ export class AuthService {
   // Logout method
   logout(): void {
     if (isPlatformBrowser(this.platformId)) {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('tokenExpiry');
-      const email = localStorage.getItem('email');
+      sessionStorage.removeItem('authToken');
+      sessionStorage.removeItem('tokenExpiry');
+      const email = sessionStorage.getItem('email');
       if (email) {
         this.metrics.clearPresence();
       }
-      localStorage.removeItem('email');
+      sessionStorage.removeItem('email');
       this.isAuthenticatedSubject.next(false);
     }
     this.router.navigate(['/login']);
@@ -154,8 +154,8 @@ export class AuthService {
       return false;
     }
     
-    const token = localStorage.getItem('authToken');
-    const expiry = localStorage.getItem('tokenExpiry');
+    const token = sessionStorage.getItem('authToken');
+    const expiry = sessionStorage.getItem('tokenExpiry');
     
     if (!token || !expiry) {
       return false;
@@ -175,7 +175,7 @@ export class AuthService {
   // Get current user's email stored at login time
   getCurrentEmail(): string | null {
     if (!isPlatformBrowser(this.platformId)) return null;
-    const email = localStorage.getItem('email');
+    const email = sessionStorage.getItem('email');
     return email ? email : null;
   }
 }
