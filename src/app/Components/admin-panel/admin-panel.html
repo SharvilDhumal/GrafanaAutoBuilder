@@ -1,5 +1,6 @@
 <app-navbar></app-navbar>
 <div class="admin-container">
+
     <!-- Header -->
     <!-- <header class="admin-header">
       <h1>Grafana AutoBuilder – Admin Panel</h1>
@@ -10,39 +11,44 @@
     <section class="stats-grid">
       <div class="stat-card">
         <h3>CSV → Grafana Conversions</h3>
-        <p class="stat-value">124</p>
+        <p class="stat-value">{{ (activities$ | async)?.length || 0 }}</p>
       </div>
       <div class="stat-card">
         <h3>Total Visits</h3>
-        <p class="stat-value">5,482</p>
+        <p class="stat-value">{{ totalVisits$ | async }}</p>
       </div>
       <div class="stat-card">
         <h3>Active Users</h3>
-        <p class="stat-value">18</p>
+        <p class="stat-value">{{ activeUsers$ | async }}</p>
       </div>
     </section>
-  
+
     <!-- CSV Upload -->
-    <section class="upload-section">
+    <!-- <section class="upload-section">
       <h2>Upload CSV</h2>
       <p>Upload a CSV file containing panel specifications to automatically update Grafana dashboards.</p>
       <input type="file" accept=".csv" class="file-input" />
       <button class="upload-btn">Upload & Build Dashboard</button>
-    </section>
-  
+    </section> -->
+
     <!-- Recent User Activity -->
     <section class="activity-section">
       <h2>Recent User Activity</h2>
       <ul class="activity-list">
-        <li><span class="user-name">Alice</span> uploaded <strong>sales_kpis.csv</strong> – <small>2 mins ago</small></li>
-        <li><span class="user-name">Bob</span> viewed <strong>Server Metrics Dashboard</strong> – <small>15 mins ago</small></li>
-        <li><span class="user-name">Charlie</span> deleted <strong>old_report.csv</strong> – <small>1 hr ago</small></li>
-        <li><span class="user-name">Dana</span> updated <strong>Marketing KPIs</strong> – <small>3 hrs ago</small></li>
+        <ng-container *ngIf="(activities$ | async) as acts; else noActs">
+          <li *ngFor="let a of acts">
+            <span class="user-name">{{ a.user }}</span> converted <strong>{{ a.docName }}</strong>
+            – <small>{{ a.timestamp | date:'short' }}</small>
+          </li>
+        </ng-container>
+        <ng-template #noActs>
+          <li><small>No recent activity yet.</small></li>
+        </ng-template>
       </ul>
     </section>
-  
+
     <!-- Dashboard Table -->
-    <section class="dashboard-table">
+    <!-- <section class="dashboard-table">
       <h2>Existing Dashboards</h2>
       <table>
         <thead>
@@ -77,5 +83,5 @@
           </tr>
         </tbody>
       </table>
-    </section>
+    </section> -->
   </div>

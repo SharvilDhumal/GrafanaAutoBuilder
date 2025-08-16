@@ -13,6 +13,7 @@ C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaauto
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\config\JwtService.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\entity\PasswordResetToken.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\repository\UserRepository.java
+C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\config\AdminSeeder.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\GrafanaAutobuilderApplication.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\service\grafana\PanelJsonBuilder.java
 C:\Angular\Grafana_Autobuilder\src\Backend\src\main\java\com\example\grafanaautobuilder\dto\ForgotPasswordRequest.java

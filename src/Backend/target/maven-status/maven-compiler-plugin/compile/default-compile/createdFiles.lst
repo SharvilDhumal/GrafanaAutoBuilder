@@ -1,5 +1,6 @@
 com\example\grafanaautobuilder\client\GrafanaClient.class
 com\example\grafanaautobuilder\service\grafana\PanelJsonBuilder.class
+com\example\grafanaautobuilder\service\csv\CsvValidationService.class
 com\example\grafanaautobuilder\dto\LoginRequest.class
 com\example\grafanaautobuilder\exception\EmailAlreadyExistsException.class
 com\example\grafanaautobuilder\entity\PasswordResetToken.class
@@ -19,10 +20,12 @@ com\example\grafanaautobuilder\dto\AuthResponse.class
 com\example\grafanaautobuilder\service\grafana\DashboardBuilder.class
 com\example\grafanaautobuilder\config\RestTemplateConfig.class
 com\example\grafanaautobuilder\config\JwtService.class
+com\example\grafanaautobuilder\controller\DashboardUploadController.class
 com\example\grafanaautobuilder\config\JwtAuthFilter.class
 com\example\grafanaautobuilder\exception\TokenNotFoundException.class
 com\example\grafanaautobuilder\service\csv\CsvParsingService.class
 com\example\grafanaautobuilder\config\GrafanaProperties.class
+com\example\grafanaautobuilder\dto\ValidationResult.class
 com\example\grafanaautobuilder\exception\TokenExpiredException.class
 com\example\grafanaautobuilder\dto\SignupRequest.class
 com\example\grafanaautobuilder\dto\ResetPasswordRequest.class

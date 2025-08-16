@@ -1,6 +1,7 @@
 .admin-container {
     font-family: 'Segoe UI', sans-serif;
     padding: 2rem;
+    padding-top: 6rem; /* prevent overlap with fixed navbar */
     background-color: #f9fbfd;
     color: #1e2a38;
   }

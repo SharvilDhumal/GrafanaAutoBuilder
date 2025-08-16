@@ -5,6 +5,7 @@ import { tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { environment } from '../../environments/environment';
+import { MetricsService } from './metrics.service';
 
 // Define interfaces for our API responses
 export interface AuthResponse {
@@ -43,6 +44,7 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router,
+    private metrics: MetricsService,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
@@ -57,6 +59,12 @@ export class AuthService {
         if (response.token && isPlatformBrowser(this.platformId)) {
           localStorage.setItem('authToken', response.token);
           localStorage.setItem('tokenExpiry', response.expiresAt);
+          // Persist email from the login request so we can identify the user client-side
+          if (loginRequest.email) {
+            localStorage.setItem('email', loginRequest.email.toLowerCase().trim());
+            // Count visit and start presence heartbeat for active users metric
+            this.metrics.markVisit(loginRequest.email.toLowerCase().trim());
+          }
           this.isAuthenticatedSubject.next(true);
         }
       }),
@@ -130,6 +138,11 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('authToken');
       localStorage.removeItem('tokenExpiry');
+      const email = localStorage.getItem('email');
+      if (email) {
+        this.metrics.clearPresence();
+      }
+      localStorage.removeItem('email');
       this.isAuthenticatedSubject.next(false);
     }
     this.router.navigate(['/login']);
@@ -157,5 +170,12 @@ export class AuthService {
     }
     
     return true;
+  }
+
+  // Get current user's email stored at login time
+  getCurrentEmail(): string | null {
+    if (!isPlatformBrowser(this.platformId)) return null;
+    const email = localStorage.getItem('email');
+    return email ? email : null;
   }
 }

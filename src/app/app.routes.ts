@@ -7,6 +7,7 @@ import { ResetPassword } from './Components/reset-password/reset-password';
 import { Upload } from './Components/upload/upload';
 import { Documentation } from './Components/documentation/documentation';
 import { AdminPanel} from './Components/admin-panel/admin-panel';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', component: Home },
@@ -17,5 +18,5 @@ export const routes: Routes = [
   { path: 'upload', component: Upload },
   { path: 'docs', component: Documentation },
   { path: 'documentation', component: Documentation },
-  { path: 'admin-panel', component: AdminPanel },
+  { path: 'admin-panel', component: AdminPanel, canActivate: [adminGuard] },
 ];
