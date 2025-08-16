@@ -36,13 +36,20 @@
       <h2>Recent User Activity</h2>
       <ul class="activity-list">
         <ng-container *ngIf="(activities$ | async) as acts; else noActs">
-          <li *ngFor="let a of acts">
-            <span class="user-name">{{ a.user }}</span> converted <strong>{{ a.docName }}</strong>
-            – <small>{{ a.timestamp | date:'short' }}</small>
+          <li class="activity-item" *ngFor="let a of acts">
+            <div class="activity-icon" aria-hidden="true">⚡</div>
+            <div class="activity-content">
+              <div class="activity-row">
+                <a class="user-link" [href]="'mailto:' + a.user">{{ a.user }}</a>
+                <span class="activity-action">converted</span>
+                <span class="doc-pill">{{ a.docName }}</span>
+              </div>
+              <div class="activity-meta">{{ a.timestamp | date:'MMM d, y, h:mm a' }}</div>
+            </div>
           </li>
         </ng-container>
         <ng-template #noActs>
-          <li><small>No recent activity yet.</small></li>
+          <li class="activity-empty"><small>No recent activity yet.</small></li>
         </ng-template>
       </ul>
     </section>

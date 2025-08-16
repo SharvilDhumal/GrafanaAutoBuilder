@@ -16,8 +16,8 @@ const LS_KEYS = {
   activities: 'metrics.activities' // JSON array of ActivityItem, newest first
 };
 
-const HEARTBEAT_MS = 10000; // 10s
-const STALE_AFTER_MS = 30000; // 30s considered offline
+const HEARTBEAT_MS = 10000; // 10s heartbeat for fast detection on other tabs
+const STALE_AFTER_MS = 2 * 60 * 60 * 1000; // 2 hours grace; considered offline sooner only if tab signals close
 const MAX_ACTIVITIES = 100;
 
 @Injectable({ providedIn: 'root' })
@@ -27,11 +27,23 @@ export class MetricsService {
   activities$ = new BehaviorSubject<ActivityItem[]>([]);
 
   private email: string | null = null;
+  private sid: string | null = null; // per-tab session id
   private bc?: BroadcastChannel;
   private readonly browser: boolean;
 
   constructor(private zone: NgZone, @Inject(PLATFORM_ID) platformId: Object) {
     this.browser = isPlatformBrowser(platformId);
+    // Create or reuse a per-tab session id
+    if (this.browser) {
+      try {
+        const existing = sessionStorage.getItem('metrics.sid');
+        this.sid = existing || this.generateSid();
+        sessionStorage.setItem('metrics.sid', this.sid);
+      } catch {
+        // sessionStorage might be unavailable; fallback to random
+        this.sid = this.generateSid();
+      }
+    }
     // Initialize from localStorage
     this.totalVisits$.next(this.getTotalVisits());
     this.activities$.next(this.getActivities());
@@ -90,7 +102,8 @@ export class MetricsService {
   clearPresence() {
     if (!this.email) return;
     const map = this.getPresenceMap();
-    delete map[this.email];
+    const key = this.presenceKey();
+    if (key) delete map[key];
     if (this.browser) {
       localStorage.setItem(LS_KEYS.presence, JSON.stringify(map));
     }
@@ -116,7 +129,10 @@ export class MetricsService {
     if (!this.email || !this.browser) return;
     const setBeat = () => {
       const map = this.getPresenceMap();
-      map[this.email!] = Date.now();
+      const key = this.presenceKey();
+      if (key) {
+        map[key] = Date.now();
+      }
       if (this.browser) {
         localStorage.setItem(LS_KEYS.presence, JSON.stringify(map));
       }
@@ -135,8 +151,14 @@ export class MetricsService {
   private computeActiveUsers() {
     const map = this.getPresenceMap();
     const now = Date.now();
-    const active = Object.values(map).filter(ts => now - ts <= STALE_AFTER_MS).length;
-    this.activeUsers$.next(active);
+    const unique = new Set<string>();
+    for (const [key, ts] of Object.entries(map)) {
+      if (now - (ts as number) <= STALE_AFTER_MS) {
+        const email = key.includes('#') ? key.split('#')[0] : key; // support legacy keys
+        unique.add(email);
+      }
+    }
+    this.activeUsers$.next(unique.size);
   }
 
   private getTotalVisits(): number {
@@ -170,12 +192,30 @@ export class MetricsService {
     if (!this.browser || !this.email) return;
     try {
       const map = this.getPresenceMap();
+      const key = this.presenceKey();
       // Set last seen to a time older than the stale threshold so other tabs drop it promptly
-      map[this.email] = Date.now() - (STALE_AFTER_MS + 1000);
+      if (key) map[key] = Date.now() - (STALE_AFTER_MS + 1000);
       localStorage.setItem(LS_KEYS.presence, JSON.stringify(map));
       this.bc?.postMessage({ type: 'presence' });
     } catch {
       // noop
+    }
+  }
+
+  // Build the presence map key combining email and per-tab session id
+  private presenceKey(): string | null {
+    if (!this.email || !this.sid) return null;
+    return `${this.email}#${this.sid}`;
+  }
+
+  // Simple SID generator; prefer crypto if available
+  private generateSid(): string {
+    try {
+      const arr = new Uint8Array(8);
+      (window.crypto || (window as any).msCrypto).getRandomValues(arr);
+      return Array.from(arr).map(b => b.toString(16).padStart(2, '0')).join('');
+    } catch {
+      return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
     }
   }
 }

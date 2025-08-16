@@ -37,30 +37,32 @@
   }
 
   .stat-card {
-    background: white;
-    padding: 1.5rem;
-    border-radius: 10px;
+    background: #fff;
+    padding: 1.25rem 1.5rem;
+    border-radius: 14px;
     text-align: center;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    box-shadow: 0 12px 24px rgba(28, 61, 107, 0.06);
+    border: 1px solid rgba(226, 232, 240, 0.9);
   }
 
   .stat-card h3 {
     color: #2d6cdf;
-    font-size: 1rem;
-    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    margin-bottom: 0.35rem;
   }
 
   .stat-value {
     font-size: 2rem;
-    font-weight: bold;
+    font-weight: 800;
   }
 
   /* Upload Section */
   .upload-section, .activity-section, .dashboard-table {
     background: white;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 1.25rem 1.5rem;
+    border-radius: 14px;
+    box-shadow: 0 12px 24px rgba(28, 61, 107, 0.06);
+    border: 1px solid rgba(226, 232, 240, 0.9);
     margin-bottom: 2rem;
   }
 
@@ -92,21 +94,77 @@
   .activity-list {
     list-style: none;
     padding: 0;
+    margin: 0.5rem 0 0;
   }
 
-  .activity-list li {
-    padding: 0.6rem 0;
-    border-bottom: 1px solid #eee;
-    font-size: 0.95rem;
+  .activity-item {
+    display: grid;
+    grid-template-columns: 40px 1fr;
+    gap: 12px;
+    align-items: start;
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed #e6eef7;
+  }
+
+  .activity-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #ebf8ff, #bee3f8);
+    color: #2b6cb0;
+    font-size: 18px;
+  }
+
+  .activity-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .activity-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .user-link {
+    color: #2b6cb0;
+    font-weight: 700;
+    text-decoration: none;
+  }
+
+  .user-link:hover {
+    text-decoration: underline;
+  }
+
+  .activity-action {
+    color: #4a5568;
+  }
+
+  .doc-pill {
+    background: #f1f5fb;
+    color: #1a365d;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+
+  .activity-meta {
+    color: #718096;
+    font-size: 12px;
+  }
+
+  .activity-empty {
+    color: #718096;
+    padding: 0.5rem 0;
   }
 
   .activity-list li:last-child {
     border-bottom: none;
-  }
-
-  .user-name {
-    font-weight: bold;
-    color: #2d6cdf;
   }
 
   /* Dashboard Table */
