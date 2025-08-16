@@ -1,15 +1,20 @@
 package com.example.grafanaautobuilder.controller;
 
 import com.example.grafanaautobuilder.config.GrafanaProperties;
-import com.example.grafanaautobuilder.service.grafana.DashboardService;
+import com.example.grafanaautobuilder.entity.FileMetadata;
+import com.example.grafanaautobuilder.repository.FileMetadataRepository;
 import com.example.grafanaautobuilder.service.csv.CsvValidationService;
+import com.example.grafanaautobuilder.service.grafana.DashboardService;
+import com.example.grafanaautobuilder.service.storage.SupabaseStorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -22,12 +27,20 @@ public class DashboardUploadController {
     private final DashboardService dashboardService;
     private final CsvValidationService csvValidationService;
     private final GrafanaProperties grafanaProperties;
+    private final SupabaseStorageService storageService;
+    private final FileMetadataRepository fileRepo;
     private static final Logger log = LoggerFactory.getLogger(DashboardUploadController.class);
 
-    public DashboardUploadController(DashboardService dashboardService, GrafanaProperties grafanaProperties, CsvValidationService csvValidationService) {
+    public DashboardUploadController(DashboardService dashboardService,
+                                     GrafanaProperties grafanaProperties,
+                                     CsvValidationService csvValidationService,
+                                     SupabaseStorageService storageService,
+                                     FileMetadataRepository fileRepo) {
         this.dashboardService = dashboardService;
         this.grafanaProperties = grafanaProperties;
         this.csvValidationService = csvValidationService;
+        this.storageService = storageService;
+        this.fileRepo = fileRepo;
     }
 
     @GetMapping("/test")
@@ -56,6 +69,21 @@ public class DashboardUploadController {
                     (stripCsv(file.getOriginalFilename()) + " - " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
             log.info("Computed dashboard title: {}", computedTitle);
 
+            // Save CSV to Supabase storage and persist metadata (userId unknown -> null)
+            String objectPath = storageService.uploadCsv(null, file);
+            String checksum = DigestUtils.md5DigestAsHex(file.getBytes());
+            FileMetadata meta = new FileMetadata(
+                    null,
+                    null,
+                    "uploads",
+                    objectPath,
+                    file.getOriginalFilename() != null ? file.getOriginalFilename() : "file.csv",
+                    file.getSize(),
+                    checksum,
+                    Instant.now()
+            );
+            meta = fileRepo.save(meta);
+
             Map<String, Object> result = dashboardService.createDashboardFromCsv(file, computedTitle);
             // Best-effort URL using the uid we sent; Grafana may override, but this still helps UX.
             Map<String, Object> payload = (Map<String, Object>) result.get("requestPayload");
@@ -69,6 +97,9 @@ public class DashboardUploadController {
             response.put("title", dash.get("title"));
             response.put("grafanaUrl", dashboardUrl);
             response.put("grafanaResponse", result.get("grafanaResponse"));
+            // also include storage info
+            response.put("storageBucket", "uploads");
+            response.put("storageObjectPath", objectPath);
             log.info("Dashboard creation request completed, uid={} url={}", uid, dashboardUrl);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
