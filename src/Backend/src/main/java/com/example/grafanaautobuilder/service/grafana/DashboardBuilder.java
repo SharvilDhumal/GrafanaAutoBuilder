@@ -15,6 +15,10 @@ public class DashboardBuilder {
         dashboard.put("title", title);
         dashboard.put("schemaVersion", 38);
         dashboard.put("panels", panels);
+        List<String> tags = new ArrayList<>();
+        dashboard.put("tags", tags);
+        // Shared tooltip/crosshair for a modern analytical feel
+        dashboard.put("graphTooltip", 1);
         
         // Add time range configuration to fix "no data" issue
         Map<String, Object> time = new HashMap<>();
@@ -38,6 +42,18 @@ public class DashboardBuilder {
         
         // Add timezone
         dashboard.put("timezone", "browser");
+
+        // Business preset: if the title suggests business analytics, apply a more executive-friendly configuration
+        if (title != null && title.toLowerCase(Locale.ROOT).contains("business")) {
+            // Tag
+            tags.add("business");
+            // Longer default time range
+            time.put("from", "now-1y");
+            // Less frequent refresh
+            dashboard.put("refresh", "1h");
+            // Allow override back into payload
+            dashboard.put("time", time);
+        }
 
         Map<String, Object> payload = new LinkedHashMap<>();
         payload.put("dashboard", dashboard);

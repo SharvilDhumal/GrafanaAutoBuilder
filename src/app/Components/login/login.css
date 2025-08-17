@@ -43,10 +43,10 @@
   color: #1a365d;
 }
 
-.logo svg {
+.logo img {
   width: 24px;
   height: 24px;
-  color: #4299e1;
+  object-fit: cover;
 }
 
 .back-btn {
@@ -97,20 +97,19 @@
 }
 
 .login-logo {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 1.5rem;
+  /* remove circular badge */
+  margin: 0 auto 1rem;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #ebf8ff 0%, #bee3f8 100%);
-  border-radius: 50%;
+  background: transparent;
+  border-radius: 0;
 }
 
-.login-logo svg {
-  width: 32px;
-  height: 32px;
-  color: #4299e1;
+.login-logo img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
 }
 
 .login-header h1 {

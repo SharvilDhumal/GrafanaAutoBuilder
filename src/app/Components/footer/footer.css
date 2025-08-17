@@ -54,9 +54,11 @@
   font-weight: 600;
 }
 
-.footer-logo svg {
+.footer-logo img {
   width: 24px;
   height: 24px;
+  object-fit: contain;
+  border-radius: 6px;
 }
 
 .footer-links {

@@ -25,3 +25,9 @@ button, input, select, textarea {
   font-family: inherit !important;
   box-sizing: border-box;
 }
+
+/* Reusable logo image styling */
+.app-logo {
+  display: block;
+  border-radius: 6px; /* small rounded corners */
+}

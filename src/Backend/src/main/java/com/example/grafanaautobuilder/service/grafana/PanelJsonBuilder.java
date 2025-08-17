@@ -55,6 +55,8 @@ public class PanelJsonBuilder {
         panel.put("type", type);
         panel.put("title", cfg.getTitle() == null ? ("Panel " + id) : cfg.getTitle());
         panel.put("gridPos", gridPos);
+        // Modern look: transparent panels by default
+        panel.put("transparent", true);
         if (datasource != null) panel.put("datasource", datasource);
         // Ensure targets are set on the panel
         panel.put("targets", targets);
@@ -153,7 +155,8 @@ public class PanelJsonBuilder {
                 case "barchart":
                 case "bar":
                     Map<String, Object> barOptions = new HashMap<>();
-                    barOptions.put("orientation", "horizontal"); // better for categorical labels
+                    // Vertical bars with value labels for a modern business look
+                    barOptions.put("orientation", "vertical");
                     barOptions.put("showValue", "always");
                     barOptions.put("stacking", "none");
                     options.putAll(barOptions);
