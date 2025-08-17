@@ -10,19 +10,12 @@
     </div>
   </header>
 
-  <nav class="quick-nav" aria-label="Quick navigation">
-    <a href="#what-is" class="chip">Overview</a>
-    <a href="#get-started" class="chip">Get Started</a>
-    <a href="#datasources" class="chip">Datasources</a>
-    <a href="#csv-schema" class="chip">CSV Schema</a>
-    <a href="#postgresql-setup" class="chip">PostgreSQL</a>
-    <a href="#query-formats" class="chip">Query Formats</a>
-    <a href="#mock-data" class="chip">Mock Data</a>
-    <a href="#tips" class="chip">Tips</a>
-    <a href="#troubleshooting" class="chip">Troubleshooting</a>
-  </nav>
+  <!-- Top tabs removed; right-hand TOC already provides navigation. -->
 
-  <h2 id="what-is">What is Grafana AutoBuilder?</h2>
+  <div class="doc-grid">
+    <main class="doc-main">
+
+  <h2 id="what-is">📘 What is Grafana AutoBuilder?</h2>
   <p>
     Grafana AutoBuilder converts a lightweight CSV specification into a complete
     Grafana dashboard. Each row in the CSV describes a single panel (its title,
@@ -32,16 +25,27 @@
     <strong>Currently, only PostgreSQL datasources are supported.</strong>
   </p>
 
-  <h2 id="get-started">Get started in 3 steps</h2>
-  <ol>
-    <li>Go to the <strong>Upload</strong> page in the app.</li>
-    <li>Drag & drop your <code>.csv</code> file (or browse to select it).</li>
-    <li>
-      Click <em>Generate Dashboard</em> and then open the provided Grafana link.
-    </li>
-  </ol>
+  <h2 id="get-started">⚡ Get started in 3 steps</h2>
+  <div class="callout callout-info">
+    <strong>First time here?</strong> Please <a routerLink="/login">log in</a> before generating a dashboard.
+  </div>
+  <div class="steps">
+    <div class="step-card">
+      <div class="step-num">1</div>
+      <div class="step-body">Go to the <strong>Upload</strong> page in the app.</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">2</div>
+      <div class="step-body">Drag & drop your <code>.csv</code> file (or browse to select it).</div>
+    </div>
+    <div class="step-card">
+      <div class="step-num">3</div>
+      <div class="step-body">Click <strong>Generate Dashboard</strong> and then open the provided Grafana link.</div>
+    </div>
+  </div>
+  <a class="btn-primary" routerLink="/login">Login to Generate Dashboard</a>
 
-  <h2 id="datasources">Supported Datasources</h2>
+  <h2 id="datasources">🗄️ Supported Datasources</h2>
   <p>
     Grafana AutoBuilder currently supports <strong>PostgreSQL only</strong>.
     You can still use <em>multiple PostgreSQL datasources</em> in one dashboard by
@@ -79,7 +83,7 @@ curl -F "file=@C:\\path\\to\\your.csv" http://localhost:8080/api/dashboard/valid
     </pre>
   </div>
 
-  <h2 id="csv-schema">CSV schema (one row = one panel)</h2>
+  <h2 id="csv-schema">🧾 CSV schema (one row = one panel)</h2>
   <p>
     Use the following headers exactly (case‑sensitive). Unused fields can be
     left blank.
@@ -154,7 +158,7 @@ Response Time,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', request_time) as time,
   </div>
   >
 
-  <h2 id="postgresql-setup">PostgreSQL Setup</h2>
+  <h2 id="postgresql-setup">🐘 PostgreSQL Setup</h2>
   <p>To use PostgreSQL as a datasource, you need to:</p>
   <ol>
     <li>
@@ -192,7 +196,7 @@ psql -U grafana_user -d grafana_autobuilder -f src/Backend/setup_test_data.sql
     </li>
   </ol>
 
-  <h2 id="query-formats">Query Formats</h2>
+  <h2 id="query-formats">🔎 Query Formats</h2>
 
   <h3>PostgreSQL (SQL)</h3>
   <div class="code-block">
@@ -222,7 +226,7 @@ ORDER BY time
   </div>
   >
 
-  <h2 id="mock-data">Generate mock data</h2>
+  <h2 id="mock-data">🧪 Generate mock data</h2>
   <p>
     You can quickly produce a CSV of panel definitions for demos, testing, or
     kick‑starting a dashboard.
@@ -270,7 +274,7 @@ Return ONLY the CSV rows including the header. No commentary.
   </div>
   >
 
-  <h2 id="tips">Tips & validation</h2>
+  <h2 id="tips">💡 Tips & validation</h2>
   <ul class="tips-list">
     <li>Header names must match the schema. Extra columns are ignored.</li>
     <li>
@@ -300,7 +304,7 @@ Return ONLY the CSV rows including the header. No commentary.
     </li>
   </ul>
 
-  <h2 id="troubleshooting">Troubleshooting</h2>
+  <h2 id="troubleshooting">🛠️ Troubleshooting</h2>
   <ul class="tips-list">
     <li>
       <strong>No data showing:</strong> Check that your PostgreSQL queries use
@@ -319,4 +323,28 @@ Return ONLY the CSV rows including the header. No commentary.
       days" - adjust in Grafana if needed
     </li>
   </ul>
+    </main>
+
+    <aside class="doc-aside">
+      <div class="toc">
+        <div class="toc-title">On this page</div>
+        <a href="#what-is" [class.active]="activeId==='what-is'">Overview</a>
+        <a href="#get-started" [class.active]="activeId==='get-started'">Get Started</a>
+        <a href="#datasources" [class.active]="activeId==='datasources'">Datasources</a>
+        <a href="#csv-schema" [class.active]="activeId==='csv-schema'">CSV Schema</a>
+        <a href="#postgresql-setup" [class.active]="activeId==='postgresql-setup'">PostgreSQL</a>
+        <a href="#query-formats" [class.active]="activeId==='query-formats'">Query Formats</a>
+        <a href="#mock-data" [class.active]="activeId==='mock-data'">Mock Data</a>
+        <a href="#tips" [class.active]="activeId==='tips'">Tips</a>
+        <a href="#troubleshooting" [class.active]="activeId==='troubleshooting'">Troubleshooting</a>
+      </div>
+
+      <div class="info-card">
+        <div class="info-title">Need a CSV?</div>
+        <p class="highlight-white">Use the AI prompt below to generate a CSV tailored for AutoBuilder.</p>
+        <a class="btn-secondary" href="#ai-prompt">View AI prompt</a>
+      </div>
+    </aside>
+  </div>
 </section>
+<app-footer></app-footer>

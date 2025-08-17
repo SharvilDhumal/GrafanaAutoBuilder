@@ -1,16 +1,18 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Navbar } from '../../Components/navbar/navbar';
+import { Footer } from '../../Components/footer/footer';
 
 @Component({
   selector: 'app-documentation',
   standalone: true,
-  imports: [CommonModule, Navbar],
+  imports: [CommonModule, Navbar, Footer],
   templateUrl: './documentation.html',
   styleUrls: ['./documentation.css'],
 })
 export class Documentation {
   copiedId: string | null = null;
+  activeId: string = '';
 
   async copy(text: string, id: string): Promise<void> {
     if (!text) return;
