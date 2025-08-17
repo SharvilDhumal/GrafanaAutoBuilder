@@ -98,6 +98,13 @@ export class MetricsService {
     this.startPresenceHeartbeat();
   }
 
+  // Call on page reload/app init to restore presence WITHOUT incrementing total visits
+  resumePresence(email: string) {
+    this.email = email;
+    this.startPresenceHeartbeat();
+    this.computeActiveUsers();
+  }
+
   // Call on logout
   clearPresence() {
     if (!this.email) return;

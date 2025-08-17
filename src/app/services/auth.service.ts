@@ -46,7 +46,79 @@ export class AuthService {
     private router: Router,
     private metrics: MetricsService,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) {
+    // Also attempt a best-effort restore on service creation
+    this.initialize();
+  }
+
+  // Extract email/subject from JWT if available
+  private getJwtEmail(token: string | null): string | null {
+    if (!token) return null;
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+      const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+      const sub = payload?.sub || payload?.email;
+      return typeof sub === 'string' ? sub : null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Safely parse JWT and return expiry in ms since epoch if present
+  private getJwtExpiryMs(token: string | null): number | null {
+    if (!token) return null;
+    try {
+      const parts = token.split('.');
+      if (parts.length !== 3) return null;
+      const payload = JSON.parse(atob(parts[1].replace(/-/g, '+').replace(/_/g, '/')));
+      if (payload && typeof payload.exp === 'number') {
+        return payload.exp * 1000;
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Rehydrate authentication state on service construction (app reload)
+  // If a valid token and email are present in sessionStorage, resume presence
+  // and mark the auth subject as true so guards/components see the state immediately.
+  public initialize() {
+    if (!isPlatformBrowser(this.platformId)) return;
+    try {
+      const token = sessionStorage.getItem('authToken');
+      const expiry = sessionStorage.getItem('tokenExpiry') || sessionStorage.getItem('tokenExpiryMs');
+      let email = sessionStorage.getItem('email');
+      if (!email) {
+        const fromJwt = this.getJwtEmail(token);
+        if (fromJwt) {
+          email = fromJwt.toLowerCase().trim();
+          sessionStorage.setItem('email', email);
+        }
+      }
+      try { console.log('[Auth] initialize() session', { hasToken: !!token, expiryRaw: expiry, email }); } catch {}
+      if (token && email) {
+        // Prefer stored ms; else ISO; else decode from JWT exp
+        let ms = expiry ? Number(expiry) : NaN;
+        if (isNaN(ms)) {
+          const tryIso = expiry ? Date.parse(String(expiry)) : NaN;
+          ms = isNaN(tryIso) ? (this.getJwtExpiryMs(token) ?? NaN) : tryIso;
+        }
+        const expiryDate = !isNaN(ms) ? new Date(ms) : new Date(0);
+        try { console.log('[Auth] initialize() parsed expiry', { expiryDate: expiryDate.toISOString(), now: new Date().toISOString() }); } catch {}
+        if (expiryDate > new Date()) {
+          // Valid session: notify and resume presence without increasing visits
+          this.isAuthenticatedSubject.next(true);
+          this.metrics.resumePresence(email.toLowerCase().trim());
+        } else {
+          try { console.log('[Auth] initialize() expired session on load'); } catch {}
+        }
+      }
+    } catch {
+      // ignore rehydrate errors
+    }
+  }
 
   // Login method
   login(loginRequest: LoginRequest): Observable<AuthResponse> {
@@ -58,7 +130,18 @@ export class AuthService {
       tap(response => {
         if (response.token && isPlatformBrowser(this.platformId)) {
           sessionStorage.setItem('authToken', response.token);
-          sessionStorage.setItem('tokenExpiry', response.expiresAt);
+          // Persist expiry in both ISO and epoch ms for robust parsing across browsers
+          try {
+            let ms = Date.parse(String(response.expiresAt));
+            if (isNaN(ms)) {
+              const fromJwt = this.getJwtExpiryMs(response.token);
+              if (fromJwt) ms = fromJwt;
+            }
+            if (!isNaN(ms)) {
+              sessionStorage.setItem('tokenExpiryMs', String(ms));
+            }
+          } catch {}
+          sessionStorage.setItem('tokenExpiry', String(response.expiresAt));
           // Persist email from the login request so we can identify the user client-side
           if (loginRequest.email) {
             sessionStorage.setItem('email', loginRequest.email.toLowerCase().trim());
@@ -155,19 +238,46 @@ export class AuthService {
     }
     
     const token = sessionStorage.getItem('authToken');
-    const expiry = sessionStorage.getItem('tokenExpiry');
+    const expiryIso = sessionStorage.getItem('tokenExpiry');
+    let expiryMsStr = sessionStorage.getItem('tokenExpiryMs');
     
-    if (!token || !expiry) {
-      return false;
+    // Minimal debug to understand guard path
+    try { console.log('[Auth] isAuthenticated() keys', { hasToken: !!token, expiryIso, expiryMsStr }); } catch {}
+    
+    if (!token) return false;
+    if (!expiryIso && !expiryMsStr) {
+      // Fallback to JWT exp if no stored expiry values
+      const fromJwt = this.getJwtExpiryMs(token);
+      if (fromJwt) {
+        expiryMsStr = String(fromJwt);
+      } else {
+        // If token exists but no expiry available, optimistically treat as authenticated
+        // (HTTP interceptor will enforce 401 on actual API calls)
+        return true;
+      }
     }
     
-    const expiryDate = new Date(expiry);
+    let expiryDate: Date;
+    if (expiryMsStr && !isNaN(Number(expiryMsStr))) {
+      expiryDate = new Date(Number(expiryMsStr));
+    } else {
+      const parsed = expiryIso ? Date.parse(String(expiryIso)) : NaN;
+      if (!isNaN(parsed)) {
+        expiryDate = new Date(parsed);
+      } else {
+        // Last fallback: decode JWT exp
+        const fromJwt = this.getJwtExpiryMs(token);
+        if (fromJwt) {
+          expiryDate = new Date(fromJwt);
+        } else {
+          return false;
+        }
+      }
+    }
     const now = new Date();
+    try { console.log('[Auth] isAuthenticated() compare', { expiry: expiryDate.toISOString(), now: now.toISOString() }); } catch {}
     
-    if (expiryDate < now) {
-      this.logout();
-      return false;
-    }
+    if (expiryDate < now) return false;
     
     return true;
   }
