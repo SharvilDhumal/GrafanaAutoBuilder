@@ -1,0 +1,7 @@
+.dialog{padding:20px;max-width:560px}
+.title{margin:0 0 8px;font-weight:600}
+.message{margin:0 0 10px;white-space:pre-wrap}
+.details{background:#0b1220;color:#e6e8ec;padding:10px;border-radius:6px;max-height:240px;overflow:auto}
+.actions{display:flex;justify-content:flex-end;margin-top:16px}
+.btn{background:#1f6feb;color:#fff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer}
+.btn:hover{background:#1a5ecb}

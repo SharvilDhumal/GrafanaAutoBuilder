@@ -1,0 +1,8 @@
+<div class="dialog">
+  <h2 class="title">{{ data.title || 'Something went wrong' }}</h2>
+  <p class="message">{{ data.message }}</p>
+  <pre *ngIf="data.details" class="details">{{ data.details }}</pre>
+  <div class="actions">
+    <button mat-dialog-close class="btn" (click)="close()">OK</button>
+  </div>
+</div>

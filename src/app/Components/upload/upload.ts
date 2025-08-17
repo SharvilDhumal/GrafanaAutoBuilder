@@ -8,6 +8,7 @@ import {
 } from '../../services/dashboard.service';
 import { MetricsService } from '../../services/metrics.service';
 import { AuthService } from '../../services/auth.service';
+import { GlobalErrorService } from '../../core/errors/global-error.service';
 
 @Component({
   selector: 'app-upload',
@@ -28,6 +29,7 @@ export class Upload {
     private dashboardService: DashboardService,
     private metrics: MetricsService,
     private auth: AuthService,
+    private errors: GlobalErrorService,
   ) {}
 
   onFileSelected(event: any): void {
@@ -39,7 +41,7 @@ export class Upload {
       this.selectedFile = file;
       this.errorMsg = null;
     } else {
-      alert('Please select a valid CSV file.');
+      this.errors.showError({ title: 'Invalid file', message: 'Please select a valid CSV file.' });
     }
   }
 
@@ -69,7 +71,7 @@ export class Upload {
         this.selectedFile = file;
         this.errorMsg = null;
       } else {
-        alert('Please drop a valid CSV file.');
+        this.errors.showError({ title: 'Invalid file', message: 'Please drop a valid CSV file.' });
       }
     }
   }

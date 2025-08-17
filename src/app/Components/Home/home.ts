@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { GlobalErrorService } from '../../core/errors/global-error.service';
 import { Navbar } from '../../Components/navbar/navbar';
 import { Footer } from '../../Components/footer/footer';
 
@@ -16,7 +17,8 @@ export class Home implements OnInit {
 
   constructor(
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private errors: GlobalErrorService
   ) {}
 
   ngOnInit(): void {
@@ -40,8 +42,8 @@ export class Home implements OnInit {
     if (this.authService.isAuthenticated()) {
       this.router.navigate(['/upload']);
     } else {
-      alert('Please login first to try the demo.');
-      this.router.navigate(['/login']);
+      this.errors.showHttpError(401, 'Please login first to try the demo.');
+      // Keep user on the page so they can read the dialog; they can click Login in header
     }
   }
 
