@@ -14,7 +14,6 @@ import reactor.core.publisher.Mono;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.Map;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -33,9 +32,14 @@ public class SupabaseStorageService {
 
     private final WebClient webClient = WebClient.builder().build();
 
-    public String uploadCsv(Long userId, MultipartFile file) {
+    public String uploadCsv(Long userId, String username, MultipartFile file) {
         String safeName = sanitize(file.getOriginalFilename());
-        String path = "users/" + (userId == null ? "anonymous" : userId) + "/" + UUID.randomUUID() + "-" + safeName;
+        // Prefer explicit username/email, then numeric userId, else 'anonymous'
+        String owner = (username != null && !username.isBlank())
+                ? sanitizePathSegment(username)
+                : (userId != null ? String.valueOf(userId) : "anonymous");
+        // Keep the exact original filename (sanitized), do not prefix with UUID
+        String path = "users/" + owner + "/" + safeName;
 
         byte[] bytes = toBytes(file);
 
@@ -55,6 +59,11 @@ public class SupabaseStorageService {
                 .block();
 
         return path;
+    }
+
+    // Backward-compatible overload
+    public String uploadCsv(Long userId, MultipartFile file) {
+        return uploadCsv(userId, null, file);
     }
 
     public String createSignedUrl(String path, int expiresInSeconds) {
@@ -92,5 +101,11 @@ public class SupabaseStorageService {
     private String sanitize(String name) {
         String n = (name == null || name.isBlank()) ? "file.csv" : name;
         return n.replaceAll("[^a-zA-Z0-9._-]", "_");
+    }
+
+    private String sanitizePathSegment(String segment) {
+        String s = (segment == null || segment.isBlank()) ? "anonymous" : segment;
+        // Avoid slashes and unsafe chars in path segment
+        return s.replaceAll("[/\\\\]+", "_").replaceAll("[^a-zA-Z0-9._-]", "_");
     }
 }

@@ -2,6 +2,7 @@ package com.example.grafanaautobuilder.controller;
 
 import com.example.grafanaautobuilder.config.GrafanaProperties;
 import com.example.grafanaautobuilder.entity.FileMetadata;
+import com.example.grafanaautobuilder.entity.User;
 import com.example.grafanaautobuilder.repository.FileMetadataRepository;
 import com.example.grafanaautobuilder.service.csv.CsvValidationService;
 import com.example.grafanaautobuilder.service.grafana.DashboardService;
@@ -10,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -69,8 +72,15 @@ public class DashboardUploadController {
                     (stripCsv(file.getOriginalFilename()) + " - " + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
             log.info("Computed dashboard title: {}", computedTitle);
 
+            // Resolve current user (email) if authenticated
+            String username = null;
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.getPrincipal() instanceof User) {
+                username = ((User) auth.getPrincipal()).getEmail();
+            }
+
             // Save CSV to Supabase storage and persist metadata (userId unknown -> null)
-            String objectPath = storageService.uploadCsv(null, file);
+            String objectPath = storageService.uploadCsv(null, username, file);
             String checksum = DigestUtils.md5DigestAsHex(file.getBytes());
             FileMetadata meta = new FileMetadata(
                     null,
