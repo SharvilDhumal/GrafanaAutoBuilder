@@ -18,12 +18,18 @@ Grafana AutoBuilder lets you upload a CSV and generate a Grafana dashboard autom
 - Java 17+
 - Maven or Gradle
 - PostgreSQL running locally
+- Optional: Supabase account (for storing uploaded CSVs via Supabase Storage)
 
 Database configuration (used by Spring Boot):
 
 - URL: `jdbc:postgresql://localhost:5432/grafana_autobuilder`
 - Username: `grafana_user`
 - Password: `sharvil39`
+
+Grafana configuration (used by Spring Boot):
+
+- URL: `http://localhost:3000`
+- API Key: A Grafana API key with at least Editor permissions
 
 ## Development server
 
@@ -50,6 +56,24 @@ Implemented auth endpoints:
 - `POST /api/auth/signup`
 
 Note: The Angular app currently uses demo logic for auth and may not yet call these endpoints. Integration work is planned.
+
+### Backend configuration (.env and application.yml)
+
+The backend reads defaults from `src/Backend/src/main/resources/application.yml` and can be overridden with environment variables. A starter env is provided in `.env.example` at the repo root — copy it to `.env` and adjust values.
+
+Relevant properties from `application.yml`:
+
+- Spring datasource: `spring.datasource.*` (PostgreSQL)
+- Grafana: `grafana.url`, `grafana.apiKey`, `grafana.defaultDatasourceUid`, `grafana.defaultDatasourceType`
+- Supabase: `supabase.url`, `supabase.serviceKey`, `supabase.storage.bucket`
+
+Environment variable overrides supported (set in your shell or a process manager):
+
+- `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`
+- `GRAFANA_API_KEY`
+- `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `SUPABASE_BUCKET`
+
+Security: never commit real secrets. `.env` is gitignored. The repository may contain placeholder values in `application.yml`; override them in your local environment.
 
 ## Using the App
 
@@ -112,6 +136,39 @@ To use PostgreSQL as a datasource:
    psql -U grafana_user -d grafana_autobuilder -f src/Backend/setup_test_data.sql
    ```
 
+### Grafana Setup
+
+1. Create an API key in Grafana (Settings → API keys). Set this as `GRAFANA_API_KEY` or in `application.yml` (`grafana.apiKey`).
+2. Add a PostgreSQL datasource in Grafana and copy its UID. Set a default UID in `application.yml` as `grafana.defaultDatasourceUid` or provide per-row via CSV `datasource`.
+3. Ensure Grafana is reachable at `http://localhost:3000` (or update `grafana.url`).
+
+The backend uses these to create dashboards and panels.
+
+### Supabase Storage (for CSV uploads)
+
+Uploads are stored in Supabase Storage by `SupabaseStorageService` (`src/Backend/src/main/java/com/example/grafanaautobuilder/service/storage/SupabaseStorageService.java`). This is optional but recommended for keeping an auditable record of uploaded CSV files.
+
+Setup steps:
+
+1. Create a Supabase project and go to Project Settings → API.
+2. Copy the Project URL (e.g., `https://YOUR-PROJECT.supabase.co`) and the Service Role key.
+   - Important: Use the Service Role key server-side only. Keep it secret.
+3. Create a Storage bucket (e.g., `uploads`).
+4. Provide configuration to the backend via env vars or `application.yml`:
+   - `SUPABASE_URL`
+   - `SUPABASE_SERVICE_KEY`
+   - `SUPABASE_BUCKET` (defaults to `uploads`)
+
+How it works:
+
+- On dashboard upload (`POST /api/dashboard/upload`), the CSV is first stored in Supabase (`bucket/users/anonymous/<uuid>-file.csv`), then processed to create a Grafana dashboard. Metadata is saved via `FileMetadataRepository`.
+- You can also upload directly via `POST /api/files/upload` and request a signed download URL via `GET /api/files/signed-url?path=...`.
+
+Troubleshooting Supabase:
+
+- Ensure the Service Role key is set and valid; 401 responses indicate an auth header or key issue.
+- If you see errors creating signed URLs, verify the bucket exists and the path is correct.
+
 ### Checklist (make sure this is true before uploading):
 
 - File is UTF-8 encoded `.csv` with a single header row.
@@ -138,7 +195,21 @@ The entire site uses the Poppins font (fallbacks: Space Grotesk, sans-serif). Th
 - CSV not accepted: Ensure it's `.csv` and not empty; validate numeric values.
 - No data showing: Check that PostgreSQL queries use `$__timeFrom()` and `$__timeTo()`.
 - PostgreSQL connection issues: Verify datasource configuration in Grafana.
+- Supabase upload/sign issues: Check `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, and that the bucket exists. See server logs.
 - Footer shows white border: The standalone Footer is full-bleed; make sure global body margins are reset in `styles.css`.
+
+## End-to-end Quick Start
+
+1. Install dependencies
+   - Frontend: `npm ci`
+   - Backend: ensure Maven/Gradle available
+2. Copy `.env.example` to `.env` and fill in values (Grafana API key, DB creds, optional Supabase vars).
+3. Start services
+   - Backend: from `src/Backend/`, run `mvn spring-boot:run` (or `gradle bootRun`). Backend runs on `http://localhost:8080`.
+   - Frontend: from repo root, run `ng serve`. Frontend runs on `http://localhost:4200`.
+4. In Grafana, create a PostgreSQL datasource and note its UID. Put UID into `application.yml` (`grafana.defaultDatasourceUid`) or provide per CSV row.
+5. Upload a sample CSV from the UI or call `POST /api/dashboard/upload` with `multipart/form-data`.
+6. Open the returned Grafana dashboard URL.
 
 ## Code scaffolding
 
