@@ -114,10 +114,24 @@ public class PanelJsonBuilder {
                 boolean isBarVis = cfg.getVisualization() != null
                         && (cfg.getVisualization().equalsIgnoreCase("barchart")
                             || cfg.getVisualization().equalsIgnoreCase("bar"));
+                boolean isTableVis = cfg.getVisualization() != null
+                        && cfg.getVisualization().equalsIgnoreCase("table");
+                boolean isStatVis = cfg.getVisualization() != null
+                        && cfg.getVisualization().equalsIgnoreCase("stat");
+                boolean isGaugeVis = cfg.getVisualization() != null
+                        && cfg.getVisualization().equalsIgnoreCase("gauge");
 
-                // For barchart panels without time, use table format so categories render
-                if (isBarVis && !(mentionsTimeMacros || selectsTimeAlias)) {
+                // Format selection rules to avoid "db has no time column" errors:
+                // 1) Table viz -> table
+                // 2) Stat/Gauge -> table unless query explicitly selects a time column
+                // 3) Bar -> table unless query explicitly selects a time column
+                // 4) Otherwise -> time_series
+                if (isTableVis) {
                     target.put("format", "table");
+                } else if (isStatVis || isGaugeVis) {
+                    target.put("format", selectsTimeAlias ? "time_series" : "table");
+                } else if (isBarVis) {
+                    target.put("format", selectsTimeAlias ? "time_series" : "table");
                 } else {
                     target.put("format", "time_series");
                 }
@@ -150,6 +164,13 @@ public class PanelJsonBuilder {
                     ));
                     statOptions.put("textMode", "auto");
                     options.putAll(statOptions);
+                    break;
+                    
+                case "table":
+                    Map<String, Object> tableOptions = new HashMap<>();
+                    // Minimal sensible defaults for table panels
+                    tableOptions.put("showHeader", true);
+                    options.putAll(tableOptions);
                     break;
                     
                 case "barchart":
@@ -311,6 +332,7 @@ public class PanelJsonBuilder {
         if (vis == null) return "timeseries";
         switch (vis.toLowerCase(Locale.ROOT)) {
             case "stat": return "stat";
+            case "table": return "table";
             case "barchart":
             case "bar": return "barchart";
             case "gauge": return "gauge";

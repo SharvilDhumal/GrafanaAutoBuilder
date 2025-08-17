@@ -53,7 +53,24 @@ public class CsvValidationService {
                 // Wrap with subselect to safely apply LIMIT 1 regardless of original query
                 String wrapped = "SELECT * FROM (" + prepared + ") AS t LIMIT 1";
                 jdbcTemplate.queryForList(wrapped);
-                results.add(ValidationResult.ok(i + 1, title));
+                // Heuristic warning for time-series-like visualizations lacking time bounds
+                String vis = cfg.getVisualization();
+                boolean isTimeVis = (vis == null)
+                        || vis.equalsIgnoreCase("timeseries")
+                        || vis.equalsIgnoreCase("stat")
+                        || vis.equalsIgnoreCase("gauge");
+                String sqlLower = sql.toLowerCase(Locale.ROOT);
+                boolean mentionsTimeMacros = sqlLower.contains("$__timefilter")
+                        || sqlLower.contains("$__timefrom()")
+                        || sqlLower.contains("$__timeto()");
+                boolean selectsTimeAlias = sqlLower.contains(" as time") || sqlLower.contains("as \"time\"");
+
+                if (isTimeVis && !(mentionsTimeMacros || selectsTimeAlias)) {
+                    results.add(new ValidationResult(i + 1, title, true,
+                            "WARN: Time-based panel without $__timeFilter()/__timeFrom()/__timeTo() or time alias may show 'No data' for some dashboard ranges"));
+                } else {
+                    results.add(ValidationResult.ok(i + 1, title));
+                }
             } catch (Exception ex) {
                 String msg = ex.getMessage();
                 results.add(ValidationResult.error(i + 1, title, msg));

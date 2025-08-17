@@ -19,7 +19,8 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background: linear-gradient(135deg, #ff8132, #f05a28);
+    /* Grafana brand gradient: Orange -> Yellow */
+    background: linear-gradient(135deg, #F05A28, #FFCA08);
     color: #fff;
     text-decoration: none;
     border: none;
@@ -31,13 +32,22 @@
   }
 
   .grafana-btn:hover {
-    filter: brightness(1.05);
+    filter: brightness(1.03);
     transform: translateY(-1px);
   }
 
   .grafana-btn:focus {
     outline: 3px solid rgba(240, 90, 40, 0.35);
     outline-offset: 2px;
+  }
+
+  /* Icon next to the label */
+  .grafana-icon {
+    width: 18px;
+    height: 18px;
+    object-fit: contain;
+    display: inline-block;
+    border-radius: 3px;
   }
 
   .secondary-btn {
