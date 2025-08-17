@@ -9,9 +9,11 @@ import java.util.*;
 @Service
 public class PanelJsonBuilder {
     private final GrafanaProperties grafanaProperties;
+    private final VisualizationColorConfigService colorConfigService;
 
-    public PanelJsonBuilder(GrafanaProperties grafanaProperties) {
+    public PanelJsonBuilder(GrafanaProperties grafanaProperties, VisualizationColorConfigService colorConfigService) {
         this.grafanaProperties = grafanaProperties;
+        this.colorConfigService = colorConfigService;
     }
 
     public Map<String, Object> buildPanel(PanelConfig cfg, int x, int y, int id) {
@@ -85,7 +87,9 @@ public class PanelJsonBuilder {
         }
 
         Map<String, Object> fieldConfig = buildFieldConfig(cfg.getUnit(), cfg.getThresholds(), cfg.getVisualization(), cfg.getColor());
-        if (!fieldConfig.isEmpty()) panel.put("fieldConfig", fieldConfig);
+        // Merge global color config from visualization-colors.json
+        Map<String, Object> mergedFieldConfig = mergeWithGlobalFieldConfig(fieldConfig);
+        if (!mergedFieldConfig.isEmpty()) panel.put("fieldConfig", mergedFieldConfig);
 
         return panel;
     }
@@ -106,9 +110,6 @@ public class PanelJsonBuilder {
                 target.put("rawSql", sql);
 
                 // Heuristic: decide if query returns time series or category table
-                boolean mentionsTimeMacros = sql.toLowerCase(Locale.ROOT).contains("$__timefilter")
-                        || sql.toLowerCase(Locale.ROOT).contains("$__timefrom()")
-                        || sql.toLowerCase(Locale.ROOT).contains("$__timeto()");
                 boolean selectsTimeAlias = sql.toLowerCase(Locale.ROOT).contains(" as time")
                         || sql.toLowerCase(Locale.ROOT).contains("as \"time\"");
                 boolean isBarVis = cfg.getVisualization() != null
@@ -326,6 +327,34 @@ public class PanelJsonBuilder {
             fieldConfig.put("overrides", new ArrayList<>());
         }
         return fieldConfig;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> mergeWithGlobalFieldConfig(Map<String, Object> base) {
+        if (base == null) base = new HashMap<>();
+        Map<String, Object> out = new HashMap<>(base);
+
+        // Merge defaults (do not override existing keys in base)
+        Map<String, Object> baseDefaults = (Map<String, Object>) out.getOrDefault("defaults", new HashMap<>());
+        Map<String, Object> globalDefaults = colorConfigService.getFieldConfigDefaults();
+        if (globalDefaults != null && !globalDefaults.isEmpty()) {
+            Map<String, Object> mergedDefaults = new HashMap<>(globalDefaults);
+            // Base keys win
+            mergedDefaults.putAll(baseDefaults);
+            out.put("defaults", mergedDefaults);
+        } else if (!baseDefaults.isEmpty()) {
+            out.put("defaults", baseDefaults);
+        }
+
+        // Merge overrides: append global overrides after base overrides
+        List<Map<String, Object>> baseOverrides = (List<Map<String, Object>>) out.getOrDefault("overrides", new ArrayList<>());
+        List<Map<String, Object>> globalOverrides = colorConfigService.getFieldConfigOverrides();
+        List<Map<String, Object>> mergedOverrides = new ArrayList<>();
+        if (baseOverrides != null) mergedOverrides.addAll(baseOverrides);
+        if (globalOverrides != null && !globalOverrides.isEmpty()) mergedOverrides.addAll(globalOverrides);
+        if (!mergedOverrides.isEmpty()) out.put("overrides", mergedOverrides);
+
+        return out;
     }
 
     private String mapVisualization(String vis) {

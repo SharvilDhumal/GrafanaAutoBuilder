@@ -1,0 +1,39 @@
+{
+  "theme": "dark",
+  "fieldConfig": {
+    "defaults": {
+      "color": {
+        "mode": "palette-classic"
+      },
+      "custom": {
+        "lineWidth": 2,
+        "fillOpacity": 20,
+        "gradientMode": "none"
+      }
+    },
+    "overrides": [
+      {
+        "matcher": { "id": "byRegexp", "options": ".*error.*" },
+        "properties": [
+          { "id": "color", "value": { "fixedColor": "red", "mode": "fixed" } }
+        ]
+      },
+      {
+        "matcher": { "id": "byRegexp", "options": ".*success.*|.*conversion.*" },
+        "properties": [
+          { "id": "color", "value": { "fixedColor": "green", "mode": "fixed" } }
+        ]
+      },
+      {
+        "matcher": { "id": "byRegexp", "options": ".*pending.*|.*waiting.*" },
+        "properties": [
+          { "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }
+        ]
+      }
+    ]
+  },
+  "palette": [
+    "#2dd4bf", "#3b82f6", "#22c55e",
+    "#a855f7", "#f59e0b", "#ef4444"
+  ]
+}
