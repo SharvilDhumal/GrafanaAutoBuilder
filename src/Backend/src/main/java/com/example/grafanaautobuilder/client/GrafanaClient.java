@@ -17,6 +17,14 @@ public class GrafanaClient {
         this.grafanaProperties = grafanaProperties;
     }
 
+    // Validates grafana.url and grafana.apiKey (throws IllegalStateException if missing).
+// Builds endpoint: "{grafana.url}/api/dashboards/db" while trimming trailing slashes via url.replaceAll("/+$", "").
+// Sets headers:
+// Content-Type: application/json
+// Authorization: Bearer {apiKey}
+// Sends POST with the provided dashboardPayload.
+// Returns ResponseEntity<String> from restTemplate.exchange(...).
+
     public ResponseEntity<String> createOrUpdateDashboard(Map<String, Object> dashboardPayload) {
         String url = grafanaProperties.getUrl();
         if (url == null || url.isBlank()) {

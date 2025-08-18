@@ -32,15 +32,18 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             @NonNull FilterChain filterChain
     ) throws ServletException, IOException {
         try {
+            // 1. Check for Authorization header
             final String authHeader = request.getHeader("Authorization");
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
+            // 2. Extract JWT from header
             final String jwt = authHeader.substring(7);
             final String userEmail = jwtService.extractUsername(jwt);
 
+            // 3. Validate and set authentication
             if (userEmail != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 try {
                     UserDetails userDetails = this.userDetailsService.loadUserByUsername(userEmail);
@@ -66,3 +69,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
     }
 }
+
+// // The JwtAuthFilter is a Spring Security filter that handles JWT (JSON Web Token) authentication for incoming HTTP requests. Its main purposes are:
+// Extract & Validate JWT – Checks the Authorization header for a valid Bearer token.
+// Authenticate Requests – If the JWT is valid, it loads user details and sets up Spring Security's authentication context.
+// Secure API Access – Ensures only authenticated users with valid tokens can access protected endpoints.
+// Stateless Security – Works without server-side sessions, relying only on the JWT for authentication.

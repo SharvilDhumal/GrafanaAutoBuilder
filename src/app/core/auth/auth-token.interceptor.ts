@@ -1,3 +1,16 @@
+// attaches auth tokens to the outgoing HTTP calls
+
+// //Behavior:
+// Runs only in browser (checks window/sessionStorage).
+// Reads token from sessionStorage.getItem('authToken').
+// Skips adding Authorization for auth endpoints: paths matching /login|signup|verify|reset-password.
+// Clones request with:
+// Authorization: Bearer <token>
+// withCredentials: true (cookies/CSRF/session if needed).
+// Logs once per request for visibility: [AuthTokenInterceptor] Attached Authorization header.
+// Effect:
+// All non-auth HTTP requests automatically include the JWT if present.
+
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';

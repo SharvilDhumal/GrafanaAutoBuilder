@@ -82,3 +82,6 @@ public class JwtService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }
+
+// Convenience: Most of the time, you only need the username and expiration → use the simple one.
+// Flexibility: Sometimes you want extra metadata in the token → use the second one.

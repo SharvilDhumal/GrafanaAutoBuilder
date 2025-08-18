@@ -1,3 +1,9 @@
+// centralizes HTTP and global error handling via interceptors and a global error handler.
+// Catches HTTP errors globally and displays user-friendly dialogs via 
+// GlobalErrorService
+
+
+
 import { ErrorHandler, Injectable, NgZone } from '@angular/core';
 import { GlobalErrorService } from './global-error.service';
 

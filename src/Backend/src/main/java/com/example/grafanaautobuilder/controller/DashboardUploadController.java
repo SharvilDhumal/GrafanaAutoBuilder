@@ -1,3 +1,12 @@
+// Accepts CSV files, validates them, and creates Grafana dashboards from them.
+// Validates presence of file.
+// Extracts the authenticated user’s email if available from SecurityContext.
+// Uploads CSV to Supabase via SupabaseStorageService.uploadCsv(...).
+// Persists FileMetadata (bucket uploads, object path, size, checksum).
+// Calls DashboardService.createDashboardFromCsv(...) to create dashboard in Grafana.
+// Responds with { uid, title, grafanaUrl, grafanaResponse, storageBucket, storageObjectPath }.
+
+
 package com.example.grafanaautobuilder.controller;
 
 import com.example.grafanaautobuilder.config.GrafanaProperties;

@@ -27,8 +27,8 @@ export class MetricsService {
   activities$ = new BehaviorSubject<ActivityItem[]>([]);
 
   private email: string | null = null;
-  private sid: string | null = null; // per-tab session id
-  private bc?: BroadcastChannel;
+  private sid: string | null = null; // unique sesssion ID per browser tab
+  private bc?: BroadcastChannel;  // is an optional BroadcastChannel for cross-tab communication
   private readonly browser: boolean;
 
   constructor(private zone: NgZone, @Inject(PLATFORM_ID) platformId: Object) {
@@ -86,7 +86,7 @@ export class MetricsService {
   // Call on successful login with user email
   markVisit(email: string) {
     this.email = email;
-    // Increment total visits atomically-ish
+    // Increment total visits atomically
     const current = this.getTotalVisits();
     if (this.browser) {
       localStorage.setItem(LS_KEYS.totalVisits, String(current + 1));
@@ -124,7 +124,7 @@ export class MetricsService {
     this.email = null;
   }
 
-  // Record a conversion activity
+  // Record a conversion activity and maintains a list of recent activities
   recordConversion(user: string, docName: string) {
     const list = this.getActivities();
     const item: ActivityItem = { user, docName, action: 'converted', timestamp: Date.now() };
@@ -160,6 +160,8 @@ export class MetricsService {
     });
   }
 
+  // Active user Calculations Counts unique users seen within the last 15 minutes
+  // Automatically removes stale entries
   private computeActiveUsers() {
     const map = this.getPresenceMap();
     const now = Date.now();

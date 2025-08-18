@@ -1,3 +1,8 @@
+// POST /upload → upload a .csv file → saves to Supabase + stores metadata in DB → returns file info.
+// GET /signed-url → generates a temporary download link for a stored file. 
+
+
+
 package com.example.grafanaautobuilder.controller;
 
 import com.example.grafanaautobuilder.dto.FileMetadataDto;

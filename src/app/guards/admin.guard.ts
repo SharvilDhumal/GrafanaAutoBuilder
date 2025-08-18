@@ -1,3 +1,7 @@
+// A standalone Angular route guard 
+// implemented as a CanActivateFn. It controls access to routes intended only for an admin user.
+
+
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';

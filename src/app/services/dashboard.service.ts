@@ -48,6 +48,7 @@ export class DashboardService {
     }
 
     // Don't set Content-Type header - let browser set it automatically for FormData
+    
     return this.http.post<UploadResponse>(endpoint, form, {
       headers,
       withCredentials: true,

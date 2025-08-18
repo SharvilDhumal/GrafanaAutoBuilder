@@ -1,3 +1,7 @@
+// Purpose: A Spring Boot configuration properties holder for all grafana.* settings from 
+// application.yml
+// (or env vars).
+
 package com.example.grafanaautobuilder.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;

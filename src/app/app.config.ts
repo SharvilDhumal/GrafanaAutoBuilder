@@ -1,3 +1,8 @@
+// app.config.ts
+// is the central wiring point for
+//  routing, HTTP/interceptors, error handling, dialogs, SSR hydration, and pre-boot auth initialization.
+
+
 import { ApplicationConfig, importProvidersFrom, provideBrowserGlobalErrorListeners, provideZoneChangeDetection, ErrorHandler, APP_INITIALIZER } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch, withInterceptorsFromDi } from '@angular/common/http';

@@ -11,3 +11,7 @@ public class RestTemplateConfig {
         return new RestTemplate();
     }
 }
+
+// Spring's traditional HTTP client for making REST API calls
+// Used to communicate with other services/APIs
+// Will be deprecated in future Spring versions in favor of WebClient

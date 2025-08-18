@@ -36,6 +36,7 @@ export interface ResetPasswordRequest {
 @Injectable({
   providedIn: 'root'
 })
+
 export class AuthService {
   private apiUrl = `${environment.apiUrl}/auth`;
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
