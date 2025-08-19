@@ -1,0 +1,50 @@
+{
+  "timeseries": {
+    "transparent": true,
+    "options": {
+      "legend": { "calcs": [], "displayMode": "list", "placement": "bottom" },
+      "tooltip": { "mode": "single", "sort": "none" },
+      "drawStyle": "line",
+      "lineInterpolation": "smooth",
+      "lineWidth": 2,
+      "fillOpacity": 12,
+      "showPoints": "auto",
+      "spanNulls": true
+    }
+  },
+  "stat": {
+    "transparent": true,
+    "options": {
+      "colorMode": "value",
+      "graphMode": "area",
+      "justifyMode": "auto",
+      "orientation": "auto",
+      "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+      "textMode": "auto"
+    }
+  },
+  "table": {
+    "transparent": true,
+    "options": { "showHeader": true }
+  },
+  "barchart": {
+    "transparent": true,
+    "options": { "orientation": "vertical", "showValue": "always", "stacking": "none" }
+  },
+  "gauge": {
+    "transparent": true,
+    "options": {
+      "orientation": "auto",
+      "showThresholdLabels": false,
+      "showThresholdMarkers": true,
+      "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+    }
+  },
+  "volkovlabs-echarts-panel": {
+    "transparent": true,
+    "options": {
+      "useDataFrames": true,
+      "function": "// ECharts template will be provided by builder if not overridden\nreturn { title: { text: context.panel.title || '' } };"
+    }
+  }
+}

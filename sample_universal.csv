@@ -1,0 +1,8 @@
+title,datasource,visualization,query
+"CPU Usage (Last 1h)",,"timeseries","select generate_series(now() - interval '60 minutes', now(), interval '5 minutes') as time, round(random()*100,2) as value"
+"Sales by Category",,"barchart","select 'Electronics' as label, 120 as value union all select 'Home' as label, 85 as value union all select 'Fashion' as label, 65 as value"
+"Current Sessions",,"stat","select 42.0 as value"
+"Error Rate",,"gauge","select 73.5 as value"
+"Orders (Time Series)",,"echarts-line","select generate_series(now() - interval '1 day', now(), interval '1 hour') as time, (random()*50+50)::int as value"
+"Inventory Table",,"table","select 'SKU-001' as label, 150 as value union all select 'SKU-002' as label, 90 as value union all select 'SKU-003' as label, 45 as value"
+"Revenue by Region",pg_postgres_uid_123,"barchart","select 'APAC' as label, 200 as value union all select 'EMEA' as label, 180 as value union all select 'AMER' as label, 220 as value"

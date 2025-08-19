@@ -7,8 +7,11 @@
       },
       "custom": {
         "lineWidth": 2,
-        "fillOpacity": 20,
-        "gradientMode": "none"
+        "drawStyle": "line",
+        "lineInterpolation": "smooth",
+        "showPoints": "never",
+        "fillOpacity": 35,
+        "gradientMode": "opacity"
       }
     },
     "overrides": [
@@ -29,11 +32,18 @@
         "properties": [
           { "id": "color", "value": { "fixedColor": "orange", "mode": "fixed" } }
         ]
+      },
+      {
+        "matcher": { "id": "byRegexp", "options": ".*revenue.*|.*orders.*|.*aov.*|.*rate.*|.*avg.*" },
+        "properties": [
+          { "id": "custom.fillOpacity", "value": 45 },
+          { "id": "custom.gradientMode", "value": "opacity" }
+        ]
       }
     ]
   },
   "palette": [
-    "#2dd4bf", "#3b82f6", "#22c55e",
-    "#a855f7", "#f59e0b", "#ef4444"
+    "#60A5FA", "#34D399", "#F59E0B", "#A78BFA", "#F43F5E", "#10B981",
+    "#06B6D4", "#F97316", "#3B82F6", "#22D3EE", "#84CC16", "#E879F9"
   ]
 }

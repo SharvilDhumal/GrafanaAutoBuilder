@@ -2,8 +2,14 @@ package com.example.grafanaautobuilder.service.grafana;
 
 import com.example.grafanaautobuilder.dto.PanelConfig;
 import com.example.grafanaautobuilder.config.GrafanaProperties;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 @Service
@@ -17,81 +23,97 @@ public class PanelJsonBuilder {
     }
 
     public Map<String, Object> buildPanel(PanelConfig cfg, int x, int y, int id) {
-        int w = (cfg.getW() == null || cfg.getW() <= 0) ? 12 : cfg.getW();
-        int h = (cfg.getH() == null || cfg.getH() <= 0) ? 8 : cfg.getH();
+        // 1) Load universal JSON template and replace placeholders for core inputs
+        String rawTemplate = loadTemplate("panel-templates/universal-panel.json");
+        if (rawTemplate == null || rawTemplate.isBlank()) {
+            // Fallback to previous behavior if template missing
+            return buildPanelFallback(cfg, x, y, id);
+        }
+
         String type = mapVisualization(cfg.getVisualization());
+        String title = (cfg.getTitle() == null || cfg.getTitle().isBlank()) ? ("Panel " + id) : cfg.getTitle();
+        String query = cfg.getQuery() == null ? "" : cfg.getQuery();
 
-        Map<String, Object> gridPos = new HashMap<>();
-        gridPos.put("x", x);
-        gridPos.put("y", y);
-        gridPos.put("w", w);
-        gridPos.put("h", h);
+        String filled = rawTemplate
+                .replace("{{visualization}}", type)
+                .replace("{{title}}", escapeJson(title))
+                .replace("{{query}}", escapeJson(query));
+        // We do NOT rely on the template's datasource placeholders; we'll inject programmatically
 
-        Map<String, Object> datasource = null;
-        // Prefer CSV-provided datasource UID; else fallback to configured default
+        Map<String, Object> panel = parseJsonToMap(filled);
+        if (panel == null) {
+            return buildPanelFallback(cfg, x, y, id);
+        }
+
+        // 2) Determine datasource UID and type with fallback to backend defaults
         String csvDatasource = cfg.getDatasource();
         String defaultUid = grafanaProperties.getDefaultDatasourceUid();
         String defaultType = grafanaProperties.getDefaultDatasourceType();
+
+        Map<String, Object> datasource = null;
         if (csvDatasource != null && !csvDatasource.isBlank()) {
             datasource = new HashMap<>();
             datasource.put("uid", csvDatasource);
-            // We don't know CSV's type; assume configured default to ensure Grafana treats it as SQL
-            if (defaultType != null && !defaultType.isBlank()) {
-                datasource.put("type", defaultType);
-            }
+            if (defaultType != null && !defaultType.isBlank()) datasource.put("type", defaultType);
         } else if (defaultUid != null && !defaultUid.isBlank()) {
             datasource = new HashMap<>();
             datasource.put("uid", defaultUid);
-            if (defaultType != null && !defaultType.isBlank()) {
-                datasource.put("type", defaultType);
+            if (defaultType != null && !defaultType.isBlank()) datasource.put("type", defaultType);
+        }
+
+        if (datasource != null) {
+            panel.put("datasource", datasource);
+            Object targetsObj = panel.get("targets");
+            if (targetsObj instanceof List) {
+                @SuppressWarnings("unchecked")
+                List<Object> targets = (List<Object>) targetsObj;
+                if (!targets.isEmpty() && targets.get(0) instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> t0 = (Map<String, Object>) targets.get(0);
+                    t0.put("datasource", datasource);
+                }
+            }
+        } else {
+            // If neither CSV nor default, remove datasource blocks to let Grafana resolve a default
+            panel.remove("datasource");
+            Object targetsObj = panel.get("targets");
+            if (targetsObj instanceof List) {
+                @SuppressWarnings("unchecked")
+                List<Object> targets = (List<Object>) targetsObj;
+                if (!targets.isEmpty() && targets.get(0) instanceof Map) {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> t0 = (Map<String, Object>) targets.get(0);
+                    t0.remove("datasource");
+                }
             }
         }
 
-        Map<String, Object> target = buildTarget(cfg, datasource);
-
-        List<Map<String, Object>> targets = new ArrayList<>();
-        targets.add(target);
-
-        Map<String, Object> panel = new LinkedHashMap<>();
+        // 3) Always set id, gridPos defaults, and transparent true.
+        Map<String, Object> gridPos = new HashMap<>();
+        gridPos.put("x", x);
+        gridPos.put("y", y);
+        // Keep reasonable defaults internally; W/H are not asked from user
+        gridPos.put("w", 12);
+        gridPos.put("h", 8);
         panel.put("id", id);
-        panel.put("type", type);
-        panel.put("title", cfg.getTitle() == null ? ("Panel " + id) : cfg.getTitle());
         panel.put("gridPos", gridPos);
-        // Modern look: transparent panels by default
         panel.put("transparent", true);
-        if (datasource != null) panel.put("datasource", datasource);
-        // Ensure targets are set on the panel
-        panel.put("targets", targets);
-
-        // Per-panel time overrides (Grafana honors these over dashboard picker)
-        String timeFrom = cfg.getTimeFrom();
-        String timeShift = cfg.getTimeShift();
-        // Provide sensible defaults by visualization if not explicitly set
-        if ((timeFrom == null || timeFrom.isBlank()) && type != null) {
-            String t = type.toLowerCase(Locale.ROOT);
-            if (t.equals("stat") || t.equals("gauge")) {
-                timeFrom = "24h"; // show last 24h for single-value panels by default
-            }
-        }
-        if (timeFrom != null && !timeFrom.isBlank()) {
-            panel.put("timeFrom", timeFrom.trim());
-        }
-        if (timeShift != null && !timeShift.isBlank()) {
-            panel.put("timeShift", timeShift.trim());
-        }
-
-        // Add time range configuration to fix "no data" issue
-        Map<String, Object> options = buildPanelOptions(cfg.getVisualization());
-        if (!options.isEmpty()) {
-            panel.put("options", options);
-        }
-
-        Map<String, Object> fieldConfig = buildFieldConfig(cfg.getUnit(), cfg.getThresholds(), cfg.getVisualization(), cfg.getColor());
-        // Merge global color config from visualization-colors.json
-        Map<String, Object> mergedFieldConfig = mergeWithGlobalFieldConfig(fieldConfig);
-        if (!mergedFieldConfig.isEmpty()) panel.put("fieldConfig", mergedFieldConfig);
 
         return panel;
+    }
+
+    // Pick a stable color from the configured palette based on a text seed (e.g., panel title)
+    private String pickColorFromPalette(String seed) {
+        List<String> palette = colorConfigService.getPalette();
+        if (palette == null || palette.isEmpty()) return null;
+        int hash = 0;
+        if (seed != null) {
+            for (int i = 0; i < seed.length(); i++) {
+                hash = (31 * hash + seed.charAt(i));
+            }
+        }
+        int idx = (hash & 0x7fffffff) % palette.size();
+        return palette.get(idx);
     }
 
     private Map<String, Object> buildTarget(PanelConfig cfg, Map<String, Object> datasource) {
@@ -153,6 +175,91 @@ public class PanelJsonBuilder {
         if (datasource != null) target.put("datasource", datasource);
         
         return target;
+    }
+
+    // Legacy fallback builder (kept for safety if template missing or parse fails)
+    private Map<String, Object> buildPanelFallback(PanelConfig cfg, int x, int y, int id) {
+        int w = (cfg.getW() == null || cfg.getW() <= 0) ? 12 : cfg.getW();
+        int h = (cfg.getH() == null || cfg.getH() <= 0) ? 8 : cfg.getH();
+        String type = mapVisualization(cfg.getVisualization());
+
+        Map<String, Object> gridPos = new HashMap<>();
+        gridPos.put("x", x);
+        gridPos.put("y", y);
+        gridPos.put("w", w);
+        gridPos.put("h", h);
+
+        Map<String, Object> datasource = null;
+        String csvDatasource = cfg.getDatasource();
+        String defaultUid = grafanaProperties.getDefaultDatasourceUid();
+        String defaultType = grafanaProperties.getDefaultDatasourceType();
+        if (csvDatasource != null && !csvDatasource.isBlank()) {
+            datasource = new HashMap<>();
+            datasource.put("uid", csvDatasource);
+            if (defaultType != null && !defaultType.isBlank()) {
+                datasource.put("type", defaultType);
+            }
+        } else if (defaultUid != null && !defaultUid.isBlank()) {
+            datasource = new HashMap<>();
+            datasource.put("uid", defaultUid);
+            if (defaultType != null && !defaultType.isBlank()) {
+                datasource.put("type", defaultType);
+            }
+        }
+
+        Map<String, Object> target = buildTarget(cfg, datasource);
+        List<Map<String, Object>> targets = new ArrayList<>();
+        targets.add(target);
+
+        Map<String, Object> panel = new LinkedHashMap<>();
+        panel.put("id", id);
+        panel.put("type", type);
+        panel.put("title", cfg.getTitle() == null ? ("Panel " + id) : cfg.getTitle());
+        panel.put("gridPos", gridPos);
+        panel.put("transparent", true);
+        if (datasource != null) panel.put("datasource", datasource);
+        panel.put("targets", targets);
+
+        // Keep previous options/fieldConfig heuristics for legacy behavior
+        Map<String, Object> options = buildPanelOptions(cfg.getVisualization());
+        if (!options.isEmpty()) panel.put("options", options);
+
+        String chosenColor = cfg.getColor();
+        if (chosenColor == null || chosenColor.isBlank()) {
+            String seed = cfg.getTitle() != null ? cfg.getTitle() : ("Panel " + id);
+            chosenColor = pickColorFromPalette(seed);
+        }
+        Map<String, Object> fieldConfig = buildFieldConfig(cfg.getUnit(), cfg.getThresholds(), cfg.getVisualization(), chosenColor);
+        Map<String, Object> mergedFieldConfig = mergeWithGlobalFieldConfig(fieldConfig);
+        if (!mergedFieldConfig.isEmpty()) panel.put("fieldConfig", mergedFieldConfig);
+
+        return panel;
+    }
+
+    private String loadTemplate(String classpathLocation) {
+        ClassPathResource resource = new ClassPathResource(classpathLocation);
+        try (InputStream is = resource.getInputStream()) {
+            byte[] bytes = is.readAllBytes();
+            return new String(bytes, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private Map<String, Object> parseJsonToMap(String json) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(json, new TypeReference<LinkedHashMap<String, Object>>() {});
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private String escapeJson(String s) {
+        if (s == null) return "";
+        // Simple escape for quotes and backslashes used within template replacements
+        return s.replace("\\", "\\\\").replace("\"", "\\\"");
     }
 
     private Map<String, Object> buildPanelOptions(String visualization) {
@@ -218,6 +325,10 @@ public class PanelJsonBuilder {
                       .append("const pdata = (context && context.panel && context.panel.data) ? context.panel.data : (context && context.data ? context.data : null);\n")
                       .append("try { if (typeof console !== 'undefined') { console.debug('[Autobuilder] pdata', pdata); } } catch (e) {}\n")
                       .append("const frames = (pdata && Array.isArray(pdata.series)) ? pdata.series : [];\n")
+                      .append("const title = (context && context.panel && context.panel.title) ? context.panel.title : '';\n")
+                      .append("const palette = ['#60A5FA','#34D399','#F59E0B','#A78BFA','#F43F5E','#10B981','#06B6D4','#F97316','#3B82F6','#22D3EE','#84CC16','#E879F9'];\n")
+                      .append("let h=0; for (let i=0;i<title.length;i++){ h=(31*h+title.charCodeAt(i))|0; } const color = palette[Math.abs(h)%palette.length];\n")
+                      .append("const hexToRgba = (hex, a)=>{ const m = /^#?([\\\\da-f]{2})([\\\\da-f]{2})([\\\\da-f]{2})$/i.exec(hex); if(!m) return hex; const r=parseInt(m[1],16), g=parseInt(m[2],16), b=parseInt(m[3],16); return `rgba(${r}, ${g}, ${b}, ${a})`; };\n")
                       .append("let frame = null;\n")
                       .append("for (const f of frames) { if (f && Array.isArray(f.fields) && f.fields.length) { frame = f; if (f.fields.some(x => x && x.type === 'number')) break; } }\n")
                       .append("if (!frame || !frame.fields || frame.fields.length === 0) {\n")
@@ -249,10 +360,17 @@ public class PanelJsonBuilder {
                       .append("  seriesData = values;\n")
                       .append("}\n")
                       .append("return {\n")
+                      .append("  color: [color],\n")
                       .append("  tooltip: { trigger: isTime ? 'axis' : 'item' },\n")
                       .append("  xAxis: { type: isTime ? 'time' : 'category', data: isTime ? undefined : labels },\n")
                       .append("  yAxis: { type: 'value' },\n")
-                      .append("  series: [ { type: '").append(seriesType).append("', showSymbol: false, smooth: true, areaStyle: isTime ? { opacity: 0.12 } : undefined, data: seriesData } ]\n")
+                      .append("  series: [ { type: '").append(seriesType).append("', showSymbol: false, smooth: true,\n")
+                      .append("    itemStyle: { color },\n")
+                      .append("    areaStyle: isTime ? { color: {\n")
+                      .append("      type: 'linear', x: 0, y: 0, x2: 0, y2: 1,\n")
+                      .append("      colorStops: [ { offset: 0, color: hexToRgba(color, 0.28) }, { offset: 1, color: hexToRgba(color, 0.02) } ]\n")
+                      .append("    } } : undefined,\n")
+                      .append("    data: seriesData } ]\n")
                       .append("};\n");
                     // Primary key used by Business Charts panel (Charts Function)
                     options.put("function", fn.toString());
