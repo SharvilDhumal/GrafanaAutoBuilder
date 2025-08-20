@@ -12,7 +12,8 @@ This guide focuses only on generating Grafana dashboards from a CSV using the Ad
 - Overview
 - Minimal Requirements
 - CSV Format (what the app expects)
-- Use the Admin Panel (Upload & Build)
+- Generate via Website (Recommended)
+- Alternative: Admin Panel (Upload & Metrics)
 - Verify in Grafana
 - Troubleshooting (CSV/build-focused)
 - Quick Checklist
@@ -44,7 +45,6 @@ Before building dashboards, make sure you have:
 
 For how to install, configure, and start services, see `README.md`.
 
-![Minimal requirements — replace with your image](ADD_IMAGE_LINK_MIN_REQS)
 
 ---
 
@@ -62,28 +62,45 @@ Key points:
 - Start from the samples and adjust titles, queries, panel types, and layout to your needs.
 - Ensure any referenced tables/columns exist in your PostgreSQL database.
 
-![CSV format concept — replace with your image](ADD_IMAGE_LINK_CSV_FORMAT)
+![CSV format concept — replace with your image](./csv.png)
+![CSV format concept — replace with your image](./csv1.png)
+---
+
+## Generate via Website (Recommended)
+1. Go to the Upload page (main website flow).  
+   - If authentication is required, log in first.
+2. Select or drag-and-drop your CSV.  
+   - Only `.csv` files are accepted; invalid files show an error.  
+   - ![Upload CSV — replace with your image](ADD_IMAGE_LINK_UPLOAD)
+3. Click Generate.  
+   - The app uploads the CSV via the dashboard service and waits for a response.
+4. See the result.  
+   - On success, you’ll get the dashboard info (and link if provided).  
+   - On error, you’ll see an error message.
+
+What happens behind the scenes:
+- The backend parses your CSV and composes dashboard JSON.
+- The backend calls the Grafana API to create/update the dashboard(s).
+
+Tip: Check backend logs for validation or API errors.
 
 ---
 
-## Use the Admin Panel (Upload & Build)
-1. Navigate to the app and open the Admin section.  
-   - If authentication is enabled, log in or sign up.
-2. Upload CSV  
-   - Choose a sample-based CSV (from the CSV Format section)  
-   - Optionally map fields if the UI prompts  
-   - ![Upload CSV — replace with your image](ADD_IMAGE_LINK_UPLOAD)
-3. Configure build options (if shown)  
-   - Default datasource UID vs. per-row `datasource_uid`  
-   - Overwrite existing dashboards vs. create new ones  
-   - Folder/Org selection  
-   - ![Build options — replace with your image](ADD_IMAGE_LINK_BUILD_OPTIONS)
-4. Run Build  
-   - Triggers the backend to parse CSV and call Grafana API  
-   - Review logs/status in the UI  
-   - ![Build progress — replace with your image](ADD_IMAGE_LINK_BUILD_PROGRESS)
+## Alternative: Admin Panel (Upload & Metrics)
+The Admin Panel also supports uploading a CSV to build dashboards and provides site metrics:
 
-Tip: Keep an eye on console/backend logs for validation or API errors.
+- Active Users (current activity)
+- Total Visits/Site Count
+- Recent Activity (CSV → Grafana conversions)
+
+Upload via Admin Panel:
+1. Open the Admin section.  
+   - If authentication is enabled, log in or sign up.
+2. Select your CSV and click Upload.  
+   - Posts to `/api/files/upload` with `FormData` key `file`.
+3. Review success or error in the panel.
+
+Use the Admin Panel when you want to see metrics along with uploading. For most users, the main website Upload page is the simplest way to generate dashboards.
 
 ---
 
