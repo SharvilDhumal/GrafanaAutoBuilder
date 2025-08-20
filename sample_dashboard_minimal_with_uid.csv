@@ -1,0 +1,6 @@
+title,visualization,query,datasource,w,h
+Daily Metric,timeseries,"SELECT t AS time, (sin(extract(epoch from t)/86400*2*pi())*50+50) AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 day') AS t",fev06aq8frhfka,12,8
+Current Score,stat,"SELECT avg(v) AS value FROM (SELECT (random()*100)::numeric AS v FROM generate_series(1,1000)) s",fev06aq8frhfka,6,6
+Top Categories,table,"SELECT label, value FROM (VALUES ('Alpha', 42), ('Beta', 27), ('Gamma', 58)) AS x(label, value) ORDER BY value DESC",fev06aq8frhfka,12,8
+Category Bars,bar,"SELECT label, value FROM (VALUES ('North', 120), ('South', 95), ('East', 130), ('West', 80)) AS x(label, value)",fev06aq8frhfka,12,8
+Trend (ECharts),echarts-line,"SELECT t AS time, (50 + 30*sin(extract(epoch from t)/3600)) AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 hour') AS t",fev06aq8frhfka,24,8

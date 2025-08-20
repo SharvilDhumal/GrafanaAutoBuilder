@@ -14,7 +14,7 @@
       },
       "rawSql": "{{query}}",
       "editorMode": "code",
-      "format": "auto"
+      "rawQuery": true
     }
   ],
   "fieldConfig": {

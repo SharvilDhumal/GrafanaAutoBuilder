@@ -1,0 +1,11 @@
+title,datasource,query,visualization,unit,thresholds,w,h,color
+"Revenue Trend (Daily)",fev06aq8frhfka,"SELECT t AS time, (100000 + 20000*sin(extract(epoch from t)/86400*2*pi()) + (random()*5000))::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 day') AS t",timeseries,currency,120000|140000,24,8,#2563EB
+"Active Users (Hourly)",fev06aq8frhfka,"SELECT t AS time, (500 + 200*sin(extract(epoch from t)/3600) + random()*50)::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 hour') AS t",timeseries,short,400|700,12,8,#059669
+"Sales by Category",fev06aq8frhfka,"SELECT label, value FROM (VALUES ('Electronics', 120), ('Home', 85), ('Fashion', 65)) AS x(label, value)",barchart,short,60|120,12,8,#F59E0B
+"Error Rate (%)",fev06aq8frhfka,"SELECT DATE_TRUNC('minute', now()) AS time, (random()*10)::numeric AS value",gauge,percent,5|8,6,6,#EF4444
+"Current Sessions",fev06aq8frhfka,"SELECT 42.0 AS value",stat,short,30|60,6,6,#7C3AED
+"Orders (Line - ECharts)",fev06aq8frhfka,"SELECT generate_series($__timeFrom(), $__timeTo(), interval '1 hour') AS time, (random()*50+50)::int AS value",echarts-line,short,60|90,24,8,#22C55E
+"Inventory Table",fev06aq8frhfka,"SELECT 'SKU-001' AS label, 150 AS value UNION ALL SELECT 'SKU-002' AS label, 90 AS value UNION ALL SELECT 'SKU-003' AS label, 45 AS value",table,short,,12,8,#0EA5E9
+"Marketing Spend (Weekly)",fev06aq8frhfka,"SELECT t AS time, (20000 + 5000*sin(extract(epoch from t)/604800*2*pi()) + random()*1000)::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 day') AS t",timeseries,currency,18000|26000,24,8,#F43F5E
+"Regional Orders",fev06aq8frhfka,"SELECT label, value FROM (VALUES ('North', 1200), ('South', 950), ('East', 1300), ('West', 800)) AS x(label, value)",barchart,short,800|1400,12,8,#06B6D4
+"Business KPI (Composite)",fev06aq8frhfka,"SELECT t AS time, (200 + 80*sin(extract(epoch from t)/86400*2*pi()) + random()*20)::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 day') AS t",business,short,150|260,24,8,#3B82F6

@@ -1,0 +1,11 @@
+title,visualization,query,datasource,w,h,color
+Revenue Trend,business,"SELECT t AS time, (100000 + 20000*sin(extract(epoch from t)/86400*2*pi()) + (random()*5000))::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 day') AS t",fev06aq8frhfka,24,8,#3B82F6
+Active Users,business,"SELECT t AS time, (500 + 200*sin(extract(epoch from t)/3600) + random()*50)::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 hour') AS t",fev06aq8frhfka,12,8,#10B981
+Conversion Rate %,business,"SELECT t AS time, (50 + 20*sin(extract(epoch from t)/86400*2*pi()))::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 day') AS t",fev06aq8frhfka,12,8,#F59E0B
+Orders by Region,business,"SELECT label, value FROM (VALUES ('North', 1200), ('South', 950), ('East', 1300), ('West', 800)) AS x(label, value)",fev06aq8frhfka,12,8,#06B6D4
+Top Products,business,"SELECT label, value FROM (VALUES ('Pro', 420), ('Plus', 310), ('Basic', 190)) AS x(label, value)",fev06aq8frhfka,12,8,#8B5CF6
+Avg Session Duration (s),business,"SELECT t AS time, (60 + 20*sin(extract(epoch from t)/3600) + random()*5)::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 hour') AS t",fev06aq8frhfka,12,8,#22C55E
+Bounce Rate %,business,"SELECT t AS time, (35 + 10*sin(extract(epoch from t)/86400*2*pi()))::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 day') AS t",fev06aq8frhfka,12,8,#EF4444
+New Signups,business,"SELECT t AS time, (200 + 80*sin(extract(epoch from t)/86400*2*pi()) + random()*20)::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 day') AS t",fev06aq8frhfka,12,8,#84CC16
+Support Tickets,business,"SELECT t AS time, (50 + 30*sin(extract(epoch from t)/43200*2*pi()) + random()*10)::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '30 minutes') AS t",fev06aq8frhfka,12,8,#E879F9
+Marketing Spend,business,"SELECT t AS time, (20000 + 5000*sin(extract(epoch from t)/604800*2*pi()) + random()*1000)::numeric AS value FROM generate_series($__timeFrom(), $__timeTo(), interval '1 day') AS t",fev06aq8frhfka,24,8,#F43F5E
