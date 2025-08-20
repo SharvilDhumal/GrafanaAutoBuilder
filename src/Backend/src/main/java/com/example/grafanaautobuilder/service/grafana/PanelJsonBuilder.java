@@ -104,9 +104,11 @@ public class PanelJsonBuilder {
         Map<String, Object> gridPos = new HashMap<>();
         gridPos.put("x", x);
         gridPos.put("y", y);
-        // Keep reasonable defaults internally; W/H are not asked from user
-        gridPos.put("w", 12);
-        gridPos.put("h", 8);
+        // Respect CSV-provided W/H when available; fall back to sane defaults
+        int csvW = (cfg.getW() == null || cfg.getW() <= 0) ? 12 : cfg.getW();
+        int csvH = (cfg.getH() == null || cfg.getH() <= 0) ? 8 : cfg.getH();
+        gridPos.put("w", csvW);
+        gridPos.put("h", csvH);
         panel.put("id", id);
         panel.put("gridPos", gridPos);
         panel.put("transparent", true);
