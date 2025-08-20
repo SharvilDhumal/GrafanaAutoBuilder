@@ -1,6 +1,6 @@
-# Grafana Autobuilder — End‑to‑End Guide (CSV ➜ Grafana)
+# Grafana Autobuilder — Dashboard Generation Guide (CSV ➜ Grafana)
 
-This guide explains how to go from a CSV file to a live Grafana dashboard using this project. It includes Grafana setup, backend/frontend setup, CSV format, and the Admin Panel workflow. Image placeholders are included—replace them with your image links later.
+This guide focuses only on generating Grafana dashboards from a CSV using the Admin Panel workflow. For installation, environment variables, backend/frontend startup, and database configuration, please see the project `README.md`. Image placeholders are included—replace them with your image links later.
 
 > Notes
 > - The project currently supports only PostgreSQL datasources.
@@ -10,17 +10,11 @@ This guide explains how to go from a CSV file to a live Grafana dashboard using 
 
 ## Table of Contents
 - Overview
-- Prerequisites
-- Architecture (at a glance)
-- Step 1: Prepare Grafana
-- Step 2: Prepare PostgreSQL
-- Step 3: Start the Backend (Spring Boot)
-- Step 4: Start the Frontend (Angular)
-- Step 5: Understand the CSV Format
-- Step 6: Use the Admin Panel (Upload & Build)
-- Step 7: Verify in Grafana
-- Optional: Supabase Storage
-- Troubleshooting & FAQ
+- Minimal Requirements
+- CSV Format (what the app expects)
+- Use the Admin Panel (Upload & Build)
+- Verify in Grafana
+- Troubleshooting (CSV/build-focused)
 - Quick Checklist
 
 ---
@@ -32,88 +26,29 @@ The app ingests a CSV that describes dashboards/panels and automatically creates
 
 ---
 
-## Prerequisites
-- Grafana: Local or remote instance you can access as an admin.
-- PostgreSQL: Running locally with a database the backend can access.
-- Java 17+ and Maven or Gradle: To run the Spring Boot backend.
-- Node.js 18+ and Angular CLI: To run the Angular frontend.
-- Grafana API Token: Admin or sufficient privileges to create dashboards.
-
-![Prerequisites checklist — replace with your image](ADD_IMAGE_LINK_PREREQS)
-
----
-
 ## Architecture (at a glance)
-1. CSV is uploaded via the Angular Admin Panel.
+1. CSV is uploaded via the Admin Panel.
 2. Backend parses CSV and composes Grafana dashboard JSON.
 3. Backend calls Grafana API to create/update dashboards.
-4. Datasource per panel is resolved using configured defaults or the CSV per-row `datasource_uid`.
+4. Per-panel datasource is resolved via default settings or the per-row `datasource_uid`.
 
 ![Architecture diagram — replace with your image](ADD_IMAGE_LINK_ARCH)
 
 ---
 
-## Step 1: Prepare Grafana
-1. Install/Run Grafana  
-   - Local default: http://localhost:3000
-2. Create a Grafana API Token (Admin → Service Accounts or API Keys)  
-   - Scope: Admin or at least Dashboards:Write and Datasources:Read  
-   - Save the token securely  
-   - ![Create API token — replace with your image](ADD_IMAGE_LINK_GRAFANA_TOKEN)
-3. Create PostgreSQL Datasource(s) in Grafana  
-   - Configure host, port, database, user, password  
-   - Get each datasource UID from the Datasource settings page (UID is visible there)  
-   - ![Datasource UID location — replace with your image](ADD_IMAGE_LINK_DS_UID)
+## Minimal Requirements
+Before building dashboards, make sure you have:
+- Grafana URL and an API token with dashboard write permissions.
+- At least one PostgreSQL datasource configured in Grafana and its UID(s).
+- Grafana Autobuilder app running and reachable (backend + frontend).
 
-Record: Grafana URL, API token, and datasource UID(s) for later steps.
+For how to install, configure, and start services, see `README.md`.
+
+![Minimal requirements — replace with your image](ADD_IMAGE_LINK_MIN_REQS)
 
 ---
 
-## Step 2: Prepare PostgreSQL
-Ensure a PostgreSQL instance is running and reachable by the backend. Example local setup:
-- URL: `jdbc:postgresql://localhost:5432/grafana_autobuilder`
-- Username: `postgres`
-- Password: `sharvil39*`
-
-Create the database if it does not exist. Validate connectivity using pgAdmin or psql.
-
-![PostgreSQL ready — replace with your image](ADD_IMAGE_LINK_POSTGRES)
-
----
-
-## Step 3: Start the Backend (Spring Boot)
-Backend code is under `src/Backend/`.
-
-1. Set environment variables (examples):
-   - `GRAFANA_URL` (e.g., `http://localhost:3000`)
-   - `GRAFANA_API_TOKEN` (token created in Step 1)
-   - `SPRING_DATASOURCE_URL` (e.g., `jdbc:postgresql://localhost:5432/grafana_autobuilder`)
-   - `SPRING_DATASOURCE_USERNAME`
-   - `SPRING_DATASOURCE_PASSWORD`
-   - Optional overrides as defined in `src/Backend/` configuration files.
-
-2. Run the server from `src/Backend/`:
-   - Maven: `mvn spring-boot:run`
-   - Gradle: `gradle bootRun`
-
-3. The backend listens on `http://localhost:8080` by default.
-
-![Backend running — replace with your image](ADD_IMAGE_LINK_BACKEND_RUNNING)
-
----
-
-## Step 4: Start the Frontend (Angular)
-1. Install dependencies at the project root:
-   - `npm install`
-2. Start the dev server:
-   - `npm start` or `ng serve`
-3. Open: `http://localhost:4200`
-
-![Frontend home — replace with your image](ADD_IMAGE_LINK_FRONTEND_HOME)
-
----
-
-## Step 5: Understand the CSV Format
+## CSV Format (what the app expects)
 Use the sample CSVs in the project root as templates:
 - `sample_dashboard_minimal.csv`
 - `sample_dashboard_minimal_with_uid.csv`
@@ -131,11 +66,11 @@ Key points:
 
 ---
 
-## Step 6: Use the Admin Panel (Upload & Build)
+## Use the Admin Panel (Upload & Build)
 1. Navigate to the app and open the Admin section.  
    - If authentication is enabled, log in or sign up.
 2. Upload CSV  
-   - Choose a sample-based CSV (from Step 5)  
+   - Choose a sample-based CSV (from the CSV Format section)  
    - Optionally map fields if the UI prompts  
    - ![Upload CSV — replace with your image](ADD_IMAGE_LINK_UPLOAD)
 3. Configure build options (if shown)  
@@ -152,7 +87,7 @@ Tip: Keep an eye on console/backend logs for validation or API errors.
 
 ---
 
-## Step 7: Verify in Grafana
+## Verify in Grafana
 1. Open Grafana → Dashboards.
 2. Locate the newly created/updated dashboard.
 3. Open panels and confirm:
@@ -163,44 +98,25 @@ Tip: Keep an eye on console/backend logs for validation or API errors.
 
 ---
 
-## Optional: Supabase Storage
-If you plan to store CSVs or assets in Supabase:
-1. Set environment variables (see project README):
-   - `SUPABASE_URL`
-   - `SUPABASE_SERVICE_KEY`
-   - `SUPABASE_BUCKET`
-2. Configure the app to read from/write to the bucket as needed.
-
-![Supabase settings — replace with your image](ADD_IMAGE_LINK_SUPABASE)
-
----
-
-## Troubleshooting & FAQ
+## Troubleshooting (CSV/build-focused)
 - Dashboards not appearing  
-  - Validate `GRAFANA_URL` and `GRAFANA_API_TOKEN` in backend env  
-  - Check backend logs for API errors  
-  - Ensure your Grafana user/API token has write permissions
+  - Confirm your API token has dashboard write permissions.  
+  - Check backend logs for Grafana API errors.  
+  - Ensure the target folder/org (if specified) exists.
 - Panels show errors / no data  
-  - Confirm PostgreSQL credentials and network access in the Grafana datasource  
-  - Verify SQL in CSV against real tables/columns  
-  - If using `datasource_uid` per row, ensure those UIDs exist in Grafana
+  - Verify SQL in CSV against real tables/columns in your DB.  
+  - Ensure Grafana datasource connection works.  
+  - If using `datasource_uid` per row, ensure those UIDs exist in Grafana.
 - Multiple datasources in one dashboard  
-  - Include `datasource_uid` per panel row, or set a default at build time
-- Backend won’t start  
-  - Ensure Java, Maven/Gradle installed  
-  - Verify PostgreSQL is running and connection details are correct
-- Auth issues  
-  - If frontend auth is disabled or using demo logic, try accessing Admin without login  
-  - If enabled, ensure backend auth endpoints are reachable (`/api/auth/login`, `/api/auth/signup`)
+  - Include `datasource_uid` per panel row, or set a default at build time.
+
+For runtime/setup issues (install, auth, backend, frontend), see `README.md`.
 
 ---
 
 ## Quick Checklist
-- [ ] Grafana running, API token created  
-- [ ] PostgreSQL running and reachable  
-- [ ] Backend env set (Grafana URL/token, DB URL/user/pass)  
-- [ ] Backend running on 8080  
-- [ ] Frontend running on 4200  
+- [ ] Grafana URL + API token ready  
+- [ ] PostgreSQL datasource UID(s) available in Grafana  
 - [ ] CSV prepared from samples (with `datasource_uid` if needed)  
 - [ ] Build triggered from Admin Panel  
 - [ ] Dashboard verified in Grafana
