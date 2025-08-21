@@ -213,6 +213,6 @@ For runtime/setup issues (install, auth, backend, frontend), see `README.md`.
 
 ![Checklist done — replace with your image](./images/check.png)
 
----The users Csv is storedin the supabase database and the dashboard is created in the grafana.
+---The uploaded Csv is stored  in the supabase database and the dashboard is created in the grafana.
 
-![Supabase](./images/supabse.png)
+![Supabase](./images/supabase.png)
