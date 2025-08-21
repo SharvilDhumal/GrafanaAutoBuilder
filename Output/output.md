@@ -11,7 +11,7 @@
   }
 </style>
 
-This guide focuses only on generating Grafana dashboards from a CSV using the Admin Panel workflow. For installation, environment variables, backend/frontend startup, and database configuration, please see the project `README.md`. Image placeholders are included—replace them with your image links later.
+This guide focuses only on generating Grafana dashboards from a CSV using the Admin Panel workflow. For installation, environment variables, backend/frontend startup, and database configuration, please see the project `README.md`. 
 
 > Notes
 > - The project currently supports only PostgreSQL datasources.
@@ -43,7 +43,7 @@ The app ingests a CSV that describes dashboards/panels and automatically creates
 
 
 ## Architecture (at a glance)
-1. CSV is uploaded via the Admin Panel.
+1. CSV is uploaded via the User Login or Admin panel.
 2. Backend parses CSV and composes Grafana dashboard JSON.
 3. Backend calls Grafana API to create/update dashboards.
 4. Per-panel datasource is resolved via default settings or the per-row `datasource_uid`.
@@ -98,7 +98,7 @@ For how to install, configure, and start services, see `README.md`.
 ![Forgot Password](./images/forgot5.png)
 ![Forgot Password](./images/forgot6.png)
 ![Forgot Password](./images/forgot7.png)
-![Forgot Password](./images/forgot8.png)
+
 
 API endpoints (for integrators):
 - POST `/api/auth/login`
