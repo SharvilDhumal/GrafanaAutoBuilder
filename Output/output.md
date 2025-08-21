@@ -11,6 +11,7 @@ This guide focuses only on generating Grafana dashboards from a CSV using the Ad
 ## Table of Contents
 - Overview
 - Minimal Requirements
+- Authentication (login required)
 - CSV Format (what the app expects)
 - Generate via Website (Recommended)
 - Alternative: Admin Panel (Upload & Metrics)
@@ -23,9 +24,12 @@ This guide focuses only on generating Grafana dashboards from a CSV using the Ad
 ## Overview
 The app ingests a CSV that describes dashboards/panels and automatically creates/updates dashboards in Grafana using the Grafana HTTP API. Datasource control is per-panel via the datasource UID.
 
-![High-level overview — replace with your image](ADD_IMAGE_LINK_OVERVIEW)
+![Homepage](./images/homepage.png)
+![Homepage](./images/homepage1.png)
+![Homepage](./images/homepage2.png)
 
 ---
+
 
 ## Architecture (at a glance)
 1. CSV is uploaded via the Admin Panel.
@@ -42,9 +46,22 @@ Before building dashboards, make sure you have:
 - Grafana URL and an API token with dashboard write permissions.
 - At least one PostgreSQL datasource configured in Grafana and its UID(s).
 - Grafana Autobuilder app running and reachable (backend + frontend).
+ - App access and credentials (log in to the web app before uploading/generating).
 
 For how to install, configure, and start services, see `README.md`.
 
+
+---
+
+## Authentication (login required)
+- Open the web app and click "Login" (top-right).
+- Enter your credentials. If you’re new, click "Sign Up" first, then log in.
+- You must be logged in to upload a CSV and generate dashboards (Upload page or Admin Panel).
+- If you see 401/Unauthorized, log in again and retry.
+
+API endpoints (for integrators):
+- POST `/api/auth/login`
+- POST `/api/auth/signup`
 
 ---
 
@@ -62,19 +79,20 @@ Key points:
 - Start from the samples and adjust titles, queries, panel types, and layout to your needs.
 - Ensure any referenced tables/columns exist in your PostgreSQL database.
 
-![CSV format concept — replace with your image](./csv.png)
-![CSV format concept — replace with your image](./csv1.png)
+![CSV format concept — replace with your image](./images/csv.png)
+![CSV format concept — replace with your image](./images/csv1.png)
 ---
 
 ## Generate via Website (Recommended)
-1. Go to the Upload page (main website flow).  
-   - If authentication is required, log in first.
-2. Select or drag-and-drop your CSV.  
+1. Login to the app.  
+   - Use your credentials or sign up first if you’re new.  
+   - ![Login](ADD_IMAGE_LINK_LOGIN)
+2. Go to the Upload page (main website flow).
+3. Select or drag-and-drop your CSV.  
    - Only `.csv` files are accepted; invalid files show an error.  
-   - ![Upload CSV — replace with your image](ADD_IMAGE_LINK_UPLOAD)
-3. Click Generate.  
+4. Click Generate.  
    - The app uploads the CSV via the dashboard service and waits for a response.
-4. See the result.  
+5. See the result.  
    - On success, you’ll get the dashboard info (and link if provided).  
    - On error, you’ll see an error message.
 
@@ -83,6 +101,8 @@ What happens behind the scenes:
 - The backend calls the Grafana API to create/update the dashboard(s).
 
 Tip: Check backend logs for validation or API errors.
+
+ ![uploadCsv](ADD_IMAGE_LINK_UPLOAD)
 
 ---
 
