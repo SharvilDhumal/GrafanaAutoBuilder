@@ -84,6 +84,11 @@ For how to install, configure, and start services, see `README.md`.
 ![Forgot Password](./images/forgot1.png)
 ![Forgot Password](./images/forgot2.png)
 ![Forgot Password](./images/forgot3.png)
+![Forgot Password](./images/forgot4.png)
+![Forgot Password](./images/forgot5.png)
+![Forgot Password](./images/forgot6.png)
+![Forgot Password](./images/forgot7.png)
+![Forgot Password](./images/forgot8.png)
 
 API endpoints (for integrators):
 - POST `/api/auth/login`
@@ -112,12 +117,21 @@ Key points:
 ## Generate via Website (Recommended)
 1. Login to the app.  
    - Use your credentials or sign up first if you’re new.  
-   - ![Login](ADD_IMAGE_LINK_LOGIN)
+   - ![Login](./images/loginSuccess.png)
 2. Go to the Upload page (main website flow).
 3. Select or drag-and-drop your CSV.  
    - Only `.csv` files are accepted; invalid files show an error.  
+
+ ![uploadCsv](./images/upload1.png)
+ ![uploadCsv](./images/upload2.png)
+ ![uploadCsv](./images/upload3.png)
+
 4. Click Generate.  
    - The app uploads the CSV via the dashboard service and waits for a response.
+
+ ![uploadCsv](./images/upload4.png)
+ ![uploadCsv](./images/upload5.png)
+
 5. See the result.  
    - On success, you’ll get the dashboard info (and link if provided).  
    - On error, you’ll see an error message.
@@ -128,7 +142,18 @@ What happens behind the scenes:
 
 Tip: Check backend logs for validation or API errors.
 
- ![uploadCsv](ADD_IMAGE_LINK_UPLOAD)
+
+## Verify in Grafana
+1. Open Grafana → Dashboards.
+2. Locate the newly created/updated dashboard.
+3. Open panels and confirm:
+   - Queries run against the intended PostgreSQL datasource(s).
+   - Visualizations, thresholds, units, and time ranges match expectations.
+
+![Output](./images/output1.png)
+![Output](./images/output2.png)
+![Output](./images/output3.png)
+![Output](./images/output4.png)
 
 ---
 
@@ -147,17 +172,6 @@ Upload via Admin Panel:
 3. Review success or error in the panel.
 
 Use the Admin Panel when you want to see metrics along with uploading. For most users, the main website Upload page is the simplest way to generate dashboards.
-
----
-
-## Verify in Grafana
-1. Open Grafana → Dashboards.
-2. Locate the newly created/updated dashboard.
-3. Open panels and confirm:
-   - Queries run against the intended PostgreSQL datasource(s).
-   - Visualizations, thresholds, units, and time ranges match expectations.
-
-![Dashboard verified — replace with your image](ADD_IMAGE_LINK_VERIFY)
 
 ---
 
@@ -184,4 +198,3 @@ For runtime/setup issues (install, auth, backend, frontend), see `README.md`.
 - [ ] Build triggered from Admin Panel  
 - [ ] Dashboard verified in Grafana
 
-![Checklist done — replace with your image](ADD_IMAGE_LINK_CHECKLIST)
