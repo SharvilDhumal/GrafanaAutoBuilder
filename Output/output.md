@@ -1,5 +1,16 @@
 # Grafana Autobuilder — Dashboard Generation Guide (CSV ➜ Grafana)
 
+<!-- Styling for images: center and set width to 75% -->
+<style>
+  img {
+    display: block;
+    margin: 16px auto;
+    max-width: 75%;
+    width: 75%;
+    height: auto;
+  }
+</style>
+
 This guide focuses only on generating Grafana dashboards from a CSV using the Admin Panel workflow. For installation, environment variables, backend/frontend startup, and database configuration, please see the project `README.md`. Image placeholders are included—replace them with your image links later.
 
 > Notes
@@ -9,15 +20,15 @@ This guide focuses only on generating Grafana dashboards from a CSV using the Ad
 ---
 
 ## Table of Contents
-- Overview
-- Minimal Requirements
-- Get Started (Login, Signup, Forgot Password)
-- CSV Format (what the app expects)
-- Generate via Website (Recommended)
-- Alternative: Admin Panel (Upload & Metrics)
-- Verify in Grafana
-- Troubleshooting (CSV/build-focused)
-- Quick Checklist
+- [Overview](#overview)
+- [Minimal Requirements](#minimal-requirements)
+- [Get Started (Login, Signup, Forgot Password)](#get-started-login-signup-forgot-password)
+- [CSV Format (what the app expects)](#csv-format-what-the-app-expects)
+- [Generate via Website (Recommended)](#generate-via-website-recommended)
+- [Alternative: Admin Panel (Upload & Metrics)](#alternative-admin-panel-upload--metrics)
+- [Verify in Grafana](#verify-in-grafana)
+- [Troubleshooting (CSV/build-focused)](#troubleshooting-csvbuild-focused)
+- [Quick Checklist](#quick-checklist)
 
 ---
 
@@ -37,7 +48,6 @@ The app ingests a CSV that describes dashboards/panels and automatically creates
 3. Backend calls Grafana API to create/update dashboards.
 4. Per-panel datasource is resolved via default settings or the per-row `datasource_uid`.
 
-![Architecture diagram — replace with your image](ADD_IMAGE_LINK_ARCH)
 
 ---
 
@@ -130,7 +140,7 @@ Key points:
    - The app uploads the CSV via the dashboard service and waits for a response.
 
  ![uploadCsv](./images/upload4.png)
- ![uploadCsv](./images/upload5.png)
+
 
 5. See the result.  
    - On success, you’ll get the dashboard info (and link if provided).  
@@ -167,11 +177,14 @@ The Admin Panel also supports uploading a CSV to build dashboards and provides s
 Upload via Admin Panel:
 1. Open the Admin section.  
    - If authentication is enabled, log in or sign up.
+   ![Admin-Panel](./images/admin1.png)
+   ![Admin-Panel](./images/admin2.png)
 2. Select your CSV and click Upload.  
    - Posts to `/api/files/upload` with `FormData` key `file`.
 3. Review success or error in the panel.
 
 Use the Admin Panel when you want to see metrics along with uploading. For most users, the main website Upload page is the simplest way to generate dashboards.
+   ![Admin-Panel](./images/admin-panel.png)
 
 ---
 
@@ -198,3 +211,4 @@ For runtime/setup issues (install, auth, backend, frontend), see `README.md`.
 - [ ] Build triggered from Admin Panel  
 - [ ] Dashboard verified in Grafana
 
+![Checklist done — replace with your image](./images/check.png)
