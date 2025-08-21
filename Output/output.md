@@ -1,16 +1,5 @@
 # Grafana Autobuilder — Dashboard Generation Guide (CSV ➜ Grafana)
 
-<!-- Styling for images: center and set width to 75% -->
-<style>
-  img {
-    display: block;
-    margin: 16px auto;
-    max-width: 75%;
-    width: 75%;
-    height: auto;
-  }
-</style>
-
 This guide focuses only on generating Grafana dashboards from a CSV using the Admin Panel workflow. For installation, environment variables, backend/frontend startup, and database configuration, please see the project `README.md`. 
 
 > Notes
