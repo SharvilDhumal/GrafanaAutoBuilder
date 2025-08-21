@@ -212,3 +212,7 @@ For runtime/setup issues (install, auth, backend, frontend), see `README.md`.
 - [ ] Dashboard verified in Grafana
 
 ![Checklist done — replace with your image](./images/check.png)
+
+---The users Csv is storedin the supabase database and the dashboard is created in the grafana.
+
+![Supabase](./images/supabse.png)
