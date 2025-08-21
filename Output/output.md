@@ -11,7 +11,7 @@ This guide focuses only on generating Grafana dashboards from a CSV using the Ad
 ## Table of Contents
 - Overview
 - Minimal Requirements
-- Authentication (login required)
+- Get Started (Login, Signup, Forgot Password)
 - CSV Format (what the app expects)
 - Generate via Website (Recommended)
 - Alternative: Admin Panel (Upload & Metrics)
@@ -53,11 +53,37 @@ For how to install, configure, and start services, see `README.md`.
 
 ---
 
-## Authentication (login required)
-- Open the web app and click "Login" (top-right).
-- Enter your credentials. If you’re new, click "Sign Up" first, then log in.
-- You must be logged in to upload a CSV and generate dashboards (Upload page or Admin Panel).
-- If you see 401/Unauthorized, log in again and retry.
+## Get Started (Login, Signup, Forgot Password)
+
+### Signup
+- Click "Sign Up" to create a new account.
+- Provide required details (e.g., name, email, password), then submit.
+- You'll receive a signup/verification email. Open it and click the link to verify your account (check spam if needed).
+- After successful verification, proceed to Login.
+
+![Signup](./images/sign-up1.png)
+![Signup](./images/sign-up2.png)
+![Signup](./images/verifyEmail.png)
+![Signup](./images/verifyEmail2.png)
+
+### Login
+- Click "Login" (top-right) in the web app.
+- Enter your email and password, then submit.
+- Required before you can upload a CSV and generate dashboards (Upload page or Admin Panel).
+- If you get 401/Unauthorized, log in again and retry.
+
+![Login](./images/login1.png)
+![Login](./images/login2.png)
+![Login](./images/loginSuccess.png)
+
+### Forgot Password
+- Click "Forgot Password" on the Login page.
+- Enter your registered email to receive a reset link.
+- Open the link, set a new password, and log in again.
+
+![Forgot Password](./images/forgot1.png)
+![Forgot Password](./images/forgot2.png)
+![Forgot Password](./images/forgot3.png)
 
 API endpoints (for integrators):
 - POST `/api/auth/login`
