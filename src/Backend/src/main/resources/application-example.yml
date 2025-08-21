@@ -1,0 +1,60 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
+      enabled: true
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/grafana_autobuilder}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USERNAME:}
+    password: ${MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          ssl:
+            trust: ${MAIL_HOST:smtp.gmail.com}
+
+app:
+  frontendBaseUrl: ${FRONTEND_BASE_URL:http://localhost:4200}
+  backendBaseUrl: ${BACKEND_BASE_URL:http://localhost:8080}
+  jwt:
+    secret: ${JWT_SECRET:}
+    expiration-ms: ${JWT_EXPIRATION_MS:3600000}
+
+grafana:
+  url: ${GRAFANA_URL:http://localhost:3000}
+  apiKey: ${GRAFANA_API_KEY:}
+  defaultDatasourceUid: ${GRAFANA_DEFAULT_DS_UID:}
+  defaultDatasourceType: ${GRAFANA_DEFAULT_DS_TYPE:postgres}
+
+supabase:
+  url: ${SUPABASE_URL:}
+  serviceKey: ${SUPABASE_SERVICE_KEY:}
+  storage:
+    bucket: ${SUPABASE_BUCKET:uploads}
