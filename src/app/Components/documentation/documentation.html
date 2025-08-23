@@ -85,8 +85,8 @@ curl -F "file=@C:\\path\\to\\your.csv" http://localhost:8080/api/dashboard/valid
 
   <h2 id="csv-schema">🧾 CSV schema (one row = one panel)</h2>
   <p>
-    Use the following headers exactly (case‑sensitive). Unused fields can be
-    left blank.
+    Use the following headers exactly (case‑sensitive). Optional fields can be
+    left blank or omitted entirely from the CSV header.
   </p>
   <ul>
     <li><code>title</code> — Panel title.</li>
@@ -109,15 +109,15 @@ curl -F "file=@C:\\path\\to\\your.csv" http://localhost:8080/api/dashboard/valid
     </li>
     <li>
       <code>thresholds</code> — Optional alert colors as
-      <code>low|high</code> numeric values (e.g., <code>80|90</code>).
+      <code>low|high</code> numeric values (e.g., <code>80|90</code>). May be omitted.
     </li>
     <li>
       <code>w</code> — Optional width in grid units (defaults to
-      <code>12</code>, grid is 24‑columns).
+      <code>12</code>, grid is 24‑columns). May be omitted.
     </li>
     <li>
       <code>h</code> — Optional height in grid units (defaults to
-      <code>8</code>).
+      <code>8</code>). May be omitted.
     </li>
   </ul>
 
@@ -149,11 +149,11 @@ curl -F "file=@C:\\path\\to\\your.csv" http://localhost:8080/api/dashboard/valid
       <button class="copy-btn" (click)="copy(codeCsv.textContent || '', 'csv')" [class.copied]="copiedId==='csv'">{{ copiedId==='csv' ? 'Copied' : 'Copy' }}</button>
     </div>
     <pre class="code" #codeCsv>
-title,datasource,query,visualization,unit,thresholds,w,h
-User Registrations,fev06aq8frhfka,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short,100|200,12,8
-Active Users,fev06aq8frhfka,"SELECT DATE_TRUNC('hour', last_login) as time, COUNT(DISTINCT user_id) as value FROM user_sessions WHERE last_login >= $__timeFrom() AND last_login <= $__timeTo() GROUP BY DATE_TRUNC('hour', last_login) ORDER BY time",timeseries,short,50|100,6,6
-Error Rate,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', timestamp) as time, (COUNT(CASE WHEN status_code >= 400 THEN 1 END) * 100.0 / COUNT(*)) as value FROM application_logs WHERE timestamp >= $__timeFrom() AND timestamp <= $__timeTo() GROUP BY DATE_TRUNC('minute', timestamp) ORDER BY time",barchart,percent,5|10,6,6
-Response Time,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', request_time) as time, AVG(response_time_ms) as value FROM api_requests WHERE request_time >= $__timeFrom() AND request_time <= $__timeTo() GROUP BY DATE_TRUNC('minute', request_time) ORDER BY time",timeseries,ms,200|500,12,6
+title,datasource,query,visualization,unit
+User Registrations,fev06aq8frhfka,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short
+Active Users,fev06aq8frhfka,"SELECT DATE_TRUNC('hour', last_login) as time, COUNT(DISTINCT user_id) as value FROM user_sessions WHERE last_login >= $__timeFrom() AND last_login <= $__timeTo() GROUP BY DATE_TRUNC('hour', last_login) ORDER BY time",timeseries,short
+Error Rate,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', timestamp) as time, (COUNT(CASE WHEN status_code >= 400 THEN 1 END) * 100.0 / COUNT(*)) as value FROM application_logs WHERE timestamp >= $__timeFrom() AND timestamp <= $__timeTo() GROUP BY DATE_TRUNC('minute', timestamp) ORDER BY time",barchart,percent
+Response Time,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', request_time) as time, AVG(response_time_ms) as value FROM api_requests WHERE request_time >= $__timeFrom() AND request_time <= $__timeTo() GROUP BY DATE_TRUNC('minute', request_time) ORDER BY time",timeseries,ms
     </pre>
   </div>
   >
@@ -250,15 +250,13 @@ ORDER BY time
     </div>
     <pre class="code" #codeAi>
 You are generating a CSV for Grafana AutoBuilder. Output ONLY valid CSV with this header:
-title,datasource,query,visualization,unit,thresholds,w,h
+title,datasource,query,visualization,unit
 
 Requirements:
 - PostgreSQL datasource only
 - Use SQL queries with $__timeFrom() and $__timeTo() time variables
 - Provide 6–10 panels covering timeseries, stat, barchart, and gauge
 - Use units like percent, bytes, s, ms, short when appropriate
-- Use thresholds in the form low|high (e.g., 80|90) when useful
-- Use widths/heights that fit a 24-column grid (e.g., w=12,h=8 for large charts; w=6,h=6 for small)
 
  Notes:
  - You may use aliases for visualization: panel_type, chart_type, or viewType (they map to visualization).

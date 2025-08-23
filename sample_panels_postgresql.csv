@@ -1,36 +1,36 @@
-title,datasource,query,visualization,unit,thresholds,w,h
+title,datasource,query,visualization,unit
 User Registrations,PostgreSQL,"SELECT 
   DATE_TRUNC('day', created_at) as time,
   COUNT(*) as value
 FROM users 
 WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo()
 GROUP BY DATE_TRUNC('day', created_at)
-ORDER BY time",timeseries,short,100|200,12,8
+ORDER BY time",timeseries,short
 Active Users,PostgreSQL,"SELECT 
   DATE_TRUNC('hour', last_login) as time,
   COUNT(DISTINCT user_id) as value
 FROM user_sessions 
 WHERE last_login >= $__timeFrom() AND last_login <= $__timeTo()
 GROUP BY DATE_TRUNC('hour', last_login)
-ORDER BY time",timeseries,short,50|100,6,6
+ORDER BY time",timeseries,short
 Error Rate,PostgreSQL,"SELECT 
   DATE_TRUNC('minute', timestamp) as time,
   (COUNT(CASE WHEN status_code >= 400 THEN 1 END) * 100.0 / COUNT(*)) as value
 FROM application_logs 
 WHERE timestamp >= $__timeFrom() AND timestamp <= $__timeTo()
 GROUP BY DATE_TRUNC('minute', timestamp)
-ORDER BY time",barchart,percent,5|10,6,6
+ORDER BY time",barchart,percent
 Database Connections,PostgreSQL,"SELECT 
   DATE_TRUNC('minute', connection_time) as time,
   COUNT(*) as value
 FROM db_connections 
 WHERE connection_time >= $__timeFrom() AND connection_time <= $__timeTo()
 GROUP BY DATE_TRUNC('minute', connection_time)
-ORDER BY time",stat,short,80|120,8,8
+ORDER BY time",stat,short
 Response Time,PostgreSQL,"SELECT 
   DATE_TRUNC('minute', request_time) as time,
   AVG(response_time_ms) as value
 FROM api_requests 
 WHERE request_time >= $__timeFrom() AND request_time <= $__timeTo()
 GROUP BY DATE_TRUNC('minute', request_time)
-ORDER BY time",timeseries,ms,200|500,12,6
+ORDER BY time",timeseries,ms

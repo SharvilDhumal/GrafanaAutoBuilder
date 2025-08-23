@@ -83,7 +83,7 @@ Security: never commit real secrets. `.env` is gitignored. The repository may co
 
 ## CSV prerequisites for dashboard generation
 
-The backend reads a CSV of panel definitions and converts each row into a Grafana panel. Columns must match exactly the headers below.
+The backend reads a CSV of panel definitions and converts each row into a Grafana panel. Columns are flexible: optional columns may be omitted entirely.
 
 ### Required headers (case-sensitive):
 
@@ -94,11 +94,11 @@ The backend reads a CSV of panel definitions and converts each row into a Grafan
   - Aliases: you may also use `panel_type`, `chart_type`, or `viewType` (they map to `visualization`).
 - `unit` — Display unit (e.g., `percent`, `bytes`, `s`, `ms`, `short`)
 
-### Optional headers:
+### Optional headers (may be left blank or omitted from the CSV entirely):
 
 - `thresholds` — Two numbers separated by `|` (e.g., `80|90`)
-- `w` — Width in grid units (integer)
-- `h` — Height in grid units (integer)
+- `w` — Width in grid units (integer; defaults to 12)
+- `h` — Height in grid units (integer; defaults to 8)
 
 ### Datasource support
 
@@ -108,9 +108,9 @@ The backend reads a CSV of panel definitions and converts each row into a Grafan
 ### Sample CSV - PostgreSQL
 
 ```csv
-title,datasource,query,visualization,unit,thresholds,w,h
-User Registrations,fev06aq8frhfka,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short,100|200,12,8
-Active Users,fev06aq8frhfka,"SELECT DATE_TRUNC('hour', last_login) as time, COUNT(DISTINCT user_id) as value FROM user_sessions WHERE last_login >= $__timeFrom() AND last_login <= $__timeTo() GROUP BY DATE_TRUNC('hour', last_login) ORDER BY time",timeseries,short,50|100,6,6
+title,datasource,query,visualization,unit
+User Registrations,fev06aq8frhfka,"SELECT DATE_TRUNC('day', created_at) as time, COUNT(*) as value FROM users WHERE created_at >= $__timeFrom() AND created_at <= $__timeTo() GROUP BY DATE_TRUNC('day', created_at) ORDER BY time",timeseries,short
+Active Users,fev06aq8frhfka,"SELECT DATE_TRUNC('hour', last_login) as time, COUNT(DISTINCT user_id) as value FROM user_sessions WHERE last_login >= $__timeFrom() AND last_login <= $__timeTo() GROUP BY DATE_TRUNC('hour', last_login) ORDER BY time",timeseries,short
 ```
 
 ### PostgreSQL Setup
@@ -172,18 +172,18 @@ Troubleshooting Supabase:
 ### Checklist (make sure this is true before uploading):
 
 - File is UTF-8 encoded `.csv` with a single header row.
-- Headers match exactly: `title,datasource,query,visualization,unit,thresholds,w,h`.
+- Headers include at least: `title,datasource,query,visualization,unit`.
   - Alternatively, you can use `panel_type`, `chart_type`, or `viewType` instead of `visualization`.
+  - Optional: you may add `thresholds`, `w`, `h` — or omit them entirely.
 - `datasource` exists and is configured in Grafana.
-- `query` is valid for the chosen datasource (PromQL/SQL/etc.).
 - `query` is valid SQL for PostgreSQL.
 - `visualization` is one of: `timeseries`, `stat`, `barchart`, `gauge`.
-- `thresholds` format: `low|high` (optional; leave blank if not used).
-- `w` and `h` are integers if provided; leave blank to let the layout pick defaults.
+- If using `thresholds`, use the format `low|high` (e.g., `80|90`).
+- If using `w`/`h`, they must be integers; otherwise defaults (12x8) are used.
 - No extra/unknown columns.
 - **For PostgreSQL queries:** Always use `$__timeFrom()` and `$__timeTo()` for time filtering.
 
-Note: These fields are parsed by `CsvParsingService` and mapped to `PanelConfig` on the backend.
+Note: These fields are parsed by `CsvParsingService` and mapped to `PanelConfig` on the backend. Missing optional columns safely parse as empty values and sensible defaults are applied.
 
 ## Styling and Fonts
 
