@@ -59,7 +59,13 @@ Note: The Angular app currently uses demo logic for auth and may not yet call th
 
 ### Backend configuration (.env and application.yml)
 
-The backend reads defaults from `backend/src/main/resources/application.yml` and can be overridden with environment variables. A starter env is provided in `.env.example` at the repo root — copy it to `.env` and adjust values.
+The backend ships with a template at `backend/src/main/resources/application-example.yml`. The real `application.yml` is intentionally gitignored and should be created locally by copying the example:
+
+```bash
+copy backend\src\main\resources\application-example.yml backend\src\main\resources\application.yml
+```
+
+You may override any values via environment variables. A starter env is provided in `.env.example` at the repo root — copy it to `.env` and adjust values.
 
 Relevant properties from `application.yml`:
 
@@ -73,7 +79,7 @@ Environment variable overrides supported (set in your shell or a process manager
 - `GRAFANA_API_KEY`
 - `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `SUPABASE_BUCKET`
 
-Security: never commit real secrets. `.env` is gitignored. The repository may contain placeholder values in `application.yml`; override them in your local environment.
+Security: never commit real secrets. `.env` and `backend/src/main/resources/application.yml` are gitignored. Keep secrets locally or in your deployment environment.
 
 ## Using the App
 
@@ -204,6 +210,10 @@ The entire site uses the Poppins font (fallbacks: Space Grotesk, sans-serif). Th
    - Frontend: `npm ci`
    - Backend: ensure Maven/Gradle available
 2. Copy `.env.example` to `.env` and fill in values (Grafana API key, DB creds, optional Supabase vars).
+   Also create a local backend config from the example (untracked by Git):
+   ```bash
+   copy backend\src\main\resources\application-example.yml backend\src\main\resources\application.yml
+   ```
 3. Start services
    - Backend: from `backend/`, run `mvn spring-boot:run` (or `gradle bootRun`). Backend runs on `http://localhost:8080`.
    - Frontend: from repo root, run `ng serve`. Frontend runs on `http://localhost:4200`.

@@ -55,11 +55,21 @@ The application will start on `http://localhost:8080`
 
 ## Configuration
 
-The application configuration is in `src/main/resources/application.yml`:
+This project ships with a template config: `src/main/resources/application-example.yml`.
+
+Create your local (untracked) config by copying the example:
+
+```bash
+copy src\main\resources\application-example.yml src\main\resources\application.yml
+```
+
+The real `application.yml` is intentionally gitignored. Configure secrets locally or via environment variables.
+
+Key properties in `application.yml`:
 
 - **Database**: PostgreSQL on localhost:5432
 - **Port**: 8080
-- **JWT Secret**: Configured in application.yml (should be moved to environment variables in production)
+- **JWT Secret**: Configure in `application.yml` or via env vars in production
 
 ## API Endpoints
 
