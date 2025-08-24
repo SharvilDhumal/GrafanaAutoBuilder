@@ -47,6 +47,7 @@ backend/.env
 
 # Spring Boot runtime config (keep local, do not commit)
 backend/src/main/resources/application.yml
+backend/src/main/resources/application.properties
 
 # Backend build outputs
 backend/target/
