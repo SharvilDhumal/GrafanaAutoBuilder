@@ -8,7 +8,7 @@
       "args": ["clean", "compile"],
       "group": "build",
       "options": {
-        "cwd": "${workspaceFolder}/src/Backend"
+        "cwd": "${workspaceFolder}/backend"
       },
       "presentation": {
         "echo": true,
@@ -25,7 +25,7 @@
       "args": ["spring-boot:run"],
       "group": "build",
       "options": {
-        "cwd": "${workspaceFolder}/src/Backend"
+        "cwd": "${workspaceFolder}/backend"
       },
       "presentation": {
         "echo": true,
@@ -42,7 +42,7 @@
       "args": ["test"],
       "group": "test",
       "options": {
-        "cwd": "${workspaceFolder}/src/Backend"
+        "cwd": "${workspaceFolder}/backend"
       },
       "presentation": {
         "echo": true,

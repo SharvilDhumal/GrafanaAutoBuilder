@@ -7,7 +7,7 @@
       "request": "launch",
       "mainClass": "com.example.grafanaautobuilder.GrafanaAutobuilderApplication",
       "projectName": "grafana-autobuilder",
-      "cwd": "${workspaceFolder}/src/Backend",
+      "cwd": "${workspaceFolder}/backend",
       "vmArgs": "-Dspring.profiles.active=dev"
     }
   ]

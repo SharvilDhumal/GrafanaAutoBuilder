@@ -6,13 +6,13 @@
   "java.maven.downloadSources": true,
   "java.maven.updateSnapshots": true,
   "java.project.sourcePaths": [
-    "src/Backend/src/main/java",
-    "src/Backend/src/test/java"
+    "backend/src/main/java",
+    "backend/src/test/java"
   ],
-  "java.project.outputPath": "src/Backend/target/classes",
+  "java.project.outputPath": "backend/target/classes",
   "java.project.referencedLibraries": [
     "lib/**/*.jar",
-    "${workspaceFolder}/src/Backend/target/dependency/*.jar"
+    "${workspaceFolder}/backend/target/dependency/*.jar"
   ],
   "java.dependency.packagePresentation": "hierarchical",
   "java.dependency.syncWithFolderExplorer": true,
@@ -35,5 +35,5 @@
   "java.server.launchMode": "Standard",
   "java.import.maven.offline.enabled": false,
   "java.maven.downloadJavadoc": true,
-  "java.project.exportJar.targetPath": "${workspaceFolder}/src/Backend/target"
+  "java.project.exportJar.targetPath": "${workspaceFolder}/backend/target"
 }

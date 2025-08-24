@@ -43,10 +43,10 @@ Thumbs.db
 
 # Environment files (secrets)
 .env
-src/Backend/.env
+backend/.env
 
 # Spring Boot runtime config (keep local, do not commit)
-src/Backend/src/main/resources/application.yml
+backend/src/main/resources/application.yml
 
 # Backend build outputs
-src/Backend/target/
+backend/target/

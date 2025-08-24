@@ -190,7 +190,7 @@ Response Time,fev06aq8frhfka,"SELECT DATE_TRUNC('minute', request_time) as time,
           <button class="copy-btn" (click)="copy(codePsql.textContent || '', 'psql')" [class.copied]="copiedId==='psql'">{{ copiedId==='psql' ? 'Copied' : 'Copy' }}</button>
         </div>
         <pre class="code" #codePsql>
-psql -U grafana_user -d grafana_autobuilder -f src/Backend/setup_test_data.sql
+psql -U grafana_user -d grafana_autobuilder -f backend/setup_test_data.sql
         </pre>
       </div>
     </li>

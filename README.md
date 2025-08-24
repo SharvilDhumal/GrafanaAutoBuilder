@@ -59,7 +59,7 @@ Note: The Angular app currently uses demo logic for auth and may not yet call th
 
 ### Backend configuration (.env and application.yml)
 
-The backend reads defaults from `src/Backend/src/main/resources/application.yml` and can be overridden with environment variables. A starter env is provided in `.env.example` at the repo root — copy it to `.env` and adjust values.
+The backend reads defaults from `backend/src/main/resources/application.yml` and can be overridden with environment variables. A starter env is provided in `.env.example` at the repo root — copy it to `.env` and adjust values.
 
 Relevant properties from `application.yml`:
 
@@ -133,7 +133,7 @@ To use PostgreSQL as a datasource:
 
 3. **Run the test data script:**
    ```bash
-   psql -U grafana_user -d grafana_autobuilder -f src/Backend/setup_test_data.sql
+   psql -U grafana_user -d grafana_autobuilder -f backend/setup_test_data.sql
    ```
 
 ### Grafana Setup
@@ -146,7 +146,7 @@ The backend uses these to create dashboards and panels.
 
 ### Supabase Storage (for CSV uploads)
 
-Uploads are stored in Supabase Storage by `SupabaseStorageService` (`src/Backend/src/main/java/com/example/grafanaautobuilder/service/storage/SupabaseStorageService.java`). This is optional but recommended for keeping an auditable record of uploaded CSV files.
+Uploads are stored in Supabase Storage by `SupabaseStorageService` (`backend/src/main/java/com/example/grafanaautobuilder/service/storage/SupabaseStorageService.java`). This is optional but recommended for keeping an auditable record of uploaded CSV files.
 
 Setup steps:
 
@@ -205,7 +205,7 @@ The entire site uses the Poppins font (fallbacks: Space Grotesk, sans-serif). Th
    - Backend: ensure Maven/Gradle available
 2. Copy `.env.example` to `.env` and fill in values (Grafana API key, DB creds, optional Supabase vars).
 3. Start services
-   - Backend: from `src/Backend/`, run `mvn spring-boot:run` (or `gradle bootRun`). Backend runs on `http://localhost:8080`.
+   - Backend: from `backend/`, run `mvn spring-boot:run` (or `gradle bootRun`). Backend runs on `http://localhost:8080`.
    - Frontend: from repo root, run `ng serve`. Frontend runs on `http://localhost:4200`.
 4. In Grafana, create a PostgreSQL datasource and note its UID. Put UID into `application.yml` (`grafana.defaultDatasourceUid`) or provide per CSV row.
 5. Upload a sample CSV from the UI or call `POST /api/dashboard/upload` with `multipart/form-data`.
