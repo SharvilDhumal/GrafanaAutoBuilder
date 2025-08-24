@@ -43,10 +43,21 @@ Once the server is running, open your browser and navigate to `http://localhost:
 
 ## Backend (Spring Boot)
 
-From the backend project root, start the API server on port 8080:
+Start the backend API (default port 8080):
 
-- Maven: `mvn spring-boot:run`
-- Gradle: `gradle bootRun`
+1. Create local config if you haven't already (untracked by Git):
+   ```bash
+   copy backend\src\main\resources\application-example.yml backend\src\main\resources\application.yml
+   ```
+2. From the repo root, run:
+   ```bash
+   cd backend
+   mvn spring-boot:run
+   ```
+   Alternative (Gradle):
+   ```bash
+   gradle bootRun
+   ```
 
 Verify PostgreSQL is running and accessible using the connection above (Services/pgAdmin/psql).
 
